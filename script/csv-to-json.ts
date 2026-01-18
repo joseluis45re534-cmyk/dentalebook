@@ -7,18 +7,18 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const CSV_PATH = path.join(process.cwd(), 'attached_assets', 'imported_books.csv');
+const INPUT_CSV = path.join(process.cwd(), "attached_assets", "digitallistings_products_1768658324529.csv");
 const JSON_OUTPUT_PATH = path.join(process.cwd(), 'client', 'public', 'products.json');
 
 // Interface matching the schema used in the app (roughly)
 // We need to map the CSV fields to the Product schema
 interface CSVBook {
-    Title: string;
-    Price: string;
-    Description: string;
-    Url: string;
-    Image_File: string;
-    Image_Url: string;
+    title: string;
+    price: string;
+    description: string;
+    url: string;
+    image_file: string;
+    image_url: string;
 }
 
 interface Product {
@@ -72,13 +72,13 @@ function determineCategory(title: string): string {
 }
 
 function main() {
-    if (!fs.existsSync(CSV_PATH)) {
-        console.error(`CSV file not found at ${CSV_PATH}`);
+    if (!fs.existsSync(INPUT_CSV)) {
+        console.error(`CSV file not found at ${INPUT_CSV}`);
         process.exit(1);
     }
 
-    console.log(`Reading CSV from ${CSV_PATH}...`);
-    const csvContent = fs.readFileSync(CSV_PATH, 'utf-8');
+    console.log(`Reading CSV from ${INPUT_CSV}...`);
+    const csvContent = fs.readFileSync(INPUT_CSV, 'utf-8');
     const records = parse(csvContent, {
         columns: true,
         skip_empty_lines: true
@@ -87,18 +87,18 @@ function main() {
     console.log(`Found ${records.length} records. converting...`);
 
     const products: Product[] = records.map((record, index) => {
-        const priceData = parsePrice(record.Price);
+        const priceData = parsePrice(record.price);
 
         return {
             id: index + 1, // Simple ID generation
-            title: record.Title,
-            price: record.Price, // Keeping original string for display if needed, but app likely uses numbers
+            title: record.title,
+            price: record.price, // Keeping original string for display if needed, but app likely uses numbers
             ...priceData,
-            description: record.Description,
-            url: record.Url,
-            imageFile: record.Image_File || null,
-            imageUrl: record.Image_Url || null,
-            category: determineCategory(record.Title)
+            description: record.description,
+            url: record.url,
+            imageFile: record.image_file || null,
+            imageUrl: record.image_url || null,
+            category: determineCategory(record.title)
         };
     });
 
