@@ -9,12 +9,16 @@ import { ShoppingCart, Check, ArrowLeft, BookOpen, Video, Clock, FileText, Downl
 import { useCart } from "@/lib/cart";
 import type { Product } from "@shared/schema";
 
+import { fetchProductById } from "@/lib/products";
+
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const { addToCart, isInCart } = useCart();
 
-  const { data: product, isLoading, error } = useQuery<Product>({
-    queryKey: [`/api/products/${id}`],
+  const { data: product, isLoading, error } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProductById(parseInt(id, 10)),
+    enabled: !!id
   });
 
   const inCart = product ? isInCart(product.id) : false;
@@ -63,9 +67,9 @@ export default function ProductDetail() {
   const parseDescription = (desc: string) => {
     const sections: { title: string; content: string }[] = [];
     const lines = desc.split('\n').filter(l => l.trim());
-    
+
     let currentSection = { title: "Description", content: "" };
-    
+
     for (const line of lines) {
       if (line.match(/^(Course Description|Topics Covered|Key Learning Areas|Course Details|Frequently Asked Questions)/i)) {
         if (currentSection.content.trim()) {
@@ -76,11 +80,11 @@ export default function ProductDetail() {
         currentSection.content += line + "\n";
       }
     }
-    
+
     if (currentSection.content.trim()) {
       sections.push(currentSection);
     }
-    
+
     return sections.length > 0 ? sections : [{ title: "Description", content: desc }];
   };
 

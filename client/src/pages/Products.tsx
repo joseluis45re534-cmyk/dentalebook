@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
+import { fetchProducts } from "@/lib/products";
 import { useQuery } from "@tanstack/react-query";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import type { PaginatedResponse } from "@shared/schema";
 export default function Products() {
   const searchString = useSearch();
   const [, setLocation] = useLocation();
-  
+
   const urlParams = new URLSearchParams(searchString);
   const initialQuery = urlParams.get("query") || "";
   const initialCategory = urlParams.get("category") || "";
@@ -37,13 +38,14 @@ export default function Products() {
   const queryParams = {
     query: searchQuery,
     category,
-    sort,
+    sort: sort as "date" | "price-asc" | "price-desc" | "title",
     page,
     limit: 12,
   };
 
-  const { data, isLoading } = useQuery<PaginatedResponse>({
-    queryKey: ["/api/products", queryParams],
+  const { data, isLoading } = useQuery({
+    queryKey: ["products", queryParams],
+    queryFn: () => fetchProducts(queryParams),
   });
 
   useEffect(() => {
@@ -151,8 +153,8 @@ export default function Products() {
           )}
         </div>
 
-        <ProductGrid 
-          products={data?.products || []} 
+        <ProductGrid
+          products={data?.products || []}
           isLoading={isLoading}
           emptyMessage="No products match your criteria"
         />

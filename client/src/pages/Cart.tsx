@@ -5,20 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, ShoppingCart, BookOpen, Video } from "lucide-react";
 import { useCart } from "@/lib/cart";
-import { apiRequest } from "@/lib/queryClient";
+import { fetchProductsByIds } from "@/lib/products";
 import type { Product } from "@shared/schema";
 
 export default function Cart() {
   const { items, removeFromCart, updateQuantity, clearCart, getTotal } = useCart();
 
   const productIds = items.map(item => item.productId);
-  
+
   const { data } = useQuery<{ products: Product[] }>({
-    queryKey: ["/api/products/batch", productIds],
+    queryKey: ["products", "batch", productIds],
     queryFn: async () => {
       if (productIds.length === 0) return { products: [] };
-      const res = await apiRequest("POST", "/api/products/batch", { ids: productIds });
-      return res.json();
+      const products = await fetchProductsByIds(productIds);
+      return { products };
     },
     enabled: productIds.length > 0,
   });
