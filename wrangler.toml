@@ -6,4 +6,4 @@ command = "npm run build"
 [[d1_databases]]
 binding = "DB"
 database_name = "digital-listings-db"
-database_id = "b30228ec-298e-41d6-9b26-e305a5e50332" this
+database_id = "b30228ec-298e-41d6-9b26-e305a5e50332"
