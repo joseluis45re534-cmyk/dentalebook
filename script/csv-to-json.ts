@@ -96,9 +96,10 @@ function main() {
             ...priceData,
             description: record.description,
             url: record.url,
-            imageFile: record.image_file || null,
-            imageUrl: record.image_url || null,
-            category: determineCategory(record.title)
+            category: determineCategory(record.title),
+            // The CSV contains multiple images separated by semicolons. We just want the first one.
+            imageFile: record.image_file ? record.image_file.split(';')[0] : null,
+            imageUrl: record.image_url ? record.image_url.split(';')[0] : null
         };
     });
 
