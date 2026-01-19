@@ -1,15 +1,20 @@
+```javascript
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, ShoppingCart, BookOpen, Video } from "lucide-react";
-import { useCart } from "@/lib/cart";
+import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, ShoppingCart, BookOpen, Video, Loader2 } from "lucide-react";
+import { useCart } from "@/context/cart-context"; // Changed from "@/lib/cart"
 import { fetchProductsByIds } from "@/lib/products";
 import type { Product } from "@shared/schema";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast"; // Changed from "@/components/ui/use-toast"
 
 export default function Cart() {
   const { items, removeFromCart, updateQuantity, clearCart, getTotal } = useCart();
+  const { toast } = useToast();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const productIds = items.map(item => item.productId);
 
@@ -70,10 +75,10 @@ export default function Cart() {
             {cartProducts.map(({ product, quantity }) => {
               const isBook = product.category.toLowerCase().includes("book");
               return (
-                <Card key={product.id} data-testid={`card-cart-item-${product.id}`}>
+                <Card key={product.id} data-testid={`card - cart - item - ${ product.id } `}>
                   <CardContent className="p-4">
                     <div className="flex gap-4">
-                      <Link href={`/product/${product.id}`} className="shrink-0">
+                      <Link href={`/ product / ${ product.id } `} className="shrink-0">
                         <div className="w-24 h-24 rounded-md overflow-hidden bg-muted">
                           {product.imageUrl ? (
                             <img
@@ -93,7 +98,7 @@ export default function Cart() {
                         </div>
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <Link href={`/product/${product.id}`}>
+                        <Link href={`/ product / ${ product.id } `}>
                           <h3 className="font-semibold line-clamp-2 hover:text-primary transition-colors">
                             {product.title}
                           </h3>
@@ -106,7 +111,7 @@ export default function Cart() {
                               size="icon"
                               className="h-8 w-8"
                               onClick={() => updateQuantity(product.id, quantity - 1)}
-                              data-testid={`button-decrease-${product.id}`}
+                              data-testid={`button - decrease - ${ product.id } `}
                             >
                               <Minus className="w-3 h-3" />
                             </Button>
@@ -116,7 +121,7 @@ export default function Cart() {
                               size="icon"
                               className="h-8 w-8"
                               onClick={() => updateQuantity(product.id, quantity + 1)}
-                              data-testid={`button-increase-${product.id}`}
+                              data-testid={`button - increase - ${ product.id } `}
                             >
                               <Plus className="w-3 h-3" />
                             </Button>
@@ -130,7 +135,7 @@ export default function Cart() {
                               size="icon"
                               className="text-destructive hover:text-destructive"
                               onClick={() => removeFromCart(product.id)}
-                              data-testid={`button-remove-${product.id}`}
+                              data-testid={`button - remove - ${ product.id } `}
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -170,8 +175,21 @@ export default function Cart() {
                   <span>Total</span>
                   <span data-testid="text-cart-total">${total.toFixed(2)}</span>
                 </div>
-                <Button className="w-full" size="lg" data-testid="button-checkout">
-                  Proceed to Checkout
+                <Button
+                  className="w-full"
+                  size="lg"
+                  data-testid="button-checkout"
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut || items.length === 0}
+                >
+                  {isCheckingOut ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Proceed to Checkout"
+                  )}
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
                   Secure checkout powered by Stripe
