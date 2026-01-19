@@ -307,6 +307,5 @@ export default function Request() {
         </div>
       </div>
       );
-  }
-}  );
+
 }
