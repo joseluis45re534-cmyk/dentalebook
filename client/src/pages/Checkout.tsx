@@ -9,7 +9,7 @@ import { useCart } from "@/lib/cart";
 import { Loader2 } from "lucide-react";
 
 // Initialize Stripe outside component to avoid recreation
-const stripePromise = loadStripe("pk_test_51SpzmQR6degPKw4yK2mh7aE7e21ESLtR0BzoZjjrcK5k9UVy9uWdDuOTkJEWBU0oAmkiz2XXbuGJV7BuT5Gdkcas00MUjxn30E");
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function CheckoutForm({ clientSecret }: { clientSecret: string }) {
     const stripe = useStripe();
