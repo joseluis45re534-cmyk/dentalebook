@@ -25,6 +25,15 @@ export default function ThankYou() {
                 body: JSON.stringify({ paymentIntentId })
             })
                 .then(async (res) => {
+                    if (!res.ok) {
+                        const text = await res.text();
+                        try {
+                            const json = JSON.parse(text);
+                            throw new Error(json.error || `Server error: ${res.status}`);
+                        } catch (e) {
+                            throw new Error(`Server Error (${res.status}): ${text.substring(0, 100)}`);
+                        }
+                    }
                     const data = await res.json();
                     if (data.success || data.message === 'Order already confirmed') {
                         setOrderStatus('success');

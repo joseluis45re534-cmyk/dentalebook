@@ -25,16 +25,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             apiVersion: '2023-10-16' as any,
         });
 
-        // Expand payment_method and latest_charge to get billing details
-        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
-            expand: ['payment_method', 'latest_charge']
-        });
+        // Simplified retrieval - prioritizing speed and reliability over extra details
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
         if (paymentIntent.status !== 'succeeded') {
             return new Response(JSON.stringify({ error: 'Payment not successful' }), { status: 400 });
         }
 
-        // 2. Check if Order already exists to prevent duplicates
+        // 2. Check if Order already exists
         const { results: existing } = await env.DB.prepare(
             "SELECT id FROM orders WHERE payment_intent_id = ?"
         ).bind(paymentIntentId).all();
@@ -51,12 +49,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         const { metadata, amount, currency } = paymentIntent;
         const cartItems = JSON.parse(metadata?.cart_items || '[]');
 
-        // Extract billing details safely
-        // @ts-ignore - Stripe types might be complex, safely access properties
-        const billingDetails = paymentIntent.payment_method?.billing_details || paymentIntent.latest_charge?.billing_details;
-
-        const customerName = billingDetails?.name || 'Customer';
-        const customerEmail = billingDetails?.email || paymentIntent.receipt_email || 'unknown@example.com';
+        // Simple fallback
+        const customerName = 'Customer';
+        const customerEmail = paymentIntent.receipt_email || 'unknown@example.com';
 
         const { results: insertResult } = await env.DB.prepare(
             `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
