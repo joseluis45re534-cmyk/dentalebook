@@ -14,6 +14,7 @@ import Request from "@/pages/Request";
 import NotFound from "@/pages/not-found";
 import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminProducts from "@/pages/admin/Products";
 
 function Router() {
   return (
@@ -27,6 +28,7 @@ function Router() {
       {/* Admin Routes */}
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/products" component={AdminProducts} />
 
       <Route component={NotFound} />
     </Switch>
