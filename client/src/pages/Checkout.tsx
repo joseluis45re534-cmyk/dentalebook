@@ -4,6 +4,8 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import { loadStripe } from "@stripe/stripe-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/lib/cart";
 import { Loader2 } from "lucide-react";
@@ -17,6 +19,8 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
     const { toast } = useToast();
     const [message, setMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,13 +29,24 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
             return;
         }
 
+        if (!email || !name) {
+            setMessage("Please fill in all fields.");
+            return;
+        }
+
         setIsLoading(true);
 
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                // Return to a completion page or the current page
                 return_url: `${window.location.origin}/request`,
+                payment_method_data: {
+                    billing_details: {
+                        name: name,
+                        email: email,
+                    }
+                },
+                receipt_email: email,
             },
         });
 
@@ -46,10 +61,33 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
 
     return (
         <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                    id="name"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                    id="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+            </div>
+
             <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
             {message && <div className="text-destructive text-sm" id="payment-message">{message}</div>}
             <Button
-                disabled={isLoading || !stripe || !elements}
+                disabled={isLoading || !stripe || !elements || !email || !name}
                 id="submit"
                 className="w-full"
                 size="lg"
