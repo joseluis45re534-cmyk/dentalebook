@@ -1,90 +1,20 @@
-import Papa from "papaparse";
 import { Product, PaginatedResponse, SearchParams } from "@shared/schema";
 
 // Cache the products promise to avoid multiple fetches
 let productsCache: Promise<Product[]> | null = null;
 
-interface CSVBook {
-    Title: string;
-    Price: string;
-    Description: string;
-    Url: string;
-    Image_File: string;
-    Image_Url: string;
-}
-
-function parsePrice(priceStr: string): { currentPrice: number; originalPrice: number | null; isOnSale: boolean } {
-    if (!priceStr) {
-        return { currentPrice: 0, originalPrice: null, isOnSale: false };
-    }
-
-    const saleMatch = priceStr.match(/\$(\d+(?:\.\d{2})?)\s*Original price was:\s*\$?(\d+(?:\.\d{2})?).*\$(\d+(?:\.\d{2})?)\s*Current price/i);
-    if (saleMatch) {
-        const originalPrice = parseFloat(saleMatch[1]);
-        const currentPrice = parseFloat(saleMatch[3]);
-        return {
-            currentPrice,
-            originalPrice,
-            isOnSale: true
-        };
-    }
-
-    const simpleMatch = priceStr.match(/\$(\d+(?:\.\d{2})?)/);
-    if (simpleMatch) {
-        return {
-            currentPrice: parseFloat(simpleMatch[1]),
-            originalPrice: null,
-            isOnSale: false
-        };
-    }
-
-    return { currentPrice: 0, originalPrice: null, isOnSale: false };
-}
-
-function determineCategory(title: string): string {
-    const lowerTitle = title.toLowerCase();
-    if (lowerTitle.includes('course') || lowerTitle.includes('masterclass')) {
-        return 'courses';
-    }
-    return 'books';
-}
-
 async function getAllProducts(): Promise<Product[]> {
     if (productsCache) return productsCache;
 
-    productsCache = new Promise((resolve, reject) => {
-        Papa.parse("/imported_books.csv", {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-                try {
-                    const records = results.data as CSVBook[];
-                    const products: Product[] = records.map((record, index) => {
-                        const priceData = parsePrice(record.Price);
-                        return {
-                            id: index + 1,
-                            title: record.Title,
-                            price: record.Price,
-                            ...priceData,
-                            description: record.Description,
-                            url: record.Url,
-                            imageFile: record.Image_File || null,
-                            imageUrl: record.Image_Url || null,
-                            category: determineCategory(record.Title)
-                        };
-                    });
-                    resolve(products);
-                } catch (err) {
-                    reject(err);
-                }
-            },
-            error: (err) => {
-                console.error("Error parsing CSV:", err);
-                reject(err);
-            }
+    productsCache = fetch("/api/products")
+        .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch products");
+            return res.json() as Promise<Product[]>;
+        })
+        .catch(err => {
+            console.error("Error fetching products:", err);
+            return []; // Fallback to empty
         });
-    });
 
     return productsCache!;
 }
@@ -144,8 +74,12 @@ export async function fetchProducts(params: Partial<SearchParams>): Promise<Pagi
 }
 
 export async function fetchProductById(id: number): Promise<Product | undefined> {
-    const allProducts = await getAllProducts();
-    return allProducts.find(p => p.id === id);
+    // We could fetch single from API (/api/products/:id) but since we cache all, find is faster for navigation
+    // However, to ensure fresh data on direct load, maybe fetch single?
+    // Let's rely on getAllProducts cache for now to keep it snappy, 
+    // invalidating cache would be needed on Admin updates (but this is public view).
+    const all = await getAllProducts();
+    return all.find(p => p.id === id);
 }
 
 export async function fetchProductsByIds(ids: number[]): Promise<Product[]> {
