@@ -3,17 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, ShoppingCart, BookOpen, Video, Loader2 } from "lucide-react";
-import { useCart } from "@/context/cart-context"; // Changed from "@/lib/cart"
+import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, ShoppingCart, BookOpen, Video } from "lucide-react";
+import { useCart } from "@/lib/cart";
 import { fetchProductsByIds } from "@/lib/products";
 import type { Product } from "@shared/schema";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast"; // Changed from "@/components/ui/use-toast"
 
 export default function Cart() {
   const { items, removeFromCart, updateQuantity, clearCart, getTotal } = useCart();
-  const { toast } = useToast();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const productIds = items.map(item => item.productId);
 
@@ -37,36 +33,7 @@ export default function Cart() {
 
   const total = getTotal(products);
 
-  const handleCheckout = async () => {
-    try {
-      setIsCheckingOut(true);
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map(i => ({ id: i.productId, quantity: i.quantity }))
-        })
-      });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Checkout failed");
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error: any) {
-      toast({
-        title: "Checkout Error",
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setIsCheckingOut(false);
-    }
-  };
 
   if (items.length === 0) {
     return (
@@ -205,21 +172,8 @@ export default function Cart() {
                   <span>Total</span>
                   <span data-testid="text-cart-total">${total.toFixed(2)}</span>
                 </div>
-                <Button
-                  className="w-full"
-                  size="lg"
-                  data-testid="button-checkout"
-                  onClick={handleCheckout}
-                  disabled={isCheckingOut || items.length === 0}
-                >
-                  {isCheckingOut ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    "Proceed to Checkout"
-                  )}
+                <Button className="w-full" size="lg">
+                  Proceed to Checkout
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
                   Secure checkout powered by Stripe

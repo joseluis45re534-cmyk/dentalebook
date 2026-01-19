@@ -48,7 +48,3 @@ export const insertProductSchema = z.object({
 
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 
-export interface CartItem {
-  id: number;
-  quantity: number;
-}
