@@ -1,3 +1,4 @@
+
 import Stripe from 'stripe';
 
 interface Env {
@@ -24,20 +25,21 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             apiVersion: '2023-10-16' as any,
         });
 
-        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        // Expand payment_method and latest_charge to get billing details
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
+            expand: ['payment_method', 'latest_charge']
+        });
 
         if (paymentIntent.status !== 'succeeded') {
             return new Response(JSON.stringify({ error: 'Payment not successful' }), { status: 400 });
         }
 
         // 2. Check if Order already exists to prevent duplicates
-        // Note: payment_intent_id is UNIQUE in our schema, so DB would also throw error, but checking is cleaner
         const { results: existing } = await env.DB.prepare(
             "SELECT id FROM orders WHERE payment_intent_id = ?"
         ).bind(paymentIntentId).all();
 
         if (existing && existing.length > 0) {
-            // Already saved, just return success
             return new Response(JSON.stringify({
                 success: true,
                 orderId: existing[0].id,
@@ -45,13 +47,16 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             }), { headers: { 'Content-Type': 'application/json' } });
         }
 
-        // 3. Create Order from Metadata (trusted because it comes from Stripe API)
-        const { metadata, billing_details, amount, currency } = paymentIntent;
-        const cartItems = JSON.parse(metadata.cart_items || '[]');
+        // 3. Create Order
+        const { metadata, amount, currency } = paymentIntent;
+        const cartItems = JSON.parse(metadata?.cart_items || '[]');
 
-        // Use billing details from Stripe (more reliable than client input at this stage)
-        const customerName = paymentIntent.payment_method_options?.card?.request_three_d_secure === 'any' ? billing_details.name : (billing_details.name || 'Customer');
-        const customerEmail = billing_details.email || 'unknown@example.com';
+        // Extract billing details safely
+        // @ts-ignore - Stripe types might be complex, safely access properties
+        const billingDetails = paymentIntent.payment_method?.billing_details || paymentIntent.latest_charge?.billing_details;
+
+        const customerName = billingDetails?.name || 'Customer';
+        const customerEmail = billingDetails?.email || paymentIntent.receipt_email || 'unknown@example.com';
 
         const { results: insertResult } = await env.DB.prepare(
             `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
@@ -86,7 +91,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     } catch (error: any) {
         console.error('Order Confirmation Error:', error);
-        return new Response(JSON.stringify({ error: error.message }), {
+        return new Response(JSON.stringify({ error: error.message || 'Unknown error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
