@@ -50,9 +50,9 @@ function determineCategory(title: string): string {
 }
 
 function escapeSql(str: string): string {
-    if (!str) return "NULL";
-    // Replace single quotes with two single quotes for SQL escaping
-    return `'${str.replace(/'/g, "''")}'`;
+  if (!str) return "NULL";
+  // Replace single quotes with two single quotes for SQL escaping
+  return `'${str.replace(/'/g, "''")}'`;
 }
 
 // Read CSV
@@ -60,33 +60,33 @@ const csvPath = path.join(process.cwd(), "client", "public", "imported_books.csv
 const csvContent = fs.readFileSync(csvPath, "utf-8");
 
 Papa.parse(csvContent, {
-    header: true,
-    skipEmptyLines: true,
-    complete: (results) => {
-        const records = results.data as CSVBook[];
-        
-        let sql = "-- Auto-generated import script\n";
-        sql += "DELETE FROM products;\n"; // Clear existing data if re-run
+  header: true,
+  skipEmptyLines: true,
+  complete: (results) => {
+    const records = results.data as CSVBook[];
 
-        const batchSize = 50; // SQLite limit for values in one insert is usually high, but let's batch for safety
-        
-        for (let i = 0; i < records.length; i += batchSize) {
-            const batch = records.slice(i, i + batchSize);
-            
-            sql += "INSERT INTO products (title, description, price, current_price, original_price, is_on_sale, url, image_file, image_url, category) VALUES \n";
-            
-            const values = batch.map(record => {
-                const { currentPrice, originalPrice, isOnSale } = parsePrice(record.Price);
-                const category = determineCategory(record.Title);
-                
-                return `(${escapeSql(record.Title)}, ${escapeSql(record.Description)}, ${escapeSql(record.Price)}, ${currentPrice}, ${originalPrice ?? 'NULL'}, ${isOnSale ? 1 : 0}, ${escapeSql(record.Url)}, ${escapeSql(record.Image_File)}, ${escapeSql(record.Image_Url)}, ${escapeSql(category)})`;
-            });
+    let sql = "-- Auto-generated import script\n";
+    sql += "DELETE FROM products;\n"; // Clear existing data if re-run
 
-            sql += values.join(",\n") + ";\n\n";
-        }
+    const batchSize = 5; // Reduced from 50 to avoid SQLITE_TOOBIG
 
-        const outPath = path.join(process.cwd(), "migrations", "0002_import_products.sql");
-        fs.writeFileSync(outPath, sql);
-        console.log(`Successfully generated SQL import script at ${outPath} with ${records.length} records.`);
+    for (let i = 0; i < records.length; i += batchSize) {
+      const batch = records.slice(i, i + batchSize);
+
+      sql += "INSERT INTO products (title, description, price, current_price, original_price, is_on_sale, url, image_file, image_url, category) VALUES \n";
+
+      const values = batch.map(record => {
+        const { currentPrice, originalPrice, isOnSale } = parsePrice(record.Price);
+        const category = determineCategory(record.Title);
+
+        return `(${escapeSql(record.Title)}, ${escapeSql(record.Description)}, ${escapeSql(record.Price)}, ${currentPrice}, ${originalPrice ?? 'NULL'}, ${isOnSale ? 1 : 0}, ${escapeSql(record.Url)}, ${escapeSql(record.Image_File)}, ${escapeSql(record.Image_Url)}, ${escapeSql(category)})`;
+      });
+
+      sql += values.join(",\n") + ";\n\n";
     }
+
+    const outPath = path.join(process.cwd(), "migrations", "0002_import_products.sql");
+    fs.writeFileSync(outPath, sql);
+    console.log(`Successfully generated SQL import script at ${outPath} with ${records.length} records.`);
+  }
 });
