@@ -1,4 +1,3 @@
-```javascript
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,37 @@ export default function Cart() {
 
   const total = getTotal(products);
 
+  const handleCheckout = async () => {
+    try {
+      setIsCheckingOut(true);
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map(i => ({ id: i.productId, quantity: i.quantity }))
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Checkout failed");
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error: any) {
+      toast({
+        title: "Checkout Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -75,10 +105,10 @@ export default function Cart() {
             {cartProducts.map(({ product, quantity }) => {
               const isBook = product.category.toLowerCase().includes("book");
               return (
-                <Card key={product.id} data-testid={`card - cart - item - ${ product.id } `}>
+                <Card key={product.id} data-testid={`card-cart-item-${product.id}`}>
                   <CardContent className="p-4">
                     <div className="flex gap-4">
-                      <Link href={`/ product / ${ product.id } `} className="shrink-0">
+                      <Link href={`/product/${product.id}`} className="shrink-0">
                         <div className="w-24 h-24 rounded-md overflow-hidden bg-muted">
                           {product.imageUrl ? (
                             <img
@@ -98,7 +128,7 @@ export default function Cart() {
                         </div>
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <Link href={`/ product / ${ product.id } `}>
+                        <Link href={`/product/${product.id}`}>
                           <h3 className="font-semibold line-clamp-2 hover:text-primary transition-colors">
                             {product.title}
                           </h3>
@@ -111,7 +141,7 @@ export default function Cart() {
                               size="icon"
                               className="h-8 w-8"
                               onClick={() => updateQuantity(product.id, quantity - 1)}
-                              data-testid={`button - decrease - ${ product.id } `}
+                              data-testid={`button-decrease-${product.id}`}
                             >
                               <Minus className="w-3 h-3" />
                             </Button>
@@ -121,7 +151,7 @@ export default function Cart() {
                               size="icon"
                               className="h-8 w-8"
                               onClick={() => updateQuantity(product.id, quantity + 1)}
-                              data-testid={`button - increase - ${ product.id } `}
+                              data-testid={`button-increase-${product.id}`}
                             >
                               <Plus className="w-3 h-3" />
                             </Button>
@@ -135,7 +165,7 @@ export default function Cart() {
                               size="icon"
                               className="text-destructive hover:text-destructive"
                               onClick={() => removeFromCart(product.id)}
-                              data-testid={`button - remove - ${ product.id } `}
+                              data-testid={`button-remove-${product.id}`}
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
