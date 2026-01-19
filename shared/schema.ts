@@ -48,3 +48,32 @@ export const insertProductSchema = z.object({
 
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 
+export const orderSchema = z.object({
+  id: z.number(),
+  paymentIntentId: z.string(),
+  customerName: z.string(),
+  customerEmail: z.string(),
+  amountTotal: z.number(),
+  currency: z.string(),
+  status: z.string(),
+  createdAt: z.number(),
+});
+
+export type Order = z.infer<typeof orderSchema>;
+
+export const orderItemSchema = z.object({
+  id: z.number(),
+  orderId: z.number(),
+  productId: z.number(),
+  productTitle: z.string(),
+  quantity: z.number(),
+  price: z.number(),
+});
+
+export type OrderItem = z.infer<typeof orderItemSchema>;
+
+export interface OrderWithItems extends Order {
+  items: OrderItem[];
+}
+
+
