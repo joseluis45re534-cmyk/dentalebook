@@ -54,28 +54,37 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             return new Response(JSON.stringify({ error: 'No valid items to create checkout' }), { status: 400 });
         }
 
-        // 4. Create Stripe Session
+        // 4. Create PaymentIntent (for Embedded Checkout)
         if (!env.STRIPE_SECRET_KEY) {
             throw new Error('STRIPE_SECRET_KEY is missing');
         }
 
         const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-            apiVersion: '2025-01-27.acacia', // Locking to latest or recent version
+            apiVersion: '2025-01-27.acacia',
         });
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: line_items as Stripe.Checkout.SessionCreateParams.LineItem[],
-            mode: 'payment',
-            success_url: `${new URL(request.url).origin}/request?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${new URL(request.url).origin}/cart`,
-            // We will add metadata later for webhook fulfillment
+        // Calculate total amount
+        const totalAmount = line_items.reduce((sum, item) => {
+            // @ts-ignore
+            return sum + (item.price_data.unit_amount * item.quantity);
+        }, 0);
+
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: totalAmount,
+            currency: 'usd',
+            // In latest Stripe API, automatic_payment_methods is enabled by default 
+            // but explicitly setting it is good practice for Elements
+            automatic_payment_methods: {
+                enabled: true,
+            },
             metadata: {
                 cart_items: JSON.stringify(items)
             }
         });
 
-        return new Response(JSON.stringify({ url: session.url }), {
+        return new Response(JSON.stringify({
+            clientSecret: paymentIntent.client_secret
+        }), {
             headers: { 'Content-Type': 'application/json' }
         });
 

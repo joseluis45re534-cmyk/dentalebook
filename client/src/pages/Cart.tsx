@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,36 +36,10 @@ export default function Cart() {
     .filter((item) => item.product) as { productId: number; quantity: number; product: Product }[];
 
   const total = getTotal(products);
+  const [, setLocation] = useLocation();
 
-  const handleCheckout = async () => {
-    try {
-      setIsCheckingOut(true);
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map(i => ({ id: i.productId, quantity: i.quantity }))
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Checkout failed");
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error: any) {
-      toast({
-        title: "Checkout Error",
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setIsCheckingOut(false);
-    }
+  const handleCheckout = () => {
+    setLocation("/checkout");
   };
 
 
