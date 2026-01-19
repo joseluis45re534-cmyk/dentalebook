@@ -42,7 +42,7 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: `${window.location.origin}/request`,
+                return_url: `${window.location.origin}/thank-you`,
                 payment_method_data: {
                     billing_details: {
                         name: name,
