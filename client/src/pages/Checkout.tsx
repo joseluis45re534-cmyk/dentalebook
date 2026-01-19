@@ -9,7 +9,7 @@ import { useCart } from "@/lib/cart";
 import { Loader2 } from "lucide-react";
 
 // Initialize Stripe outside component to avoid recreation
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe("pk_test_51SpzmQR6degPKw4yK2mh7aE7e21ESLtR0BzoZjjrcK5k9UVy9uWdDuOTkJEWBU0oAmkiz2XXbuGJV7BuT5Gdkcas00MUjxn30E");
 
 function CheckoutForm({ clientSecret }: { clientSecret: string }) {
     const stripe = useStripe();
@@ -123,26 +123,15 @@ export default function Checkout() {
                         <CardTitle>Payment Details</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {/* Debug Info */}
-                        <div className="mb-4 p-4 bg-yellow-50 text-yellow-800 text-xs rounded border border-yellow-200">
-                            <p className="font-bold">Debug Info:</p>
-                            <p>Key Loaded: {import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ? "Yes (" + import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY.substring(0, 8) + "...)" : "No"}</p>
-                            <p>Client Secret: {clientSecret ? "Yes" : "No"}</p>
-                        </div>
-
-                        {clientSecret && import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ? (
+                        {clientSecret ? (
                             <div className="min-h-[400px]">
                                 <Elements options={options} stripe={stripePromise}>
                                     <CheckoutForm clientSecret={clientSecret} />
                                 </Elements>
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center py-12 gap-4">
+                            <div className="flex justify-center py-12">
                                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                                <p className="text-sm text-muted-foreground">Initializing secure checkout...</p>
-                                {!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY && (
-                                    <p className="text-destructive font-bold">Error: Missing Stripe Public Key</p>
-                                )}
                             </div>
                         )}
                     </CardContent>
