@@ -11,6 +11,7 @@ export default function ThankYou() {
     const params = new URLSearchParams(search);
     const paymentIntentId = params.get("payment_intent");
     const [orderStatus, setOrderStatus] = useState<'loading' | 'success' | 'error' | 'idle'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
     const { clearCart } = useCart();
 
     // Handle Order Confirmation Flow
@@ -30,11 +31,13 @@ export default function ThankYou() {
                         clearCart();
                     } else {
                         console.error(data.error);
+                        setErrorMessage(data.error || 'Unknown error occurred');
                         setOrderStatus('error');
                     }
                 })
                 .catch((err) => {
                     console.error('Order confirmation failed', err);
+                    setErrorMessage(err.message || 'Network error');
                     setOrderStatus('error');
                 });
         } else {
@@ -88,7 +91,13 @@ export default function ThankYou() {
                         </div>
                         <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
                         <p className="text-muted-foreground mb-6">
-                            We couldn't verify your order automatically. If you have been charged, please contact support.
+                            We couldn't verify your order automatically. <br />
+                            <span className="text-xs text-red-500 bg-red-50 p-2 rounded mt-2 inline-block font-mono">
+                                Error: {errorMessage}
+                            </span>
+                        </p>
+                        <p className="text-sm text-muted-foreground mb-6">
+                            If you have been charged, please contact support with the error above.
                         </p>
                         <Button onClick={() => window.location.href = '/'} variant="outline">
                             Return to Home
