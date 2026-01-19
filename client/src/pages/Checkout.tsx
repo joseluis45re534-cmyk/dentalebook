@@ -9,6 +9,9 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/lib/cart";
 import { Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProductsByIds } from "@/lib/products";
+import type { Product } from "@shared/schema";
 
 // Initialize Stripe outside component to avoid recreation
 const stripePromise = loadStripe("pk_test_51SpzmQR6degPKw4yK2mh7aE7e21ESLtR0BzoZjjrcK5k9UVy9uWdDuOTkJEWBU0oAmkiz2XXbuGJV7BuT5Gdkcas00MUjxn30E");
@@ -113,6 +116,28 @@ export default function Checkout() {
     const { toast } = useToast();
     const [, setLocation] = useLocation();
 
+    // Fetch product details for summary
+    const productIds = items.map(item => item.productId);
+    const { data } = useQuery<{ products: Product[] }>({
+        queryKey: ["products", "batch", productIds],
+        queryFn: async () => {
+            if (productIds.length === 0) return { products: [] };
+            const products = await fetchProductsByIds(productIds);
+            return { products };
+        },
+        enabled: productIds.length > 0,
+    });
+
+    const products = data?.products || [];
+    const cartProducts = items
+        .map((item) => ({
+            ...item,
+            product: products.find((p) => p.id === item.productId),
+        }))
+        .filter((item) => item.product) as { productId: number; quantity: number; product: Product }[];
+
+    const total = getTotal(products);
+
     useEffect(() => {
         if (items.length === 0) {
             setLocation("/cart");
@@ -154,26 +179,77 @@ export default function Checkout() {
 
     return (
         <div className="min-h-screen bg-muted/30 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md mx-auto">
+            <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl font-bold text-center mb-8">Checkout</h1>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Payment Details</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {clientSecret ? (
-                            <div className="min-h-[400px]">
-                                <Elements options={options} stripe={stripePromise}>
-                                    <CheckoutForm clientSecret={clientSecret} />
-                                </Elements>
-                            </div>
-                        ) : (
-                            <div className="flex justify-center py-12">
-                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+
+                <div className="grid lg:grid-cols-2 gap-8">
+                    {/* Order Summary Section */}
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Order Summary</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {cartProducts.map(({ product, quantity }) => (
+                                    <div key={product.id} className="flex gap-4 text-sm">
+                                        <div className="w-16 h-16 rounded overflow-hidden bg-muted shrink-0">
+                                            {product.imageUrl ? (
+                                                <img
+                                                    src={product.imageUrl}
+                                                    alt={product.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                                    📦
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="font-medium line-clamp-2">{product.title}</p>
+                                            <p className="text-muted-foreground">Qty: {quantity}</p>
+                                        </div>
+                                        <div className="font-medium">
+                                            ${(product.currentPrice * quantity).toFixed(2)}
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className="pt-4 border-t space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-muted-foreground">Subtotal</span>
+                                        <span>${total.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between font-bold text-lg pt-2 border-t">
+                                        <span>Total</span>
+                                        <span>${total.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Payment Form Section */}
+                    <div>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Payment Details</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {clientSecret ? (
+                                    <div className="min-h-[400px]">
+                                        <Elements options={options} stripe={stripePromise}>
+                                            <CheckoutForm clientSecret={clientSecret} />
+                                        </Elements>
+                                    </div>
+                                ) : (
+                                    <div className="flex justify-center py-12">
+                                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </div>
         </div>
     );
