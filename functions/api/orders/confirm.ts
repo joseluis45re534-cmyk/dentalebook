@@ -16,7 +16,20 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             return new Response(JSON.stringify({ error: 'Missing paymentIntentId' }), { status: 400 });
         }
 
-        // 1. Verify Payment Intent with Stripe
+        // 1. Check if Order already exists (DB First - avoid Stripe latency if already done)
+        const { results: existing } = await env.DB.prepare(
+            "SELECT id FROM orders WHERE payment_intent_id = ?"
+        ).bind(paymentIntentId).all();
+
+        if (existing && existing.length > 0) {
+            return new Response(JSON.stringify({
+                success: true,
+                orderId: existing[0].id,
+                message: 'Order already confirmed'
+            }), { headers: { 'Content-Type': 'application/json' } });
+        }
+
+        // 2. Verify Payment Intent with Stripe
         if (!env.STRIPE_SECRET_KEY) {
             throw new Error('STRIPE_SECRET_KEY is missing');
         }
@@ -30,19 +43,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
         if (paymentIntent.status !== 'succeeded') {
             return new Response(JSON.stringify({ error: 'Payment not successful' }), { status: 400 });
-        }
-
-        // 2. Check if Order already exists
-        const { results: existing } = await env.DB.prepare(
-            "SELECT id FROM orders WHERE payment_intent_id = ?"
-        ).bind(paymentIntentId).all();
-
-        if (existing && existing.length > 0) {
-            return new Response(JSON.stringify({
-                success: true,
-                orderId: existing[0].id,
-                message: 'Order already confirmed'
-            }), { headers: { 'Content-Type': 'application/json' } });
         }
 
         // 3. Create Order
