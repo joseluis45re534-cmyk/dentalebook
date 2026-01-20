@@ -17,6 +17,7 @@ import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminProducts from "@/pages/admin/Products";
 import AdminOrders from "@/pages/admin/Orders";
+import AdminScripts from "@/pages/admin/Scripts";
 import ThankYou from "@/pages/ThankYou";
 import { usePageTracking } from "@/hooks/use-page-tracking";
 
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/products" component={AdminProducts} />
       <Route path="/admin/orders" component={AdminOrders} />
+      <Route path="/admin/scripts" component={AdminScripts} />
 
       <Route component={NotFound} />
     </Switch>

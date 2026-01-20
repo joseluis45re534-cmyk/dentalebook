@@ -12,7 +12,8 @@ import {
     Loader2,
     Package,
     ShoppingBag,
-    LogOut
+    LogOut,
+    Code
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -147,6 +148,18 @@ export default function AdminDashboard() {
                             <div>
                                 <h2 className="font-semibold text-lg">Customers</h2>
                                 <p className="text-sm text-muted-foreground">View client list</p>
+                            </div>
+                        </div>
+                    </Link>
+                    <Link href="/admin/scripts">
+                        <div
+                            className="bg-card p-6 rounded-lg shadow-sm border hover:border-primary cursor-pointer transition-colors flex items-center gap-4">
+                            <div className="p-2 bg-primary/10 rounded-full">
+                                <Code className="h-6 w-6 text-primary" />
+                            </div>
+                            <div>
+                                <h2 className="font-semibold text-lg">Scripts</h2>
+                                <p className="text-sm text-muted-foreground">Manage tags</p>
                             </div>
                         </div>
                     </Link>
