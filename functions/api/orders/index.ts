@@ -9,9 +9,20 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     try {
         const { results } = await context.env.DB.prepare(
             "SELECT * FROM orders ORDER BY created_at DESC"
-        ).all<Order>();
+        ).all<any>();
 
-        return new Response(JSON.stringify(results), {
+        const mappedResults = results.map(order => ({
+            id: order.id,
+            paymentIntentId: order.payment_intent_id,
+            customerName: order.customer_name,
+            customerEmail: order.customer_email,
+            amount: order.amount_total,
+            currency: order.currency,
+            status: order.status,
+            createdAt: order.created_at * 1000 // Convert unix seconds to milliseconds for JS Date
+        }));
+
+        return new Response(JSON.stringify(mappedResults), {
             headers: {
                 "Content-Type": "application/json",
             },
