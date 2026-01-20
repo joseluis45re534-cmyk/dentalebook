@@ -48,19 +48,23 @@ export default function AdminOrders() {
                                 <TableHead>Order ID</TableHead>
                                 <TableHead>Customer</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Products</TableHead>
                                 <TableHead>Amount</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Date</TableHead>
+                                <TableHead>Date & Time</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {orders?.map((order) => (
+                            {orders?.map((order: any) => (
                                 <TableRow key={order.id}>
                                     <TableCell className="font-medium text-xs font-mono">
                                         {order.id}
                                     </TableCell>
                                     <TableCell>{order.customerName}</TableCell>
                                     <TableCell>{order.customerEmail}</TableCell>
+                                    <TableCell className="max-w-xs truncate" title={order.products}>
+                                        {order.products}
+                                    </TableCell>
                                     <TableCell>
                                         {(order.amount / 100).toLocaleString("en-US", {
                                             style: "currency",
@@ -70,7 +74,7 @@ export default function AdminOrders() {
                                     <TableCell>
                                         <Badge
                                             variant={
-                                                order.status === "completed" || order.status === "succeeded"
+                                                order.status === "completed" || order.status === "succeeded" || order.status === "paid"
                                                     ? "default"
                                                     : "secondary"
                                             }
@@ -78,8 +82,8 @@ export default function AdminOrders() {
                                             {order.status}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell>
-                                        {new Date(order.createdAt!).toLocaleDateString()}
+                                    <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                                        {new Date(order.createdAt!).toLocaleString()}
                                     </TableCell>
                                 </TableRow>
                             ))}
