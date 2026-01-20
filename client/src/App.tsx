@@ -18,8 +18,10 @@ import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminProducts from "@/pages/admin/Products";
 import AdminOrders from "@/pages/admin/Orders";
 import ThankYou from "@/pages/ThankYou";
+import { usePageTracking } from "@/hooks/use-page-tracking";
 
 function Router() {
+  usePageTracking();
   return (
     <Switch>
       <Route path="/" component={Home} />
