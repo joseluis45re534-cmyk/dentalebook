@@ -82,6 +82,42 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             }
         });
 
+        // Create Pending Order (Abandoned Checkout Tracking)
+        try {
+            const { results: insertResult } = await env.DB.prepare(
+                `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
+                 VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
+            ).bind(
+                paymentIntent.id,
+                'Guest (Pending)', // Placeholder until they pay
+                'pending@checkout.com', // Placeholder
+                totalAmount,
+                'usd',
+                'pending'
+            ).all();
+
+            const orderId = insertResult[0].id;
+
+            // Insert Order Items (Pending)
+            const stmt = env.DB.prepare(
+                `INSERT INTO order_items (order_id, product_id, product_title, quantity, price) VALUES (?, ?, ?, ?, ?)`
+            );
+            const batch = validItems.map((item: any) =>
+                stmt.bind(
+                    orderId,
+                    item.original_id,
+                    item.price_data.product_data.name,
+                    item.quantity,
+                    item.price_data.unit_amount
+                )
+            );
+            await env.DB.batch(batch);
+
+        } catch (dbErr) {
+            console.error("Failed to create pending order", dbErr);
+            // Don't fail checkout if logging fails, but it's bad for tracking
+        }
+
         return new Response(JSON.stringify({
             clientSecret: paymentIntent.client_secret
         }), {
