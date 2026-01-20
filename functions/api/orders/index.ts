@@ -10,7 +10,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         const { results } = await context.env.DB.prepare(
             `SELECT 
                 o.*, 
-                GROUP_CONCAT(oi.product_title, ', ') as products
+                GROUP_CONCAT(oi.product_id, ', ') as products
              FROM orders o
              LEFT JOIN order_items oi ON o.id = oi.order_id
              GROUP BY o.id
