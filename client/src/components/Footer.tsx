@@ -33,6 +33,12 @@ export function Footer() {
               <Link href="/request" className="text-muted-foreground text-sm hover:text-foreground transition-colors" data-testid="link-footer-request">
                 Request a Book
               </Link>
+              <Link href="/refunds" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+                Refund & Returns
+              </Link>
+              <Link href="/shipping" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+                Shipping & Delivery
+              </Link>
             </nav>
           </div>
 

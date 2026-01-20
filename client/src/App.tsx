@@ -19,6 +19,8 @@ import AdminProducts from "@/pages/admin/Products";
 import AdminOrders from "@/pages/admin/Orders";
 import AdminScripts from "@/pages/admin/Scripts";
 import ThankYou from "@/pages/ThankYou";
+import Refunds from "@/pages/Refunds";
+import Shipping from "@/pages/Shipping";
 import { usePageTracking } from "@/hooks/use-page-tracking";
 
 function Router() {
@@ -32,6 +34,8 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/request" component={Request} />
       <Route path="/thank-you" component={ThankYou} />
+      <Route path="/refunds" component={Refunds} />
+      <Route path="/shipping" component={Shipping} />
 
       {/* Admin Routes */}
       <Route path="/admin/login" component={AdminLogin} />
