@@ -21,6 +21,10 @@ import AdminScripts from "@/pages/admin/Scripts";
 import ThankYou from "@/pages/ThankYou";
 import Refunds from "@/pages/Refunds";
 import Shipping from "@/pages/Shipping";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfService from "@/pages/TermsOfService";
+import Contact from "@/pages/Contact";
+import About from "@/pages/About";
 import { usePageTracking } from "@/hooks/use-page-tracking";
 
 function Router() {
@@ -36,6 +40,10 @@ function Router() {
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/refunds" component={Refunds} />
       <Route path="/shipping" component={Shipping} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/terms-of-service" component={TermsOfService} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/about" component={About} />
 
       {/* Admin Routes */}
       <Route path="/admin/login" component={AdminLogin} />

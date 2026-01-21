@@ -39,15 +39,36 @@ export function Footer() {
               <Link href="/shipping" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
                 Shipping & Delivery
               </Link>
+              <Link href="/privacy-policy" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms-of-service" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+                Terms of Service
+              </Link>
             </nav>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Contact</h4>
+            <h4 className="font-semibold mb-4">Company</h4>
+            <nav className="flex flex-col gap-2">
+              <Link href="/about" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+                About Us
+              </Link>
+              <Link href="/contact" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+                Contact Us
+              </Link>
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="font-semibold mb-4">Contact Support</h4>
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <Mail className="w-4 h-4" />
               <span>support@dentaledu.pro</span>
             </div>
+            <p className="text-muted-foreground text-xs mt-2">
+              New York, NY 10001, USA
+            </p>
           </div>
 
           <div>
