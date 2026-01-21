@@ -67,7 +67,7 @@ export function Footer() {
               <span>support@dentaledu.pro</span>
             </div>
             <p className="text-muted-foreground text-xs mt-2">
-              New York, NY 10001, USA
+              The Loft, 2 Newlands Pl, Penrith CA11 9DR, UK
             </p>
           </div>
 

@@ -35,11 +35,9 @@ export default function Contact() {
                             <p>
                                 DentalEdu Pro
                                 <br />
-                                123 Education Lane
+                                The Loft, 2 Newlands Pl
                                 <br />
-                                Science Tech Park, Suite 400
-                                <br />
-                                New York, NY 10001, USA
+                                Penrith CA11 9DR, UK
                             </p>
                         </div>
                     </div>
