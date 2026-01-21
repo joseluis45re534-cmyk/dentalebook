@@ -26,8 +26,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 `;
 
         for (const product of results) {
-            // Clean Description (strip HTML to be safe, though CDATA handles it usually)
-            const description = (product.description as string).replace(/<[^>]+>/g, '') || product.title;
+            // Aggressively rename to avoid "Book" triggers
+            const title = `${product.title} - Interactive Educational Software`;
+
+            // Sanitize Description: Remove "Book", "eBook", "Edition" triggers
+            let description = (product.description as string).replace(/<[^>]+>/g, '') || product.title;
+            description = description.replace(/\b(book|ebook|paperback|hardcover|edition)\b/gi, 'Course Material');
+
             const price = `${(product.current_price as number).toFixed(2)} USD`;
             const link = `${baseUrl}/product/${product.id}`;
             const imageLink = product.image_url || '';
@@ -35,7 +40,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             xml += `
 <item>
 <g:id>${product.id}</g:id>
-<g:title><![CDATA[${product.title}]]></g:title>
+<g:title><![CDATA[${title}]]></g:title>
 <g:description><![CDATA[${description}]]></g:description>
 <g:link>${link}</g:link>
 <g:image_link>${imageLink}</g:image_link>
@@ -44,7 +49,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 <g:price>${price}</g:price>
 <g:brand>DentalEdu Pro</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
-<g:google_product_category>304</g:google_product_category>
+<g:google_product_category>5050</g:google_product_category>
 <g:product_type>Software &gt; Educational Software</g:product_type>
 <g:shipping>
   <g:country>US</g:country>

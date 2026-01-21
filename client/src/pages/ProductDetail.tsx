@@ -8,11 +8,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ShoppingCart, Check, ArrowLeft, BookOpen, Video, Clock, FileText, Download, Shield, Zap, HeadphonesIcon } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import type { Product } from "@shared/schema";
-
 import { fetchProductById } from "@/lib/products";
+import { Helmet } from "react-helmet";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
+  // ... rest of imports
+
   const { addToCart, isInCart } = useCart();
 
   const { data: product, isLoading, error } = useQuery({
@@ -93,6 +95,28 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="container mx-auto px-4 py-8">
+
+        {product && (
+          <Helmet>
+            <script type="application/ld+json">
+              {JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": product.title,
+                "operatingSystem": "Any",
+                "applicationCategory": "EducationalApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": product.currentPrice.toFixed(2),
+                  "priceCurrency": "USD",
+                  "availability": "https://schema.org/InStock"
+                },
+                "description": product.description.replace(/<[^>]+>/g, '').substring(0, 160)
+              })}
+            </script>
+          </Helmet>
+        )}
+
         <Link href="/products" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors" data-testid="link-back">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Products
