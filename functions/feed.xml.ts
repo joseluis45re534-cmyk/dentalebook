@@ -42,8 +42,20 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 <g:condition>new</g:condition>
 <g:availability>in_stock</g:availability>
 <g:price>${price}</g:price>
-<g:brand>Digital Listings</g:brand>
+<g:brand>DentalEdu Pro</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
+<g:google_product_category>304</g:google_product_category>
+<g:product_type>Software &gt; Educational Software</g:product_type>
+<g:shipping>
+  <g:country>US</g:country>
+  <g:service>Instant Delivery</g:service>
+  <g:price>0.00 USD</g:price>
+</g:shipping>
+<g:shipping>
+  <g:country>GB</g:country>
+  <g:service>Instant Delivery</g:service>
+  <g:price>0.00 USD</g:price>
+</g:shipping>
 </item>`;
         }
 
