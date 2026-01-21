@@ -55,18 +55,19 @@ export const onRequest: PagesFunction<Env> = async (context) => {
             "SELECT content, location FROM scripts WHERE enabled = 1"
         ).all();
 
-        if (!results || results.length === 0) {
-            return response;
-        }
+        const validScripts = results || [];
 
-        return new HTMLRewriter()
-            .on('head', new ScriptInjector(results))
-            .on('body', new ScriptInjector(results))
-            .transform(response);
+        const rewriter = new HTMLRewriter()
+            .on('head', new ScriptInjector(validScripts))
+            .on('body', new ScriptInjector(validScripts));
 
-    } catch (e) {
+        const transformedResponse = rewriter.transform(response);
+        transformedResponse.headers.set('X-Scripts-Injected', validScripts.length.toString());
+        return transformedResponse;
+
+    } catch (e: any) {
         console.error('Script injection failed:', e);
-        // Return original response if injection fails
+        response.headers.set('X-Scripts-Error', e.message || 'Unknown error');
         return response;
     }
 };
