@@ -27,11 +27,33 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
         for (const product of results) {
             // Aggressively rename to avoid "Book" triggers
-            const title = `${product.title} - Interactive Educational Software`;
+            // 1. Remove text in parentheses/brackets e.g. (Scanned), [PDF]
+            let cleanTitle = product.title.replace(/[\(\[\{].*?[\)\]\}]/g, '').trim();
+            
+            // 2. Remove specific blocklisted keywords from Title
+            const blocklist = /\b(handbook|edition|study guide|atlas|textbook|volume|hardcover|paperback|ebook|book|pdf|scanned)\b/gi;
+            cleanTitle = cleanTitle.replace(blocklist, '').trim();
+            
+            // 3. Clean up double spaces or trailing punctuation
+            cleanTitle = cleanTitle.replace(/\s+/g, ' ').replace(/[:\-]+$/, '').trim();
 
-            // Sanitize Description: Remove "Book", "eBook", "Edition" triggers
+            const title = `${cleanTitle} - Interactive Educational Software`;
+
+            // Sanitize Description: Remove "Book", "eBook", "Edition" triggers and other risky terms
             let description = (product.description as string).replace(/<[^>]+>/g, '') || product.title;
-            description = description.replace(/\b(book|ebook|paperback|hardcover|edition)\b/gi, 'Course Material');
+            
+            // Remove risky sentences or phrases
+            description = description.replace(/scanned copy/gi, 'digital version');
+            description = description.replace(/immediate download/gi, 'instant access');
+            
+            // Remove blocklisted words from description too
+            description = description.replace(blocklist, 'Course Material');
+            
+            // Truncate to avoid issues if replacement made it messy
+            if (description.length > 4000) description = description.substring(0, 3997) + '...';
+
+            // Ensure we didn't empty the description
+            if (description.trim().length < 10) description = `${title} - Comprehensive educational software for dental professionals.`;
 
             const price = `${(product.current_price as number).toFixed(2)} USD`;
             const link = `${baseUrl}/product/${product.id}`;
