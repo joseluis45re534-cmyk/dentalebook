@@ -14,7 +14,7 @@ import { fetchProductsByIds } from "@/lib/products";
 import type { Product } from "@shared/schema";
 
 // Initialize Stripe outside component to avoid recreation
-const stripePromise = loadStripe("pk_test_51SpzmQR6degPKw4yK2mh7aE7e21ESLtR0BzoZjjrcK5k9UVy9uWdDuOTkJEWBU0oAmkiz2XXbuGJV7BuT5Gdkcas00MUjxn30E");
+const stripePromise = loadStripe("pk_test_51SmUtnHL8Re8eVeSvI60MBhhzJ2PXlaGZoR3sDfSkpwDf9ulQ8cLcDIn5LhTfVDE2KDhRqN9cHovcdWCGLL7wXNf00aLZnJyEL");
 
 function CheckoutForm({ clientSecret }: { clientSecret: string }) {
     const stripe = useStripe();
