@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import {
     Table,
@@ -10,19 +9,11 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, CalendarIcon } from "lucide-react";
-import type { Order } from "../../../../shared/schema";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 export default function AdminOrders() {
-    const [date, setDate] = useState<Date | undefined>();
-
-    const { data: orders, isLoading } = useQuery<Order[]>({
+    const { data: orders, isLoading, refetch } = useQuery({
         queryKey: ["admin-orders"],
         queryFn: async () => {
             const res = await fetch("/api/orders");
@@ -31,23 +22,9 @@ export default function AdminOrders() {
         },
     });
 
-    const filteredOrders = orders?.filter((order: any) => {
-        if (!date) return true;
-
-        if (!order.createdAt) return false;
-        const orderDate = new Date(order.createdAt);
-        const filterDate = new Date(date);
-
-        return (
-            orderDate.getDate() === filterDate.getDate() &&
-            orderDate.getMonth() === filterDate.getMonth() &&
-            orderDate.getFullYear() === filterDate.getFullYear()
-        );
-    });
-
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center p-8">
+            <div className="flex items-center justify-center p-12">
                 <Loader2 className="h-8 w-8 animate-spin" />
             </div>
         );
@@ -57,71 +34,42 @@ export default function AdminOrders() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant={"outline"}
-                            className={cn(
-                                "w-[240px] justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
-                            )}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? format(date, "PPP") : <span>Filter by date</span>}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="end">
-                        <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                        />
-                        {date && (
-                            <div className="p-2 border-t">
-                                <Button
-                                    variant="ghost"
-                                    className="w-full justify-center text-xs h-8"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setDate(undefined);
-                                    }}
-                                >
-                                    Clear Filter
-                                </Button>
-                            </div>
-                        )}
-                    </PopoverContent>
-                </Popover>
+                <Button variant="outline" size="sm" onClick={() => refetch()}>
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    Refresh
+                </Button>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Orders</CardTitle>
+                    <CardTitle>Recent Orders</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Order ID</TableHead>
+                                <TableHead>ID</TableHead>
                                 <TableHead>Customer</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Products</TableHead>
-                                <TableHead>Amount</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Date & Time</TableHead>
+                                <TableHead>Amount</TableHead>
+                                <TableHead>Products</TableHead>
+                                <TableHead className="text-right">Date</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredOrders?.map((order: any) => (
+                            {orders?.map((order: any) => (
                                 <TableRow key={order.id}>
-                                    <TableCell className="font-medium text-xs font-mono">
-                                        {order.id}
+                                    <TableCell className="font-mono text-xs">#{order.id}</TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-col">
+                                            <span className="font-medium">{order.customerName}</span>
+                                            <span className="text-xs text-muted-foreground">{order.customerEmail}</span>
+                                        </div>
                                     </TableCell>
-                                    <TableCell>{order.customerName}</TableCell>
-                                    <TableCell>{order.customerEmail}</TableCell>
-                                    <TableCell className="max-w-xs truncate" title={order.products}>
-                                        {order.products}
+                                    <TableCell>
+                                        <Badge variant={order.status === 'paid' ? 'default' : 'destructive'}>
+                                            {order.status.toUpperCase()}
+                                        </Badge>
                                     </TableCell>
                                     <TableCell>
                                         {(order.amount / 100).toLocaleString("en-US", {
@@ -129,28 +77,18 @@ export default function AdminOrders() {
                                             currency: order.currency.toUpperCase(),
                                         })}
                                     </TableCell>
-                                    <TableCell>
-                                        <Badge
-                                            variant={
-                                                order.status === "completed" || order.status === "succeeded" || order.status === "paid"
-                                                    ? "default"
-                                                    : order.status === "pending"
-                                                        ? "destructive" // Red for abandoned/pending
-                                                        : "secondary"
-                                            }
-                                        >
-                                            {order.status === 'pending' ? 'Abandoned' : order.status}
-                                        </Badge>
+                                    <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground">
+                                        {order.products}
                                     </TableCell>
-                                    <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                                        {new Date(order.createdAt!).toLocaleString()}
+                                    <TableCell className="text-right text-xs">
+                                        {new Date(order.createdAt).toLocaleString()}
                                     </TableCell>
                                 </TableRow>
                             ))}
                             {orders?.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center py-8">
-                                        No orders found
+                                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                                        No recent orders found.
                                     </TableCell>
                                 </TableRow>
                             )}

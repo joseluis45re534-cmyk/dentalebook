@@ -30,21 +30,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
             console.log(`Processing successful payment: ${paymentIntentId}`);
 
-            // 1. Try to find existing pending order
+            // 1. Check if order exists (created by checkout)
             const { results } = await env.DB.prepare(
                 "SELECT id FROM orders WHERE payment_intent_id = ?"
             ).bind(paymentIntentId).all();
 
             if (results && results.length > 0) {
-                // Order exists (created by checkout), just mark as paid
+                // Update existing order
                 await env.DB.prepare(
                     "UPDATE orders SET status = 'paid' WHERE payment_intent_id = ?"
                 ).bind(paymentIntentId).run();
                 console.log(`Updated existing order ${results[0].id} to paid`);
             } else {
-                // Order missing (rare, maybe checkout logic failed or direct Stripe payment)
-                // Create it now
-
+                // Create new order (Fail-safe)
                 const customerName = billing_details?.name || 'Guest Customer';
                 const customerEmail = billing_details?.email || 'no-email@example.com';
 
@@ -63,7 +61,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
                 const orderId = insertResult[0].id;
                 console.log(`Created new order ${orderId} from webhook`);
 
-                // If metadata has cart items, recover them
+                // Restore items from metadata if available
                 if (metadata && metadata.cart_items) {
                     try {
                         const cartItems = JSON.parse(metadata.cart_items);
@@ -75,7 +73,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
                                 stmt.bind(orderId, item.id, item.title, item.quantity, item.price)
                             );
                             await env.DB.batch(batch);
-                            console.log(`Restored ${cartItems.length} items for order ${orderId}`);
                         }
                     } catch (e) {
                         console.error('Failed to parse metadata items', e);
