@@ -26,46 +26,62 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
         if (event.type === 'payment_intent.succeeded') {
             const paymentIntent = event.data.object;
-            const { metadata, billing_details, amount, currency, id: paymentIntentId } = paymentIntent;
+            const { id: paymentIntentId, amount, currency, metadata, billing_details } = paymentIntent;
 
-            const cartItems = JSON.parse(metadata.cart_items || '[]');
-            const customerName = paymentIntent.payment_method_options?.card?.request_three_d_secure === 'any' ? billing_details.name : (billing_details.name || 'Unknown');
-            const customerEmail = billing_details.email || 'unknown@example.com';
+            console.log(`Processing successful payment: ${paymentIntentId}`);
 
-            // NOTE: billing_details usually comes from the payment_method attached. 
-            // In 'payment_intent.succeeded', top-level billing_details might be incomplete depending on integration.
-            // We should ensure we capture the email/name correctly from where Stripe puts it.
-            // For Elements, specifically LinkAuthenticationElement + PaymentElement, they populate the payment_method.
-
-            // Insert Order
+            // 1. Try to find existing pending order
             const { results } = await env.DB.prepare(
-                `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
-                 VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
-            ).bind(
-                paymentIntentId,
-                customerName || 'Customer',
-                customerEmail,
-                amount, // stored in cents
-                currency,
-                'paid'
-            ).all();
+                "SELECT id FROM orders WHERE payment_intent_id = ?"
+            ).bind(paymentIntentId).all();
 
-            const orderId = results[0].id;
+            if (results && results.length > 0) {
+                // Order exists (created by checkout), just mark as paid
+                await env.DB.prepare(
+                    "UPDATE orders SET status = 'paid' WHERE payment_intent_id = ?"
+                ).bind(paymentIntentId).run();
+                console.log(`Updated existing order ${results[0].id} to paid`);
+            } else {
+                // Order missing (rare, maybe checkout logic failed or direct Stripe payment)
+                // Create it now
 
-            // Insert Order Items
-            if (cartItems.length > 0) {
-                const stmt = env.DB.prepare(
-                    `INSERT INTO order_items (order_id, product_id, product_title, quantity, price) VALUES (?, ?, ?, ?, ?)`
-                );
+                const customerName = billing_details?.name || 'Guest Customer';
+                const customerEmail = billing_details?.email || 'no-email@example.com';
 
-                const batch = cartItems.map((item: any) =>
-                    stmt.bind(orderId, item.id, item.title, item.quantity, item.price)
-                );
+                const { results: insertResult } = await env.DB.prepare(
+                    `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
+                     VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
+                ).bind(
+                    paymentIntentId,
+                    customerName,
+                    customerEmail,
+                    amount,
+                    currency,
+                    'paid'
+                ).all();
 
-                await env.DB.batch(batch);
+                const orderId = insertResult[0].id;
+                console.log(`Created new order ${orderId} from webhook`);
+
+                // If metadata has cart items, recover them
+                if (metadata && metadata.cart_items) {
+                    try {
+                        const cartItems = JSON.parse(metadata.cart_items);
+                        if (Array.isArray(cartItems) && cartItems.length > 0) {
+                            const stmt = env.DB.prepare(
+                                `INSERT INTO order_items (order_id, product_id, product_title, quantity, price) VALUES (?, ?, ?, ?, ?)`
+                            );
+                            const batch = cartItems.map((item: any) =>
+                                stmt.bind(orderId, item.id, item.title, item.quantity, item.price)
+                            );
+                            await env.DB.batch(batch);
+                            console.log(`Restored ${cartItems.length} items for order ${orderId}`);
+                        }
+                    } catch (e) {
+                        console.error('Failed to parse metadata items', e);
+                    }
+                }
             }
-
-            console.log(`Order ${orderId} created successfully for PaymentIntent ${paymentIntentId}`);
         }
 
         return new Response(JSON.stringify({ received: true }), {
