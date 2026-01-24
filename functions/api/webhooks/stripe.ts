@@ -36,11 +36,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             ).bind(paymentIntentId).all();
 
             if (results && results.length > 0) {
-                // Update existing order
+                // Update existing order with both status AND customer details
+                const customerName = billing_details?.name || 'Customer';
+                const customerEmail = billing_details?.email || 'paid@checkout.com';
+
                 await env.DB.prepare(
-                    "UPDATE orders SET status = 'paid' WHERE payment_intent_id = ?"
-                ).bind(paymentIntentId).run();
-                console.log(`Updated existing order ${results[0].id} to paid`);
+                    "UPDATE orders SET status = 'paid', customer_name = ?, customer_email = ? WHERE payment_intent_id = ?"
+                ).bind(customerName, customerEmail, paymentIntentId).run();
+                console.log(`Updated existing order ${results[0].id} to paid with details for ${customerEmail}`);
             } else {
                 // Create new order (Fail-safe)
                 const customerName = billing_details?.name || 'Guest Customer';
