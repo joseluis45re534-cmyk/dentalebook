@@ -86,3 +86,11 @@ export async function fetchProductsByIds(ids: number[]): Promise<Product[]> {
     const allProducts = await getAllProducts();
     return allProducts.filter(p => ids.includes(p.id));
 }
+
+export async function fetchSuggestedProducts(currentId: number, limit = 4): Promise<Product[]> {
+    const all = await getAllProducts();
+    const others = all.filter(p => p.id !== currentId);
+    // Simple shuffle
+    const shuffled = others.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, limit);
+}

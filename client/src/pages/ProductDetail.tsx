@@ -8,7 +8,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ShoppingCart, Check, ArrowLeft, BookOpen, Video, Clock, FileText, Download, Shield, Zap, HeadphonesIcon } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import type { Product } from "@shared/schema";
-import { fetchProductById } from "@/lib/products";
+import { fetchProductById, fetchSuggestedProducts } from "@/lib/products";
+import { ProductGrid } from "@/components/ProductGrid";
 import { Helmet } from "react-helmet";
 
 export default function ProductDetail() {
@@ -21,6 +22,12 @@ export default function ProductDetail() {
   const { data: product, isLoading, error } = useQuery({
     queryKey: ["product", id],
     queryFn: () => fetchProductById(parseInt(id, 10)),
+    enabled: !!id
+  });
+
+  const { data: suggestedProducts, isLoading: isSuggestedLoading } = useQuery({
+    queryKey: ["suggested", id],
+    queryFn: () => fetchSuggestedProducts(parseInt(id, 10)),
     enabled: !!id
   });
 
@@ -322,7 +329,15 @@ export default function ProductDetail() {
             </Accordion>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
+
+        {/* Suggested Products Section */ }
+  <div className="mt-16 border-t pt-12">
+    <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
+    <ProductGrid products={suggestedProducts || []} isLoading={isSuggestedLoading} />
+  </div>
+      </div >
+    </div >
   );
 }
