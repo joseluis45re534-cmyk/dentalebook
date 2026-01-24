@@ -46,9 +46,16 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         const CORRECT_PASSWORD = env.ADMIN_PASSWORD;
         const JWT_SECRET = env.JWT_SECRET;
 
+        // Debugging keys (Safe: only shows valid keys, not values)
+        const availableKeys = Object.keys(env);
+
         // Security Check: If secrets are missing, fail securely
         if (!CORRECT_PASSWORD || !JWT_SECRET) {
-            return new Response(JSON.stringify({ error: "Server misconfiguration: Missing secrets" }), {
+            return new Response(JSON.stringify({
+                error: "Secrets not detected by server.",
+                details: `Missing: ${!CORRECT_PASSWORD ? 'ADMIN_PASSWORD ' : ''}${!JWT_SECRET ? 'JWT_SECRET' : ''}`,
+                env_keys_found: availableKeys.join(', ')
+            }), {
                 status: 500,
                 headers: { "Content-Type": "application/json" }
             });
