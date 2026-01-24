@@ -261,8 +261,7 @@ export default function ProductDetail() {
                   <div key={i}>
                     <h3 className="font-semibold mb-3">{section.title}</h3>
                     <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
-                      {section.content.slice(0, 500)}
-                      {section.content.length > 500 && "..."}
+                      {section.content}
                     </p>
                   </div>
                 ))}
