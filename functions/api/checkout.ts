@@ -30,8 +30,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         }
 
         const productIds = items.map(i => i.id).join(',');
-
-        // 1. Fetch Products from DB
         const query = `SELECT id, title, current_price FROM products WHERE id IN (${productIds || '0'})`;
         const { results } = await env.DB.prepare(query).all();
 
@@ -39,7 +37,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             return new Response(JSON.stringify({ error: 'No valid products found' }), { status: 400 });
         }
 
-        // 2. Validate Items & Calculate Total
         const validItems = items.map(item => {
             const product = results.find((p: any) => p.id === item.id);
             if (!product) return null;
@@ -59,16 +56,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             return sum + (item.price_data.unit_amount * item.quantity);
         }, 0);
 
-        // 3. Initialize Stripe
         if (!env.STRIPE_SECRET_KEY) throw new Error('STRIPE_SECRET_KEY is missing');
         const stripe = new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' as any });
 
-        // 4. Create PaymentIntent
         const paymentIntent = await stripe.paymentIntents.create({
             amount: totalAmount,
             currency: 'usd',
             automatic_payment_methods: { enabled: true },
-            receipt_email: customerEmail, // Send receipt directly to this email
+            receipt_email: customerEmail,
             metadata: {
                 customer_name: customerName,
                 customer_email: customerEmail,
@@ -83,14 +78,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             }
         });
 
-        // 5. Create PENDING Order with accurate Name/Email
+        // Insert Pending Order
         const { results: insertResult } = await env.DB.prepare(
             `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
-                VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
+             VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
         ).bind(
             paymentIntent.id,
-            customerName, // <--- REAL DATA
-            customerEmail, // <--- REAL DATA
+            customerName,
+            customerEmail,
             totalAmount,
             'usd',
             'pending'
@@ -98,7 +93,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
         const orderId = insertResult[0].id;
 
-        // Insert Order Items (Pending)
         const stmt = env.DB.prepare(
             `INSERT INTO order_items (order_id, product_id, product_title, quantity, price) VALUES (?, ?, ?, ?, ?)`
         );
@@ -113,22 +107,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         );
         await env.DB.batch(batch);
 
-    } catch (dbErr) {
-        console.error("Failed to create pending order", dbErr);
-        // Don't fail checkout if logging fails, but it's bad for tracking
+        return new Response(JSON.stringify({
+            clientSecret: paymentIntent.client_secret
+        }), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+    } catch (error: any) {
+        console.error('Checkout Error:', error);
+        return new Response(JSON.stringify({ error: error.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
-
-    return new Response(JSON.stringify({
-        clientSecret: paymentIntent.client_secret
-    }), {
-        headers: { 'Content-Type': 'application/json' }
-    });
-
-} catch (error: any) {
-    console.error('Checkout Error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-    });
-}
 };
