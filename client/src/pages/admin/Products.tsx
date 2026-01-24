@@ -29,9 +29,13 @@ export default function AdminProducts() {
     // Mutations
     const createMutation = useMutation({
         mutationFn: async (newProduct: Partial<Product>) => {
-            const res = await fetch("/api/products", {
+            const token = localStorage.getItem("admin_token");
+            const res = await fetch("/api/admin/products", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(newProduct),
             });
             if (!res.ok) throw new Error("Failed to create product");
@@ -49,9 +53,13 @@ export default function AdminProducts() {
 
     const updateMutation = useMutation({
         mutationFn: async (product: Partial<Product>) => {
-            const res = await fetch(`/api/products/${product.id}`, {
+            const token = localStorage.getItem("admin_token");
+            const res = await fetch(`/api/admin/products/${product.id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(product),
             });
             if (!res.ok) throw new Error("Failed to update product");
@@ -70,8 +78,12 @@ export default function AdminProducts() {
 
     const deleteMutation = useMutation({
         mutationFn: async (id: number) => {
-            const res = await fetch(`/api/products/${id}`, {
+            const token = localStorage.getItem("admin_token");
+            const res = await fetch(`/api/admin/products/${id}`, {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
             });
             if (!res.ok) throw new Error("Failed to delete product");
             return res.json();

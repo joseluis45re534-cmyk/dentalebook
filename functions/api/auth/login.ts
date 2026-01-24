@@ -1,6 +1,38 @@
 interface Env {
     DB: D1Database;
-    ADMIN_PASSWORD_HASH: string; // Set this in Cloudflare Pages secrets
+    ADMIN_PASSWORD?: string;
+    JWT_SECRET?: string;
+}
+
+// Minimal JWT implementation using Web Crypto API
+async function sign(payload: any, secret: string) {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+
+    const header = JSON.stringify({ alg: "HS256", typ: "JWT" });
+    const body = JSON.stringify(payload);
+
+    const b64Header = btoa(header).replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
+    const b64Body = btoa(body).replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
+
+    const signature = await crypto.subtle.sign(
+        "HMAC",
+        key,
+        encoder.encode(`${b64Header}.${b64Body}`)
+    );
+
+    const b64Signature = btoa(String.fromCharCode(...new Uint8Array(signature)))
+        .replace(/=+$/, "")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_");
+
+    return `${b64Header}.${b64Body}.${b64Signature}`;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -10,21 +42,30 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         const body: any = await request.json();
         const { password } = body;
 
-        // TODO: use bcrypt or similar for real hashing. 
-        // For now, doing a simple comparison with an environment variable for the MVP foundation.
-        // In production, you would fetch a hashed password from env or DB and compare.
-        const CORRECT_PASSWORD = env.ADMIN_PASSWORD || "admin123"; // Fallback for dev
+        // Use environment variable or fallback for safe failure
+        const CORRECT_PASSWORD = env.ADMIN_PASSWORD;
+        const JWT_SECRET = env.JWT_SECRET;
+
+        // Security Check: If secrets are missing, fail securely
+        if (!CORRECT_PASSWORD || !JWT_SECRET) {
+            return new Response(JSON.stringify({ error: "Server misconfiguration: Missing secrets" }), {
+                status: 500,
+                headers: { "Content-Type": "application/json" }
+            });
+        }
 
         if (password === CORRECT_PASSWORD) {
-            // Simple session / token logic
-            // structured Clone is needed for deep object copying in Cloudflare Workers if we were doing complex things, 
-            // but here we just return a simple JSON.
+            // Create a token valid for 24 hours
+            const now = Math.floor(Date.now() / 1000);
+            const payload = {
+                sub: "admin",
+                iat: now,
+                exp: now + (24 * 60 * 60) // 24 hours
+            };
 
-            // In a real app, sign a JWT here. 
-            // For this static-first approach, we'll return a success flag and let the client handle the state 
-            // (or set a secure cookie if we want strict server-side sessions).
+            const token = await sign(payload, JWT_SECRET);
 
-            return new Response(JSON.stringify({ success: true, token: "mock-admin-token" }), {
+            return new Response(JSON.stringify({ success: true, token }), {
                 headers: { "Content-Type": "application/json" }
             });
         }
@@ -34,7 +75,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             headers: { "Content-Type": "application/json" }
         });
 
-    } catch (e) {
-        return new Response(JSON.stringify({ error: "Server error" }), { status: 500 });
+    } catch (e: any) {
+        return new Response(JSON.stringify({ error: e.message || "Server error" }), { status: 500 });
     }
 }

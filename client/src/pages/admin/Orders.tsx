@@ -16,7 +16,17 @@ export default function AdminOrders() {
     const { data: orders, isLoading, refetch } = useQuery({
         queryKey: ["admin-orders"],
         queryFn: async () => {
-            const res = await fetch("/api/orders");
+            const token = localStorage.getItem("admin_token");
+            const res = await fetch("/api/admin/orders", {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+            if (res.status === 401) {
+                // Handle unauthorized (redirect logic could go here or in a wrapper)
+                throw new Error("Unauthorized");
+            }
             if (!res.ok) throw new Error("Failed to fetch orders");
             return res.json();
         },
