@@ -329,14 +329,12 @@ export default function ProductDetail() {
             </Accordion>
           </CardContent>
         </Card>
-      </CardContent>
-    </Card>
 
-        {/* Suggested Products Section */ }
-  <div className="mt-16 border-t pt-12">
-    <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-    <ProductGrid products={suggestedProducts || []} isLoading={isSuggestedLoading} />
-  </div>
+        {/* Suggested Products Section */}
+        <div className="mt-16 border-t pt-12">
+          <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
+          <ProductGrid products={suggestedProducts || []} isLoading={isSuggestedLoading} />
+        </div>
       </div >
     </div >
   );
