@@ -9,7 +9,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     try {
         const { request, env } = context;
 
-        const { items } = await request.json() as { items: { id: number; quantity: number }[] };
+        const { items, customerName, customerEmail } = await request.json() as {
+            items: { id: number; quantity: number }[];
+            customerName: string;
+            customerEmail: string;
+        };
 
         if (!items || items.length === 0) {
             return new Response(JSON.stringify({ error: 'Cart is empty' }), {
@@ -18,9 +22,16 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             });
         }
 
+        if (!customerName || !customerEmail) {
+            return new Response(JSON.stringify({ error: 'Name and Email are required' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
         const productIds = items.map(i => i.id).join(',');
 
-        // Use a safe fallback for empty list which shouldn't happen due to check above
+        // 1. Fetch Products from DB
         const query = `SELECT id, title, current_price FROM products WHERE id IN (${productIds || '0'})`;
         const { results } = await env.DB.prepare(query).all();
 
@@ -28,49 +39,39 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             return new Response(JSON.stringify({ error: 'No valid products found' }), { status: 400 });
         }
 
-        // Construct valid line items including the original ID for metadata reference
+        // 2. Validate Items & Calculate Total
         const validItems = items.map(item => {
             const product = results.find((p: any) => p.id === item.id);
             if (!product) return null;
-
             return {
-                original_id: item.id, // Keep track of ID
+                original_id: item.id,
                 price_data: {
                     currency: 'usd',
-                    product_data: {
-                        name: product.title,
-                    },
+                    product_data: { name: product.title },
                     unit_amount: Math.round(product.current_price * 100),
                 },
                 quantity: item.quantity,
             };
         }).filter((item): item is NonNullable<typeof item> => item !== null);
 
-        if (validItems.length === 0) {
-            return new Response(JSON.stringify({ error: 'No valid items to create checkout' }), { status: 400 });
-        }
-
-        if (!env.STRIPE_SECRET_KEY) {
-            throw new Error('STRIPE_SECRET_KEY is missing');
-        }
-
-        const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-            apiVersion: '2023-10-16' as any, // Use a known stable version or cast to any if types are old
-        });
-
         const totalAmount = validItems.reduce((sum, item) => {
             // @ts-ignore
             return sum + (item.price_data.unit_amount * item.quantity);
         }, 0);
 
+        // 3. Initialize Stripe
+        if (!env.STRIPE_SECRET_KEY) throw new Error('STRIPE_SECRET_KEY is missing');
+        const stripe = new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' as any });
+
+        // 4. Create PaymentIntent
         const paymentIntent = await stripe.paymentIntents.create({
             amount: totalAmount,
             currency: 'usd',
-            automatic_payment_methods: {
-                enabled: true,
-            },
+            automatic_payment_methods: { enabled: true },
+            receipt_email: customerEmail, // Send receipt directly to this email
             metadata: {
-                // Store critical order info in metadata locally so Webhook doesn't need to re-query DB for titles
+                customer_name: customerName,
+                customer_email: customerEmail,
                 cart_items: JSON.stringify(validItems.map(item => ({
                     id: item.original_id,
                     quantity: item.quantity,
@@ -82,53 +83,52 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             }
         });
 
-        // Create Pending Order (Abandoned Checkout Tracking)
-        try {
-            const { results: insertResult } = await env.DB.prepare(
-                `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
-                 VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
-            ).bind(
-                paymentIntent.id,
-                'Guest (Pending)', // Placeholder until they pay
-                'pending@checkout.com', // Placeholder
-                totalAmount,
-                'usd',
-                'pending'
-            ).all();
+        // 5. Create PENDING Order with accurate Name/Email
+        const { results: insertResult } = await env.DB.prepare(
+            `INSERT INTO orders (payment_intent_id, customer_name, customer_email, amount_total, currency, status) 
+                VALUES (?, ?, ?, ?, ?, ?) RETURNING id`
+        ).bind(
+            paymentIntent.id,
+            customerName, // <--- REAL DATA
+            customerEmail, // <--- REAL DATA
+            totalAmount,
+            'usd',
+            'pending'
+        ).all();
 
-            const orderId = insertResult[0].id;
+        const orderId = insertResult[0].id;
 
-            // Insert Order Items (Pending)
-            const stmt = env.DB.prepare(
-                `INSERT INTO order_items (order_id, product_id, product_title, quantity, price) VALUES (?, ?, ?, ?, ?)`
-            );
-            const batch = validItems.map((item: any) =>
-                stmt.bind(
-                    orderId,
-                    item.original_id,
-                    item.price_data.product_data.name,
-                    item.quantity,
-                    item.price_data.unit_amount
-                )
-            );
-            await env.DB.batch(batch);
+        // Insert Order Items (Pending)
+        const stmt = env.DB.prepare(
+            `INSERT INTO order_items (order_id, product_id, product_title, quantity, price) VALUES (?, ?, ?, ?, ?)`
+        );
+        const batch = validItems.map((item: any) =>
+            stmt.bind(
+                orderId,
+                item.original_id,
+                item.price_data.product_data.name,
+                item.quantity,
+                item.price_data.unit_amount
+            )
+        );
+        await env.DB.batch(batch);
 
-        } catch (dbErr) {
-            console.error("Failed to create pending order", dbErr);
-            // Don't fail checkout if logging fails, but it's bad for tracking
-        }
-
-        return new Response(JSON.stringify({
-            clientSecret: paymentIntent.client_secret
-        }), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-    } catch (error: any) {
-        console.error('Checkout Error:', error);
-        return new Response(JSON.stringify({ error: error.message }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+    } catch (dbErr) {
+        console.error("Failed to create pending order", dbErr);
+        // Don't fail checkout if logging fails, but it's bad for tracking
     }
+
+    return new Response(JSON.stringify({
+        clientSecret: paymentIntent.client_secret
+    }), {
+        headers: { 'Content-Type': 'application/json' }
+    });
+
+} catch (error: any) {
+    console.error('Checkout Error:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+    });
+}
 };
