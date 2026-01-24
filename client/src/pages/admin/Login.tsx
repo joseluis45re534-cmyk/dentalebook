@@ -37,7 +37,7 @@ export default function AdminLogin() {
                 toast({
                     variant: "destructive",
                     title: "Access Denied",
-                    description: data.error || "Invalid password",
+                    description: `${data.error || "Invalid password"} ${data.details || ""} (Found: ${data.env_keys_found || "None"})`,
                 });
             }
         } catch (error) {
