@@ -25,6 +25,20 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
 
+    const syncDetails = async () => {
+        if (!clientSecret || (!name && !email)) return;
+        const paymentIntentId = clientSecret.split('_secret_')[0];
+        try {
+            await fetch('/api/orders/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paymentIntentId, name, email })
+            });
+        } catch (e) {
+            console.error('Failed to sync details', e);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -71,6 +85,7 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
                     placeholder="John Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    onBlur={syncDetails}
                     required
                 />
             </div>
@@ -83,6 +98,7 @@ function CheckoutForm({ clientSecret }: { clientSecret: string }) {
                     placeholder="john@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onBlur={syncDetails}
                     required
                 />
             </div>
