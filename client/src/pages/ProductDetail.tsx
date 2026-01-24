@@ -1,4 +1,4 @@
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +15,7 @@ export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   // ... rest of imports
 
+  const [, setLocation] = useLocation();
   const { addToCart, isInCart } = useCart();
 
   const { data: product, isLoading, error } = useQuery({
@@ -28,6 +29,15 @@ export default function ProductDetail() {
   const handleAddToCart = () => {
     if (product && !inCart) {
       addToCart(product.id);
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (product) {
+      if (!inCart) {
+        addToCart(product.id);
+      }
+      setLocation("/checkout");
     }
   };
 
@@ -177,25 +187,37 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <Button
-              size="lg"
-              onClick={handleAddToCart}
-              variant={inCart ? "secondary" : "default"}
-              className="w-full text-lg"
-              data-testid="button-add-to-cart"
-            >
-              {inCart ? (
-                <>
-                  <Check className="w-5 h-5 mr-2" />
-                  Added to Cart
-                </>
-              ) : (
-                <>
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </>
-              )}
-            </Button>
+            <div className="flex flex-col gap-3">
+              <Button
+                size="lg"
+                onClick={handleBuyNow}
+                className="w-full text-lg bg-green-600 hover:bg-green-700 text-white animate-pulse-subtle"
+                data-testid="button-buy-now"
+              >
+                <Zap className="w-5 h-5 mr-2 fill-current" />
+                Buy Now
+              </Button>
+
+              <Button
+                size="lg"
+                onClick={handleAddToCart}
+                variant={inCart ? "secondary" : "outline"}
+                className="w-full text-lg"
+                data-testid="button-add-to-cart"
+              >
+                {inCart ? (
+                  <>
+                    <Check className="w-5 h-5 mr-2" />
+                    Added to Cart
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Add to Cart
+                  </>
+                )}
+              </Button>
+            </div>
 
             {inCart && (
               <Link href="/cart" data-testid="link-view-cart">
