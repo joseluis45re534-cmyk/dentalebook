@@ -116,9 +116,9 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <img
-              src="/assets/payment-methods.png"
+              src="/assets/payment-badge-custom.png"
               alt="Accepted Payment Methods"
-              className="h-10 w-auto object-contain opacity-80"
+              className="h-8 w-auto object-contain opacity-80"
             />
           </div>
         </div>

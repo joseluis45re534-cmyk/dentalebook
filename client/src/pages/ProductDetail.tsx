@@ -232,11 +232,11 @@ export default function ProductDetail() {
                 )}
               </Button>
 
-              <div className="pt-2 flex justify-center w-full">
+              <div className="pt-4 flex justify-center w-full">
                 <img
-                  src="/assets/payment-methods.png"
-                  alt="Accepted Payment Methods: Link, Visa, Mastercard, Amex, PayPal, Apple Pay, Google Pay"
-                  className="h-16 w-auto object-contain opacity-90"
+                  src="/assets/payment-badge-custom.png"
+                  alt="Secure Payment"
+                  className="w-full max-w-[300px] h-auto object-contain"
                 />
               </div>
             </div>
