@@ -14,7 +14,7 @@ import { fetchProductsByIds } from "@/lib/products";
 import type { Product } from "@shared/schema";
 
 // Initialize Stripe
-const stripePromise = loadStripe("pk_test_51SmUtnHL8Re8eVeSvI60MBhhzJ2PXlaGZoR3sDfSkpwDf9ulQ8cLcDIn5LhTfVDE2KDhRqN9cHovcdWCGLL7wXNf00aLZnJyEL");
+const stripePromise = loadStripe("pk_live_51SmUsuH1B3BkzHT6ftQdhl1KdHz4HDBhdQBwWYiL6p1hWgS94h6eKDjDfpNnp0QwdBB8miSmD5i8RzUAxg5udf2N00atehEkFw");
 
 function PaymentForm({ clientSecret, email, name }: { clientSecret: string; email: string; name: string }) {
     const stripe = useStripe();
