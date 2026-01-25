@@ -110,8 +110,17 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="text-center text-muted-foreground text-sm">
-          <p>DentalEdu Pro &copy; {new Date().getFullYear()}. All Rights Reserved.</p>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground text-center md:text-left">
+            DentalEdu Pro &copy; {new Date().getFullYear()}. All Rights Reserved.
+          </p>
+          <div className="flex items-center gap-4">
+            <img
+              src="/assets/payment-methods.png"
+              alt="Accepted Payment Methods"
+              className="h-6 object-contain opacity-70"
+            />
+          </div>
         </div>
       </div>
     </footer>
