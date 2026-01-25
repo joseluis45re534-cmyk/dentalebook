@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Elements, PaymentElement, useStripe, useElements, ExpressCheckoutElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,28 @@ function PaymentForm({ clientSecret, email, name }: { clientSecret: string; emai
     const elements = useElements();
     const [message, setMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const onExpressConfirm = async (event: any) => {
+        if (!stripe || !elements) return;
+
+        setIsLoading(true);
+        const { error } = await stripe.confirmPayment({
+            elements,
+            clientSecret,
+            confirmParams: {
+                return_url: `${window.location.origin}/thank-you`,
+                payment_method_data: {
+                    billing_details: { name, email }
+                },
+                receipt_email: email,
+            },
+        });
+
+        if (error) {
+            setMessage(error.message || "An unexpected error occurred.");
+            setIsLoading(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,6 +72,21 @@ function PaymentForm({ clientSecret, email, name }: { clientSecret: string; emai
 
     return (
         <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
+            <div className="mb-6">
+                <ExpressCheckoutElement onConfirm={onExpressConfirm} />
+            </div>
+
+            <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                        Or pay with card
+                    </span>
+                </div>
+            </div>
+
             <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
             {message && <div className="text-destructive text-sm">{message}</div>}
             <Button disabled={isLoading || !stripe || !elements} className="w-full" size="lg">
