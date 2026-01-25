@@ -84,8 +84,15 @@ export default function ProductDetail() {
   const isCourse = product.category.toLowerCase().includes("course");
 
   const parseDescription = (desc: string) => {
+    // Specifically target and remove the accidental FAQ merge block
+    let cleanedDesc = desc;
+    const faqMarker = "Frequently Asked Questions How do I access the PDF";
+    if (cleanedDesc.includes(faqMarker)) {
+        cleanedDesc = cleanedDesc.split(faqMarker)[0].trim();
+    }
+
     const sections: { title: string; content: string }[] = [];
-    const lines = desc.split('\n').filter(l => l.trim());
+    const lines = cleanedDesc.split('\n').filter(l => l.trim());
 
     let currentSection = { title: "Description", content: "" };
 
@@ -95,7 +102,7 @@ export default function ProductDetail() {
           sections.push({ ...currentSection });
         }
         currentSection = { title: line.trim(), content: "" };
-      } else if (!line.includes("How can I access") && !line.includes("What payment methods")) {
+      } else {
         currentSection.content += line + "\n";
       }
     }
@@ -104,7 +111,7 @@ export default function ProductDetail() {
       sections.push(currentSection);
     }
 
-    return sections.length > 0 ? sections : [{ title: "Description", content: desc }];
+    return sections.length > 0 ? sections : [{ title: "Description", content: cleanedDesc }];
   };
 
   const descSections = parseDescription(product.description);
