@@ -40,6 +40,11 @@ export default function ProductDetail() {
   };
 
   const handleBuyNow = () => {
+    // Trigger Meta Pixel Event
+    if ((window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout');
+    }
+
     if (product) {
       if (!inCart) {
         addToCart(product.id);
