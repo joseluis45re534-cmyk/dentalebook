@@ -97,12 +97,12 @@ function PaymentForm({ clientSecret, email, name }: { clientSecret: string; emai
                     </>
                 ) : "Pay now"}
             </Button>
-            
+
             <div className="flex justify-center mt-4">
-                <img 
-                    src="/assets/trust-badge.png" 
-                    alt="Guaranteed Safe Checkout" 
-                    className="h-12 object-contain"
+                <img
+                    src="/assets/trust-badge.png"
+                    alt="Guaranteed Safe Checkout"
+                    className="h-20 w-auto object-contain"
                 />
             </div>
         </form>

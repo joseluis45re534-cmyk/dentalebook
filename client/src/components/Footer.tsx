@@ -118,7 +118,7 @@ export function Footer() {
             <img
               src="/assets/payment-methods.png"
               alt="Accepted Payment Methods"
-              className="h-6 object-contain opacity-70"
+              className="h-10 w-auto object-contain opacity-80"
             />
           </div>
         </div>

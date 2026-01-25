@@ -88,7 +88,7 @@ export default function ProductDetail() {
     let cleanedDesc = desc;
     const faqMarker = "Frequently Asked Questions How do I access the PDF";
     if (cleanedDesc.includes(faqMarker)) {
-        cleanedDesc = cleanedDesc.split(faqMarker)[0].trim();
+      cleanedDesc = cleanedDesc.split(faqMarker)[0].trim();
     }
 
     const sections: { title: string; content: string }[] = [];
@@ -232,124 +232,127 @@ export default function ProductDetail() {
                 )}
               </Button>
 
-              <div className="pt-2 flex justify-center w-full">
-                <img 
-                    src="/assets/payment-methods.png" 
-                    alt="Accepted Payment Methods: Link, Visa, Mastercard, Amex, PayPal, Apple Pay, Google Pay" 
-                    className="h-8 object-contain opacity-80"
-                />
-              </div>
+                )}
+            </Button>
+
+            <div className="pt-2 flex justify-center w-full">
+              <img
+                src="/assets/payment-methods.png"
+                alt="Accepted Payment Methods: Link, Visa, Mastercard, Amex, PayPal, Apple Pay, Google Pay"
+                className="h-16 w-auto object-contain opacity-90"
+              />
             </div>
+          </div>
 
-            {inCart && (
-              <Link href="/cart" data-testid="link-view-cart">
-                <Button variant="outline" className="w-full">
-                  View Cart
-                </Button>
-              </Link>
-            )}
+          {inCart && (
+            <Link href="/cart" data-testid="link-view-cart">
+              <Button variant="outline" className="w-full">
+                View Cart
+              </Button>
+            </Link>
+          )}
 
-            <div className="grid grid-cols-3 gap-4 py-6 border-y">
-              <div className="flex flex-col items-center text-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <Download className="w-5 h-5" />
-                </div>
-                <span className="text-xs text-muted-foreground">Instant Download</span>
+          <div className="grid grid-cols-3 gap-4 py-6 border-y">
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <Download className="w-5 h-5" />
               </div>
-              <div className="flex flex-col items-center text-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <Shield className="w-5 h-5" />
-                </div>
-                <span className="text-xs text-muted-foreground">Secure Payment</span>
-              </div>
-              <div className="flex flex-col items-center text-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <HeadphonesIcon className="w-5 h-5" />
-                </div>
-                <span className="text-xs text-muted-foreground">24/7 Support</span>
-              </div>
+              <span className="text-xs text-muted-foreground">Instant Download</span>
             </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <Shield className="w-5 h-5" />
+              </div>
+              <span className="text-xs text-muted-foreground">Secure Payment</span>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <HeadphonesIcon className="w-5 h-5" />
+              </div>
+              <span className="text-xs text-muted-foreground">24/7 Support</span>
+            </div>
+          </div>
 
-            <Card>
-              <CardContent className="p-6">
-                {descSections.slice(0, 1).map((section, i) => (
-                  <div key={i}>
-                    <h3 className="font-semibold mb-3">{section.title}</h3>
+          <Card>
+            <CardContent className="p-6">
+              {descSections.slice(0, 1).map((section, i) => (
+                <div key={i}>
+                  <h3 className="font-semibold mb-3">{section.title}</h3>
+                  <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
+                    {section.content}
+                  </p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {descSections.length > 1 && (
+        <Card className="mb-12">
+          <CardContent className="p-6">
+            <Accordion type="multiple" className="w-full">
+              {descSections.slice(1).map((section, i) => (
+                <AccordionItem key={i} value={`section-${i}`}>
+                  <AccordionTrigger className="text-left font-semibold">
+                    {section.title}
+                  </AccordionTrigger>
+                  <AccordionContent>
                     <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
                       {section.content}
                     </p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {descSections.length > 1 && (
-          <Card className="mb-12">
-            <CardContent className="p-6">
-              <Accordion type="multiple" className="w-full">
-                {descSections.slice(1).map((section, i) => (
-                  <AccordionItem key={i} value={`section-${i}`}>
-                    <AccordionTrigger className="text-left font-semibold">
-                      {section.title}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
-                        {section.content}
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </CardContent>
-          </Card>
-        )}
-
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="font-semibold mb-4">Frequently Asked Questions</h3>
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="access">
-                <AccordionTrigger>How can I access the content after purchase?</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  Immediately after checkout, we email you a secure link to all materials. If you don't see the message, please check your spam or junk folder. You can also access your downloads from your account dashboard.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="payment">
-                <AccordionTrigger>What payment methods are accepted?</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  We accept a variety of payment methods, including credit cards, debit cards, and PayPal, to make your purchase convenient and secure.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="duration">
-                <AccordionTrigger>How long do I have access to the material?</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  Upon purchasing, you will enjoy unlimited access to the material. You can watch and revisit the content whenever you wish, allowing for a thorough learning experience.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="mobile">
-                <AccordionTrigger>Is the content accessible on mobile devices?</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  Yes, our content is designed to be accessible on both desktop and mobile devices. You can easily access the materials using a web browser on your smartphone or tablet.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="download">
-                <AccordionTrigger>Can I download the materials for offline access?</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  Absolutely! You will have the option to download all materials, including videos and supplementary resources. This allows you to access the content offline whenever and wherever it suits you best.
-                </AccordionContent>
-              </AccordionItem>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           </CardContent>
         </Card>
+      )}
 
-        {/* Suggested Products Section */}
-        <div className="mt-16 border-t pt-12">
-          <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-          <ProductGrid products={suggestedProducts || []} isLoading={isSuggestedLoading} />
-        </div>
-      </div >
+      <Card>
+        <CardContent className="p-6">
+          <h3 className="font-semibold mb-4">Frequently Asked Questions</h3>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="access">
+              <AccordionTrigger>How can I access the content after purchase?</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Immediately after checkout, we email you a secure link to all materials. If you don't see the message, please check your spam or junk folder. You can also access your downloads from your account dashboard.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="payment">
+              <AccordionTrigger>What payment methods are accepted?</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                We accept a variety of payment methods, including credit cards, debit cards, and PayPal, to make your purchase convenient and secure.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="duration">
+              <AccordionTrigger>How long do I have access to the material?</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Upon purchasing, you will enjoy unlimited access to the material. You can watch and revisit the content whenever you wish, allowing for a thorough learning experience.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="mobile">
+              <AccordionTrigger>Is the content accessible on mobile devices?</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Yes, our content is designed to be accessible on both desktop and mobile devices. You can easily access the materials using a web browser on your smartphone or tablet.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="download">
+              <AccordionTrigger>Can I download the materials for offline access?</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Absolutely! You will have the option to download all materials, including videos and supplementary resources. This allows you to access the content offline whenever and wherever it suits you best.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
+      </Card>
+
+      {/* Suggested Products Section */}
+      <div className="mt-16 border-t pt-12">
+        <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
+        <ProductGrid products={suggestedProducts || []} isLoading={isSuggestedLoading} />
+      </div>
+    </div >
     </div >
   );
 }
