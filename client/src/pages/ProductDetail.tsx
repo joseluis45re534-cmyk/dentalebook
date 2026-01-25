@@ -231,6 +231,14 @@ export default function ProductDetail() {
                   </>
                 )}
               </Button>
+
+              <div className="pt-2 flex justify-center w-full">
+                <img 
+                    src="/assets/payment-methods.png" 
+                    alt="Accepted Payment Methods: Link, Visa, Mastercard, Amex, PayPal, Apple Pay, Google Pay" 
+                    className="h-8 object-contain opacity-80"
+                />
+              </div>
             </div>
 
             {inCart && (
