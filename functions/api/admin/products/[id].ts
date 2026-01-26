@@ -17,10 +17,10 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
             body.description,
             body.price,
             body.currentPrice,
-            body.originalPrice,
+            body.originalPrice || null,
             body.isOnSale ? 1 : 0,
             body.url,
-            body.imageFile,
+            body.imageFile || null,
             body.imageUrl,
             body.category,
             id
