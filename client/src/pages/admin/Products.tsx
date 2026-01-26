@@ -62,7 +62,10 @@ export default function AdminProducts() {
                 },
                 body: JSON.stringify(product),
             });
-            if (!res.ok) throw new Error("Failed to update product");
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to update product");
+            }
             return res.json();
         },
         onSuccess: () => {

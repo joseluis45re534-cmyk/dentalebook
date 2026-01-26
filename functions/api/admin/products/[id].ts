@@ -3,7 +3,7 @@ interface Env {
 }
 
 export const onRequestPut: PagesFunction<Env> = async (context) => {
-    const id = context.params.id;
+    const id = Number(context.params.id);
     try {
         const body: any = await context.request.json();
 
@@ -30,18 +30,20 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
             headers: { "Content-Type": "application/json" }
         });
     } catch (e) {
+        console.error("Failed to update product:", e);
         return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500 });
     }
 }
 
 export const onRequestDelete: PagesFunction<Env> = async (context) => {
-    const id = context.params.id;
+    const id = Number(context.params.id);
     try {
         const { success } = await context.env.DB.prepare("DELETE FROM products WHERE id = ?").bind(id).run();
         return new Response(JSON.stringify({ success }), {
             headers: { "Content-Type": "application/json" }
         });
     } catch (e) {
+        console.error("Failed to delete product:", e);
         return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500 });
     }
 }
