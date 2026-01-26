@@ -119,7 +119,13 @@ export default function ProductDetail() {
     return sections.length > 0 ? sections : [{ title: "Description", content: cleanedDesc }];
   };
 
-  const descSections = parseDescription(product.description);
+  const isHtmlDescription = (desc: string) => {
+    return /<[a-z][\s\S]*>/i.test(desc);
+  };
+
+  const descSections = product && !isHtmlDescription(product.description)
+    ? parseDescription(product.description)
+    : [];
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -275,18 +281,26 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <Card>
-              <CardContent className="p-6">
-                {descSections.slice(0, 1).map((section, i) => (
-                  <div key={i}>
-                    <h3 className="font-semibold mb-3">{section.title}</h3>
-                    <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
-                      {section.content}
-                    </p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+            {isHtmlDescription(product.description) ? (
+              <Card>
+                <CardContent className="p-6 prose dark:prose-invert max-w-none">
+                  <div dangerouslySetInnerHTML={{ __html: product.description }} />
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="p-6">
+                  {descSections.slice(0, 1).map((section, i) => (
+                    <div key={i}>
+                      <h3 className="font-semibold mb-3">{section.title}</h3>
+                      <p className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed">
+                        {section.content}
+                      </p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -7,14 +7,27 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, ArrowLeft } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, ArrowLeft, Code } from "lucide-react";
 import type { Product } from "@shared/schema";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function AdminProducts() {
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [description, setDescription] = useState("");
+    const [isSourceView, setIsSourceView] = useState(false);
+
+    // Sync description state when editingProduct changes
+    useEffect(() => {
+        if (editingProduct) {
+            setDescription(editingProduct.description || "");
+        } else {
+            setDescription("");
+        }
+    }, [editingProduct]);
 
     // Fetch Products
     const { data: products, isLoading } = useQuery<Product[]>({
@@ -110,7 +123,7 @@ export default function AdminProducts() {
             price: formData.get("price") as string, // Keep raw string for now
             currentPrice: parseFloat(formData.get("currentPrice") as string),
             originalPrice: formData.get("originalPrice") ? parseFloat(formData.get("originalPrice") as string) : null,
-            description: formData.get("description") as string,
+            description: description, // Use state instead of formData
             category: formData.get("category") as string,
             imageUrl: formData.get("imageUrl") as string,
             isOnSale: !!formData.get("originalPrice"), // Simple logic: if original price exists, it's on sale
@@ -165,8 +178,36 @@ export default function AdminProducts() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Description</label>
-                                    <Textarea name="description" defaultValue={editingProduct?.description} className="h-32" />
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-sm font-medium">Description</label>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => setIsSourceView(!isSourceView)}
+                                            className="h-8 text-xs"
+                                        >
+                                            <Code className="w-3 h-3 mr-1" />
+                                            {isSourceView ? "Visual Editor" : "Edit HTML"}
+                                        </Button>
+                                    </div>
+                                    <div className="min-h-[200px] border rounded-md">
+                                        {isSourceView ? (
+                                            <Textarea
+                                                name="description-source"
+                                                value={description}
+                                                onChange={(e) => setDescription(e.target.value)}
+                                                className="min-h-[200px] font-mono text-sm"
+                                            />
+                                        ) : (
+                                            <ReactQuill
+                                                theme="snow"
+                                                value={description}
+                                                onChange={setDescription}
+                                                className="h-[200px] mb-12" // Add margin bottom for toolbar
+                                            />
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-3 gap-4">
