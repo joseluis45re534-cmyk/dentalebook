@@ -11,6 +11,7 @@ export interface Product {
   url: string;
   imageFile: string | null;
   imageUrl: string | null;
+  images: string[]; // Store multiple image URLs
   category: string;
 }
 
@@ -77,3 +78,18 @@ export interface OrderWithItems extends Order {
 }
 
 
+export interface CartItem {
+  productId: number;
+  quantity: number;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+}
+
+export interface InsertUser {
+  username: string;
+  password: string;
+}

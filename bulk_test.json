@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Bulk Test Product 1",
+        "description": "Description for product 1",
+        "price": "$10.00",
+        "currentPrice": 10,
+        "originalPrice": 20,
+        "isOnSale": true,
+        "category": "Test"
+    },
+    {
+        "title": "Bulk Test Product 2",
+        "description": "Description for product 2",
+        "price": "$15.00",
+        "currentPrice": 15,
+        "originalPrice": null,
+        "isOnSale": false,
+        "category": "Test"
+    }
+]

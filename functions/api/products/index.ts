@@ -20,6 +20,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             url: row.url,
             imageFile: row.image_file,
             imageUrl: row.image_url,
+            images: row.images ? JSON.parse(row.images) : [],
             category: row.category
         }));
 

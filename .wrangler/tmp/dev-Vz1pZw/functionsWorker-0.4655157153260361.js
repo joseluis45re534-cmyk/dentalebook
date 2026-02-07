@@ -1,38 +1,8 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-};
-var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 
-// ../.wrangler/tmp/bundle-0YgtSR/checked-fetch.js
+// .wrangler/tmp/bundle-ltocyV/checked-fetch.js
+var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
     (typeof request === "string" ? new Request(request, init) : request).url
@@ -48,30 +18,136 @@ function checkURL(request, init) {
     }
   }
 }
-var urls;
+__name(checkURL, "checkURL");
+globalThis.fetch = new Proxy(globalThis.fetch, {
+  apply(target, thisArg, argArray) {
+    const [request, init] = argArray;
+    checkURL(request, init);
+    return Reflect.apply(target, thisArg, argArray);
+  }
+});
+
+// .wrangler/tmp/pages-Xuc53S/functionsWorker-0.4655157153260361.mjs
+var __create = Object.create;
+var __defProp2 = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
+var __esm = /* @__PURE__ */ __name((fn, res) => /* @__PURE__ */ __name(function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+}, "__init"), "__esm");
+var __commonJS = /* @__PURE__ */ __name((cb, mod) => /* @__PURE__ */ __name(function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+}, "__require"), "__commonJS");
+var __export = /* @__PURE__ */ __name((target, all) => {
+  for (var name in all)
+    __defProp2(target, name, { get: all[name], enumerable: true });
+}, "__export");
+var __copyProps = /* @__PURE__ */ __name((to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp2(to, key, { get: /* @__PURE__ */ __name(() => from[key], "get"), enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+}, "__copyProps");
+var __toESM = /* @__PURE__ */ __name((mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+)), "__toESM");
+function checkURL2(request, init) {
+  const url = request instanceof URL ? request : new URL(
+    (typeof request === "string" ? new Request(request, init) : request).url
+  );
+  if (url.port && url.port !== "443" && url.protocol === "https:") {
+    if (!urls2.has(url.toString())) {
+      urls2.add(url.toString());
+      console.warn(
+        `WARNING: known issue with \`fetch()\` requests to custom HTTPS ports in published Workers:
+ - ${url.toString()} - the custom port will be ignored when the Worker is published using the \`wrangler deploy\` command.
+`
+      );
+    }
+  }
+}
+__name(checkURL2, "checkURL");
+var urls2;
 var init_checked_fetch = __esm({
-  "../.wrangler/tmp/bundle-0YgtSR/checked-fetch.js"() {
+  "../.wrangler/tmp/bundle-d7ZBMd/checked-fetch.js"() {
     "use strict";
-    urls = /* @__PURE__ */ new Set();
-    __name(checkURL, "checkURL");
+    urls2 = /* @__PURE__ */ new Set();
+    __name2(checkURL2, "checkURL");
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
         const [request, init] = argArray;
-        checkURL(request, init);
+        checkURL2(request, init);
         return Reflect.apply(target, thisArg, argArray);
       }
     });
   }
 });
-
-// api/admin/products/[id].ts
-var onRequestPut, onRequestDelete;
+var onRequestPost;
+var init_bulk = __esm({
+  "api/admin/products/bulk.ts"() {
+    "use strict";
+    init_functionsRoutes_0_08206309707451787();
+    init_checked_fetch();
+    onRequestPost = /* @__PURE__ */ __name2(async (context) => {
+      try {
+        const body = await context.request.json();
+        if (!Array.isArray(body)) {
+          return new Response(JSON.stringify({ error: "Input must be an array of products" }), { status: 400 });
+        }
+        const products = body;
+        const statements = products.map((product) => {
+          return context.env.DB.prepare(
+            `INSERT INTO products (title, description, price, current_price, original_price, is_on_sale, url, image_file, image_url, images, category) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          ).bind(
+            product.title,
+            product.description || "",
+            product.price || "$0.00",
+            product.currentPrice || 0,
+            product.originalPrice || null,
+            product.isOnSale ? 1 : 0,
+            product.url || "",
+            product.imageFile || "",
+            product.imageUrl || "",
+            JSON.stringify(product.images || []),
+            // Store images as JSON string
+            product.category || "books"
+          );
+        });
+        const chunkSize = 50;
+        for (let i = 0; i < statements.length; i += chunkSize) {
+          const batch = statements.slice(i, i + chunkSize);
+          await context.env.DB.batch(batch);
+        }
+        return new Response(JSON.stringify({ success: true, count: products.length }), {
+          status: 201,
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (e) {
+        console.error("Bulk Import Error:", e);
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+      }
+    }, "onRequestPost");
+  }
+});
+var onRequestPut;
+var onRequestDelete;
 var init_id = __esm({
   "api/admin/products/[id].ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestPut = /* @__PURE__ */ __name(async (context) => {
+    onRequestPut = /* @__PURE__ */ __name2(async (context) => {
       const id = Number(context.params.id);
       try {
         const body = await context.request.json();
@@ -101,7 +177,7 @@ var init_id = __esm({
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
       }
     }, "onRequestPut");
-    onRequestDelete = /* @__PURE__ */ __name(async (context) => {
+    onRequestDelete = /* @__PURE__ */ __name2(async (context) => {
       const id = Number(context.params.id);
       try {
         const { success } = await context.env.DB.prepare("DELETE FROM products WHERE id = ?").bind(id).run();
@@ -115,15 +191,13 @@ var init_id = __esm({
     }, "onRequestDelete");
   }
 });
-
-// api/admin/orders.ts
 var onRequestGet;
 var init_orders = __esm({
   "api/admin/orders.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestGet = /* @__PURE__ */ __name(async (context) => {
+    onRequestGet = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { results } = await context.env.DB.prepare(
           `SELECT 
@@ -163,15 +237,13 @@ var init_orders = __esm({
     }, "onRequestGet");
   }
 });
-
-// api/admin/products/index.ts
-var onRequestPost;
+var onRequestPost2;
 var init_products = __esm({
   "api/admin/products/index.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestPost = /* @__PURE__ */ __name(async (context) => {
+    onRequestPost2 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const body = await context.request.json();
         if (!body.title || !body.price) {
@@ -206,15 +278,13 @@ var init_products = __esm({
     }, "onRequestPost");
   }
 });
-
-// api/analytics/dashboard.ts
 var onRequestGet2;
 var init_dashboard = __esm({
   "api/analytics/dashboard.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestGet2 = /* @__PURE__ */ __name(async (context) => {
+    onRequestGet2 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { env } = context;
         const { results: salesStats } = await env.DB.prepare(
@@ -259,15 +329,13 @@ var init_dashboard = __esm({
     }, "onRequestGet");
   }
 });
-
-// api/analytics/track.ts
-var onRequestPost2;
+var onRequestPost3;
 var init_track = __esm({
   "api/analytics/track.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestPost2 = /* @__PURE__ */ __name(async (context) => {
+    onRequestPost3 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { request, env } = context;
         const body = await request.json();
@@ -294,8 +362,6 @@ var init_track = __esm({
     }, "onRequestPost");
   }
 });
-
-// api/auth/login.ts
 async function sign(payload, secret) {
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -317,14 +383,15 @@ async function sign(payload, secret) {
   const b64Signature = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
   return `${b64Header}.${b64Body}.${b64Signature}`;
 }
-var onRequestPost3;
+__name(sign, "sign");
+var onRequestPost4;
 var init_login = __esm({
   "api/auth/login.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    __name(sign, "sign");
-    onRequestPost3 = /* @__PURE__ */ __name(async (context) => {
+    __name2(sign, "sign");
+    onRequestPost4 = /* @__PURE__ */ __name2(async (context) => {
       const { request, env } = context;
       try {
         const body = await request.json();
@@ -365,29 +432,23 @@ var init_login = __esm({
     }, "onRequestPost");
   }
 });
-
-// ../node_modules/es-errors/type.js
 var require_type = __commonJS({
   "../node_modules/es-errors/type.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = TypeError;
   }
 });
-
-// (disabled):../node_modules/object-inspect/util.inspect
 var require_util = __commonJS({
   "(disabled):../node_modules/object-inspect/util.inspect"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
   }
 });
-
-// ../node_modules/object-inspect/index.js
 var require_object_inspect = __commonJS({
   "../node_modules/object-inspect/index.js"(exports, module) {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var hasMap = typeof Map === "function" && Map.prototype;
     var mapSizeDescriptor = Object.getOwnPropertyDescriptor && hasMap ? Object.getOwnPropertyDescriptor(Map.prototype, "size") : null;
@@ -441,6 +502,7 @@ var require_object_inspect = __commonJS({
       return $replace.call(str, sepRegex, "$&_");
     }
     __name(addNumericSeparator, "addNumericSeparator");
+    __name2(addNumericSeparator, "addNumericSeparator");
     var utilInspect = require_util();
     var inspectCustom = utilInspect.custom;
     var inspectSymbol = isSymbol(inspectCustom) ? inspectCustom : null;
@@ -454,7 +516,7 @@ var require_object_inspect = __commonJS({
       "double": /(["\\])/g,
       single: /(['\\])/g
     };
-    module.exports = /* @__PURE__ */ __name(function inspect_(obj, options, depth, seen) {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function inspect_(obj, options, depth, seen) {
       var opts = options || {};
       if (has(opts, "quoteStyle") && !has(quotes, opts.quoteStyle)) {
         throw new TypeError('option "quoteStyle" must be "single" or "double"');
@@ -526,6 +588,7 @@ var require_object_inspect = __commonJS({
         return inspect_(value, opts, depth + 1, seen);
       }
       __name(inspect, "inspect");
+      __name2(inspect, "inspect");
       if (typeof obj === "function" && !isRegExp(obj)) {
         var name = nameOf(obj);
         var keys = arrObjKeys(obj, inspect);
@@ -636,49 +699,59 @@ var require_object_inspect = __commonJS({
         return tag + "{ " + $join.call(ys, ", ") + " }";
       }
       return String(obj);
-    }, "inspect_");
+    }, "inspect_"), "inspect_");
     function wrapQuotes(s, defaultStyle, opts) {
       var style = opts.quoteStyle || defaultStyle;
       var quoteChar = quotes[style];
       return quoteChar + s + quoteChar;
     }
     __name(wrapQuotes, "wrapQuotes");
+    __name2(wrapQuotes, "wrapQuotes");
     function quote(s) {
       return $replace.call(String(s), /"/g, "&quot;");
     }
     __name(quote, "quote");
+    __name2(quote, "quote");
     function canTrustToString(obj) {
       return !toStringTag || !(typeof obj === "object" && (toStringTag in obj || typeof obj[toStringTag] !== "undefined"));
     }
     __name(canTrustToString, "canTrustToString");
+    __name2(canTrustToString, "canTrustToString");
     function isArray(obj) {
       return toStr(obj) === "[object Array]" && canTrustToString(obj);
     }
     __name(isArray, "isArray");
+    __name2(isArray, "isArray");
     function isDate(obj) {
       return toStr(obj) === "[object Date]" && canTrustToString(obj);
     }
     __name(isDate, "isDate");
+    __name2(isDate, "isDate");
     function isRegExp(obj) {
       return toStr(obj) === "[object RegExp]" && canTrustToString(obj);
     }
     __name(isRegExp, "isRegExp");
+    __name2(isRegExp, "isRegExp");
     function isError(obj) {
       return toStr(obj) === "[object Error]" && canTrustToString(obj);
     }
     __name(isError, "isError");
+    __name2(isError, "isError");
     function isString(obj) {
       return toStr(obj) === "[object String]" && canTrustToString(obj);
     }
     __name(isString, "isString");
+    __name2(isString, "isString");
     function isNumber(obj) {
       return toStr(obj) === "[object Number]" && canTrustToString(obj);
     }
     __name(isNumber, "isNumber");
+    __name2(isNumber, "isNumber");
     function isBoolean(obj) {
       return toStr(obj) === "[object Boolean]" && canTrustToString(obj);
     }
     __name(isBoolean, "isBoolean");
+    __name2(isBoolean, "isBoolean");
     function isSymbol(obj) {
       if (hasShammedSymbols) {
         return obj && typeof obj === "object" && obj instanceof Symbol;
@@ -697,6 +770,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isSymbol, "isSymbol");
+    __name2(isSymbol, "isSymbol");
     function isBigInt(obj) {
       if (!obj || typeof obj !== "object" || !bigIntValueOf) {
         return false;
@@ -709,6 +783,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isBigInt, "isBigInt");
+    __name2(isBigInt, "isBigInt");
     var hasOwn = Object.prototype.hasOwnProperty || function(key) {
       return key in this;
     };
@@ -716,10 +791,12 @@ var require_object_inspect = __commonJS({
       return hasOwn.call(obj, key);
     }
     __name(has, "has");
+    __name2(has, "has");
     function toStr(obj) {
       return objectToString.call(obj);
     }
     __name(toStr, "toStr");
+    __name2(toStr, "toStr");
     function nameOf(f) {
       if (f.name) {
         return f.name;
@@ -731,6 +808,7 @@ var require_object_inspect = __commonJS({
       return null;
     }
     __name(nameOf, "nameOf");
+    __name2(nameOf, "nameOf");
     function indexOf(xs, x) {
       if (xs.indexOf) {
         return xs.indexOf(x);
@@ -743,6 +821,7 @@ var require_object_inspect = __commonJS({
       return -1;
     }
     __name(indexOf, "indexOf");
+    __name2(indexOf, "indexOf");
     function isMap(x) {
       if (!mapSize || !x || typeof x !== "object") {
         return false;
@@ -760,6 +839,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isMap, "isMap");
+    __name2(isMap, "isMap");
     function isWeakMap(x) {
       if (!weakMapHas || !x || typeof x !== "object") {
         return false;
@@ -777,6 +857,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isWeakMap, "isWeakMap");
+    __name2(isWeakMap, "isWeakMap");
     function isWeakRef(x) {
       if (!weakRefDeref || !x || typeof x !== "object") {
         return false;
@@ -789,6 +870,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isWeakRef, "isWeakRef");
+    __name2(isWeakRef, "isWeakRef");
     function isSet(x) {
       if (!setSize || !x || typeof x !== "object") {
         return false;
@@ -806,6 +888,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isSet, "isSet");
+    __name2(isSet, "isSet");
     function isWeakSet(x) {
       if (!weakSetHas || !x || typeof x !== "object") {
         return false;
@@ -823,6 +906,7 @@ var require_object_inspect = __commonJS({
       return false;
     }
     __name(isWeakSet, "isWeakSet");
+    __name2(isWeakSet, "isWeakSet");
     function isElement(x) {
       if (!x || typeof x !== "object") {
         return false;
@@ -833,6 +917,7 @@ var require_object_inspect = __commonJS({
       return typeof x.nodeName === "string" && typeof x.getAttribute === "function";
     }
     __name(isElement, "isElement");
+    __name2(isElement, "isElement");
     function inspectString(str, opts) {
       if (str.length > opts.maxStringLength) {
         var remaining = str.length - opts.maxStringLength;
@@ -845,6 +930,7 @@ var require_object_inspect = __commonJS({
       return wrapQuotes(s, "single", opts);
     }
     __name(inspectString, "inspectString");
+    __name2(inspectString, "inspectString");
     function lowbyte(c) {
       var n = c.charCodeAt(0);
       var x = {
@@ -860,19 +946,23 @@ var require_object_inspect = __commonJS({
       return "\\x" + (n < 16 ? "0" : "") + $toUpperCase.call(n.toString(16));
     }
     __name(lowbyte, "lowbyte");
+    __name2(lowbyte, "lowbyte");
     function markBoxed(str) {
       return "Object(" + str + ")";
     }
     __name(markBoxed, "markBoxed");
+    __name2(markBoxed, "markBoxed");
     function weakCollectionOf(type) {
       return type + " { ? }";
     }
     __name(weakCollectionOf, "weakCollectionOf");
+    __name2(weakCollectionOf, "weakCollectionOf");
     function collectionOf(type, size, entries, indent) {
       var joinedEntries = indent ? indentedJoin(entries, indent) : $join.call(entries, ", ");
       return type + " (" + size + ") {" + joinedEntries + "}";
     }
     __name(collectionOf, "collectionOf");
+    __name2(collectionOf, "collectionOf");
     function singleLineValues(xs) {
       for (var i = 0; i < xs.length; i++) {
         if (indexOf(xs[i], "\n") >= 0) {
@@ -882,6 +972,7 @@ var require_object_inspect = __commonJS({
       return true;
     }
     __name(singleLineValues, "singleLineValues");
+    __name2(singleLineValues, "singleLineValues");
     function getIndent(opts, depth) {
       var baseIndent;
       if (opts.indent === "	") {
@@ -897,6 +988,7 @@ var require_object_inspect = __commonJS({
       };
     }
     __name(getIndent, "getIndent");
+    __name2(getIndent, "getIndent");
     function indentedJoin(xs, indent) {
       if (xs.length === 0) {
         return "";
@@ -905,6 +997,7 @@ var require_object_inspect = __commonJS({
       return lineJoiner + $join.call(xs, "," + lineJoiner) + "\n" + indent.prev;
     }
     __name(indentedJoin, "indentedJoin");
+    __name2(indentedJoin, "indentedJoin");
     function arrObjKeys(obj, inspect) {
       var isArr = isArray(obj);
       var xs = [];
@@ -947,18 +1040,17 @@ var require_object_inspect = __commonJS({
       return xs;
     }
     __name(arrObjKeys, "arrObjKeys");
+    __name2(arrObjKeys, "arrObjKeys");
   }
 });
-
-// ../node_modules/side-channel-list/index.js
 var require_side_channel_list = __commonJS({
   "../node_modules/side-channel-list/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var inspect = require_object_inspect();
     var $TypeError = require_type();
-    var listGetNode = /* @__PURE__ */ __name(function(list, key, isDelete) {
+    var listGetNode = /* @__PURE__ */ __name2(function(list, key, isDelete) {
       var prev = list;
       var curr;
       for (; (curr = prev.next) != null; prev = curr) {
@@ -973,14 +1065,14 @@ var require_side_channel_list = __commonJS({
         }
       }
     }, "listGetNode");
-    var listGet = /* @__PURE__ */ __name(function(objects, key) {
+    var listGet = /* @__PURE__ */ __name2(function(objects, key) {
       if (!objects) {
         return void 0;
       }
       var node = listGetNode(objects, key);
       return node && node.value;
     }, "listGet");
-    var listSet = /* @__PURE__ */ __name(function(objects, key, value) {
+    var listSet = /* @__PURE__ */ __name2(function(objects, key, value) {
       var node = listGetNode(objects, key);
       if (node) {
         node.value = value;
@@ -994,26 +1086,26 @@ var require_side_channel_list = __commonJS({
         };
       }
     }, "listSet");
-    var listHas = /* @__PURE__ */ __name(function(objects, key) {
+    var listHas = /* @__PURE__ */ __name2(function(objects, key) {
       if (!objects) {
         return false;
       }
       return !!listGetNode(objects, key);
     }, "listHas");
-    var listDelete = /* @__PURE__ */ __name(function(objects, key) {
+    var listDelete = /* @__PURE__ */ __name2(function(objects, key) {
       if (objects) {
         return listGetNode(objects, key, true);
       }
     }, "listDelete");
-    module.exports = /* @__PURE__ */ __name(function getSideChannelList() {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getSideChannelList() {
       var $o;
       var channel = {
-        assert: /* @__PURE__ */ __name(function(key) {
+        assert: /* @__PURE__ */ __name2(function(key) {
           if (!channel.has(key)) {
             throw new $TypeError("Side channel does not contain " + inspect(key));
           }
         }, "assert"),
-        "delete": /* @__PURE__ */ __name(function(key) {
+        "delete": /* @__PURE__ */ __name2(function(key) {
           var root = $o && $o.next;
           var deletedNode = listDelete($o, key);
           if (deletedNode && root && root === deletedNode) {
@@ -1021,13 +1113,13 @@ var require_side_channel_list = __commonJS({
           }
           return !!deletedNode;
         }, "delete"),
-        get: /* @__PURE__ */ __name(function(key) {
+        get: /* @__PURE__ */ __name2(function(key) {
           return listGet($o, key);
         }, "get"),
-        has: /* @__PURE__ */ __name(function(key) {
+        has: /* @__PURE__ */ __name2(function(key) {
           return listHas($o, key);
         }, "has"),
-        set: /* @__PURE__ */ __name(function(key, value) {
+        set: /* @__PURE__ */ __name2(function(key, value) {
           if (!$o) {
             $o = {
               next: void 0
@@ -1042,183 +1134,149 @@ var require_side_channel_list = __commonJS({
         }, "set")
       };
       return channel;
-    }, "getSideChannelList");
+    }, "getSideChannelList"), "getSideChannelList");
   }
 });
-
-// ../node_modules/es-object-atoms/index.js
 var require_es_object_atoms = __commonJS({
   "../node_modules/es-object-atoms/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Object;
   }
 });
-
-// ../node_modules/es-errors/index.js
 var require_es_errors = __commonJS({
   "../node_modules/es-errors/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Error;
   }
 });
-
-// ../node_modules/es-errors/eval.js
 var require_eval = __commonJS({
   "../node_modules/es-errors/eval.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = EvalError;
   }
 });
-
-// ../node_modules/es-errors/range.js
 var require_range = __commonJS({
   "../node_modules/es-errors/range.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = RangeError;
   }
 });
-
-// ../node_modules/es-errors/ref.js
 var require_ref = __commonJS({
   "../node_modules/es-errors/ref.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = ReferenceError;
   }
 });
-
-// ../node_modules/es-errors/syntax.js
 var require_syntax = __commonJS({
   "../node_modules/es-errors/syntax.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = SyntaxError;
   }
 });
-
-// ../node_modules/es-errors/uri.js
 var require_uri = __commonJS({
   "../node_modules/es-errors/uri.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = URIError;
   }
 });
-
-// ../node_modules/math-intrinsics/abs.js
 var require_abs = __commonJS({
   "../node_modules/math-intrinsics/abs.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Math.abs;
   }
 });
-
-// ../node_modules/math-intrinsics/floor.js
 var require_floor = __commonJS({
   "../node_modules/math-intrinsics/floor.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Math.floor;
   }
 });
-
-// ../node_modules/math-intrinsics/max.js
 var require_max = __commonJS({
   "../node_modules/math-intrinsics/max.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Math.max;
   }
 });
-
-// ../node_modules/math-intrinsics/min.js
 var require_min = __commonJS({
   "../node_modules/math-intrinsics/min.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Math.min;
   }
 });
-
-// ../node_modules/math-intrinsics/pow.js
 var require_pow = __commonJS({
   "../node_modules/math-intrinsics/pow.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Math.pow;
   }
 });
-
-// ../node_modules/math-intrinsics/round.js
 var require_round = __commonJS({
   "../node_modules/math-intrinsics/round.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Math.round;
   }
 });
-
-// ../node_modules/math-intrinsics/isNaN.js
 var require_isNaN = __commonJS({
   "../node_modules/math-intrinsics/isNaN.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    module.exports = Number.isNaN || /* @__PURE__ */ __name(function isNaN2(a) {
+    module.exports = Number.isNaN || /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function isNaN2(a) {
       return a !== a;
-    }, "isNaN");
+    }, "isNaN2"), "isNaN");
   }
 });
-
-// ../node_modules/math-intrinsics/sign.js
 var require_sign = __commonJS({
   "../node_modules/math-intrinsics/sign.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var $isNaN = require_isNaN();
-    module.exports = /* @__PURE__ */ __name(function sign2(number) {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function sign2(number) {
       if ($isNaN(number) || number === 0) {
         return number;
       }
       return number < 0 ? -1 : 1;
-    }, "sign");
+    }, "sign2"), "sign");
   }
 });
-
-// ../node_modules/gopd/gOPD.js
 var require_gOPD = __commonJS({
   "../node_modules/gopd/gOPD.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Object.getOwnPropertyDescriptor;
   }
 });
-
-// ../node_modules/gopd/index.js
 var require_gopd = __commonJS({
   "../node_modules/gopd/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var $gOPD = require_gOPD();
     if ($gOPD) {
@@ -1231,12 +1289,10 @@ var require_gopd = __commonJS({
     module.exports = $gOPD;
   }
 });
-
-// ../node_modules/es-define-property/index.js
 var require_es_define_property = __commonJS({
   "../node_modules/es-define-property/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var $defineProperty = Object.defineProperty || false;
     if ($defineProperty) {
@@ -1249,14 +1305,12 @@ var require_es_define_property = __commonJS({
     module.exports = $defineProperty;
   }
 });
-
-// ../node_modules/has-symbols/shams.js
 var require_shams = __commonJS({
   "../node_modules/has-symbols/shams.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    module.exports = /* @__PURE__ */ __name(function hasSymbols() {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function hasSymbols() {
       if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
         return false;
       }
@@ -1303,19 +1357,17 @@ var require_shams = __commonJS({
         }
       }
       return true;
-    }, "hasSymbols");
+    }, "hasSymbols"), "hasSymbols");
   }
 });
-
-// ../node_modules/has-symbols/index.js
 var require_has_symbols = __commonJS({
   "../node_modules/has-symbols/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var origSymbol = typeof Symbol !== "undefined" && Symbol;
     var hasSymbolSham = require_shams();
-    module.exports = /* @__PURE__ */ __name(function hasNativeSymbols() {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function hasNativeSymbols() {
       if (typeof origSymbol !== "function") {
         return false;
       }
@@ -1329,42 +1381,36 @@ var require_has_symbols = __commonJS({
         return false;
       }
       return hasSymbolSham();
-    }, "hasNativeSymbols");
+    }, "hasNativeSymbols"), "hasNativeSymbols");
   }
 });
-
-// ../node_modules/get-proto/Reflect.getPrototypeOf.js
 var require_Reflect_getPrototypeOf = __commonJS({
   "../node_modules/get-proto/Reflect.getPrototypeOf.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = typeof Reflect !== "undefined" && Reflect.getPrototypeOf || null;
   }
 });
-
-// ../node_modules/get-proto/Object.getPrototypeOf.js
 var require_Object_getPrototypeOf = __commonJS({
   "../node_modules/get-proto/Object.getPrototypeOf.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var $Object = require_es_object_atoms();
     module.exports = $Object.getPrototypeOf || null;
   }
 });
-
-// ../node_modules/function-bind/implementation.js
 var require_implementation = __commonJS({
   "../node_modules/function-bind/implementation.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
     var toStr = Object.prototype.toString;
     var max = Math.max;
     var funcType = "[object Function]";
-    var concatty = /* @__PURE__ */ __name(function concatty2(a, b) {
+    var concatty = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function concatty2(a, b) {
       var arr = [];
       for (var i = 0; i < a.length; i += 1) {
         arr[i] = a[i];
@@ -1373,15 +1419,15 @@ var require_implementation = __commonJS({
         arr[j + a.length] = b[j];
       }
       return arr;
-    }, "concatty");
-    var slicy = /* @__PURE__ */ __name(function slicy2(arrLike, offset) {
+    }, "concatty2"), "concatty");
+    var slicy = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function slicy2(arrLike, offset) {
       var arr = [];
       for (var i = offset || 0, j = 0; i < arrLike.length; i += 1, j += 1) {
         arr[j] = arrLike[i];
       }
       return arr;
-    }, "slicy");
-    var joiny = /* @__PURE__ */ __name(function(arr, joiner) {
+    }, "slicy2"), "slicy");
+    var joiny = /* @__PURE__ */ __name2(function(arr, joiner) {
       var str = "";
       for (var i = 0; i < arr.length; i += 1) {
         str += arr[i];
@@ -1391,14 +1437,14 @@ var require_implementation = __commonJS({
       }
       return str;
     }, "joiny");
-    module.exports = /* @__PURE__ */ __name(function bind(that) {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function bind(that) {
       var target = this;
       if (typeof target !== "function" || toStr.apply(target) !== funcType) {
         throw new TypeError(ERROR_MESSAGE + target);
       }
       var args = slicy(arguments, 1);
       var bound;
-      var binder = /* @__PURE__ */ __name(function() {
+      var binder = /* @__PURE__ */ __name2(function() {
         if (this instanceof bound) {
           var result = target.apply(
             this,
@@ -1421,63 +1467,53 @@ var require_implementation = __commonJS({
       }
       bound = Function("binder", "return function (" + joiny(boundArgs, ",") + "){ return binder.apply(this,arguments); }")(binder);
       if (target.prototype) {
-        var Empty = /* @__PURE__ */ __name(function Empty2() {
-        }, "Empty");
+        var Empty = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function Empty2() {
+        }, "Empty2"), "Empty");
         Empty.prototype = target.prototype;
         bound.prototype = new Empty();
         Empty.prototype = null;
       }
       return bound;
-    }, "bind");
+    }, "bind"), "bind");
   }
 });
-
-// ../node_modules/function-bind/index.js
 var require_function_bind = __commonJS({
   "../node_modules/function-bind/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var implementation = require_implementation();
     module.exports = Function.prototype.bind || implementation;
   }
 });
-
-// ../node_modules/call-bind-apply-helpers/functionCall.js
 var require_functionCall = __commonJS({
   "../node_modules/call-bind-apply-helpers/functionCall.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Function.prototype.call;
   }
 });
-
-// ../node_modules/call-bind-apply-helpers/functionApply.js
 var require_functionApply = __commonJS({
   "../node_modules/call-bind-apply-helpers/functionApply.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = Function.prototype.apply;
   }
 });
-
-// ../node_modules/call-bind-apply-helpers/reflectApply.js
 var require_reflectApply = __commonJS({
   "../node_modules/call-bind-apply-helpers/reflectApply.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     module.exports = typeof Reflect !== "undefined" && Reflect && Reflect.apply;
   }
 });
-
-// ../node_modules/call-bind-apply-helpers/actualApply.js
 var require_actualApply = __commonJS({
   "../node_modules/call-bind-apply-helpers/actualApply.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var bind = require_function_bind();
     var $apply = require_functionApply();
@@ -1486,31 +1522,27 @@ var require_actualApply = __commonJS({
     module.exports = $reflectApply || bind.call($call, $apply);
   }
 });
-
-// ../node_modules/call-bind-apply-helpers/index.js
 var require_call_bind_apply_helpers = __commonJS({
   "../node_modules/call-bind-apply-helpers/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var bind = require_function_bind();
     var $TypeError = require_type();
     var $call = require_functionCall();
     var $actualApply = require_actualApply();
-    module.exports = /* @__PURE__ */ __name(function callBindBasic(args) {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function callBindBasic(args) {
       if (args.length < 1 || typeof args[0] !== "function") {
         throw new $TypeError("a function is required");
       }
       return $actualApply(bind, $call, args);
-    }, "callBindBasic");
+    }, "callBindBasic"), "callBindBasic");
   }
 });
-
-// ../node_modules/dunder-proto/get.js
 var require_get = __commonJS({
   "../node_modules/dunder-proto/get.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var callBind = require_call_bind_apply_helpers();
     var gOPD = require_gopd();
@@ -1532,40 +1564,36 @@ var require_get = __commonJS({
     var $getPrototypeOf = $Object.getPrototypeOf;
     module.exports = desc && typeof desc.get === "function" ? callBind([desc.get]) : typeof $getPrototypeOf === "function" ? (
       /** @type {import('./get')} */
-      /* @__PURE__ */ __name(function getDunder(value) {
+      /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getDunder(value) {
         return $getPrototypeOf(value == null ? value : $Object(value));
-      }, "getDunder")
+      }, "getDunder"), "getDunder")
     ) : false;
   }
 });
-
-// ../node_modules/get-proto/index.js
 var require_get_proto = __commonJS({
   "../node_modules/get-proto/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var reflectGetProto = require_Reflect_getPrototypeOf();
     var originalGetProto = require_Object_getPrototypeOf();
     var getDunderProto = require_get();
-    module.exports = reflectGetProto ? /* @__PURE__ */ __name(function getProto(O) {
+    module.exports = reflectGetProto ? /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getProto(O) {
       return reflectGetProto(O);
-    }, "getProto") : originalGetProto ? /* @__PURE__ */ __name(function getProto(O) {
+    }, "getProto"), "getProto") : originalGetProto ? /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getProto(O) {
       if (!O || typeof O !== "object" && typeof O !== "function") {
         throw new TypeError("getProto: not an object");
       }
       return originalGetProto(O);
-    }, "getProto") : getDunderProto ? /* @__PURE__ */ __name(function getProto(O) {
+    }, "getProto"), "getProto") : getDunderProto ? /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getProto(O) {
       return getDunderProto(O);
-    }, "getProto") : null;
+    }, "getProto"), "getProto") : null;
   }
 });
-
-// ../node_modules/hasown/index.js
 var require_hasown = __commonJS({
   "../node_modules/hasown/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var call = Function.prototype.call;
     var $hasOwn = Object.prototype.hasOwnProperty;
@@ -1573,12 +1601,10 @@ var require_hasown = __commonJS({
     module.exports = bind.call(call, $hasOwn);
   }
 });
-
-// ../node_modules/get-intrinsic/index.js
 var require_get_intrinsic = __commonJS({
   "../node_modules/get-intrinsic/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var undefined2;
     var $Object = require_es_object_atoms();
@@ -1597,7 +1623,7 @@ var require_get_intrinsic = __commonJS({
     var round = require_round();
     var sign2 = require_sign();
     var $Function = Function;
-    var getEvalledConstructor = /* @__PURE__ */ __name(function(expressionSyntax) {
+    var getEvalledConstructor = /* @__PURE__ */ __name2(function(expressionSyntax) {
       try {
         return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
       } catch (e) {
@@ -1605,7 +1631,7 @@ var require_get_intrinsic = __commonJS({
     }, "getEvalledConstructor");
     var $gOPD = require_gopd();
     var $defineProperty = require_es_define_property();
-    var throwTypeError = /* @__PURE__ */ __name(function() {
+    var throwTypeError = /* @__PURE__ */ __name2(function() {
       throw new $TypeError();
     }, "throwTypeError");
     var ThrowTypeError = $gOPD ? (function() {
@@ -1721,7 +1747,7 @@ var require_get_intrinsic = __commonJS({
       }
     }
     var errorProto;
-    var doEval = /* @__PURE__ */ __name(function doEval2(name) {
+    var doEval = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function doEval2(name) {
       var value;
       if (name === "%AsyncFunction%") {
         value = getEvalledConstructor("async function () {}");
@@ -1742,7 +1768,7 @@ var require_get_intrinsic = __commonJS({
       }
       INTRINSICS[name] = value;
       return value;
-    }, "doEval");
+    }, "doEval2"), "doEval");
     var LEGACY_ALIASES = {
       __proto__: null,
       "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
@@ -1806,7 +1832,7 @@ var require_get_intrinsic = __commonJS({
     var $exec = bind.call($call, RegExp.prototype.exec);
     var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
     var reEscapeChar = /\\(\\)?/g;
-    var stringToPath = /* @__PURE__ */ __name(function stringToPath2(string) {
+    var stringToPath = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function stringToPath2(string) {
       var first = $strSlice(string, 0, 1);
       var last = $strSlice(string, -1);
       if (first === "%" && last !== "%") {
@@ -1819,8 +1845,8 @@ var require_get_intrinsic = __commonJS({
         result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match2;
       });
       return result;
-    }, "stringToPath");
-    var getBaseIntrinsic = /* @__PURE__ */ __name(function getBaseIntrinsic2(name, allowMissing) {
+    }, "stringToPath2"), "stringToPath");
+    var getBaseIntrinsic = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getBaseIntrinsic2(name, allowMissing) {
       var intrinsicName = name;
       var alias;
       if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
@@ -1842,8 +1868,8 @@ var require_get_intrinsic = __commonJS({
         };
       }
       throw new $SyntaxError("intrinsic " + name + " does not exist!");
-    }, "getBaseIntrinsic");
-    module.exports = /* @__PURE__ */ __name(function GetIntrinsic(name, allowMissing) {
+    }, "getBaseIntrinsic2"), "getBaseIntrinsic");
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function GetIntrinsic(name, allowMissing) {
       if (typeof name !== "string" || name.length === 0) {
         throw new $TypeError("intrinsic name must be a non-empty string");
       }
@@ -1903,20 +1929,18 @@ var require_get_intrinsic = __commonJS({
         }
       }
       return value;
-    }, "GetIntrinsic");
+    }, "GetIntrinsic"), "GetIntrinsic");
   }
 });
-
-// ../node_modules/call-bound/index.js
 var require_call_bound = __commonJS({
   "../node_modules/call-bound/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var GetIntrinsic = require_get_intrinsic();
     var callBindBasic = require_call_bind_apply_helpers();
     var $indexOf = callBindBasic([GetIntrinsic("%String.prototype.indexOf%")]);
-    module.exports = /* @__PURE__ */ __name(function callBoundIntrinsic(name, allowMissing) {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function callBoundIntrinsic(name, allowMissing) {
       var intrinsic = (
         /** @type {(this: unknown, ...args: unknown[]) => unknown} */
         GetIntrinsic(name, !!allowMissing)
@@ -1928,15 +1952,13 @@ var require_call_bound = __commonJS({
         );
       }
       return intrinsic;
-    }, "callBoundIntrinsic");
+    }, "callBoundIntrinsic"), "callBoundIntrinsic");
   }
 });
-
-// ../node_modules/side-channel-map/index.js
 var require_side_channel_map = __commonJS({
   "../node_modules/side-channel-map/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var GetIntrinsic = require_get_intrinsic();
     var callBound = require_call_bound();
@@ -1949,15 +1971,15 @@ var require_side_channel_map = __commonJS({
     var $mapDelete = callBound("Map.prototype.delete", true);
     var $mapSize = callBound("Map.prototype.size", true);
     module.exports = !!$Map && /** @type {Exclude<import('.'), false>} */
-    /* @__PURE__ */ __name(function getSideChannelMap() {
+    /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getSideChannelMap() {
       var $m;
       var channel = {
-        assert: /* @__PURE__ */ __name(function(key) {
+        assert: /* @__PURE__ */ __name2(function(key) {
           if (!channel.has(key)) {
             throw new $TypeError("Side channel does not contain " + inspect(key));
           }
         }, "assert"),
-        "delete": /* @__PURE__ */ __name(function(key) {
+        "delete": /* @__PURE__ */ __name2(function(key) {
           if ($m) {
             var result = $mapDelete($m, key);
             if ($mapSize($m) === 0) {
@@ -1967,18 +1989,18 @@ var require_side_channel_map = __commonJS({
           }
           return false;
         }, "delete"),
-        get: /* @__PURE__ */ __name(function(key) {
+        get: /* @__PURE__ */ __name2(function(key) {
           if ($m) {
             return $mapGet($m, key);
           }
         }, "get"),
-        has: /* @__PURE__ */ __name(function(key) {
+        has: /* @__PURE__ */ __name2(function(key) {
           if ($m) {
             return $mapHas($m, key);
           }
           return false;
         }, "has"),
-        set: /* @__PURE__ */ __name(function(key, value) {
+        set: /* @__PURE__ */ __name2(function(key, value) {
           if (!$m) {
             $m = new $Map();
           }
@@ -1986,15 +2008,13 @@ var require_side_channel_map = __commonJS({
         }, "set")
       };
       return channel;
-    }, "getSideChannelMap");
+    }, "getSideChannelMap"), "getSideChannelMap");
   }
 });
-
-// ../node_modules/side-channel-weakmap/index.js
 var require_side_channel_weakmap = __commonJS({
   "../node_modules/side-channel-weakmap/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var GetIntrinsic = require_get_intrinsic();
     var callBound = require_call_bound();
@@ -2008,16 +2028,16 @@ var require_side_channel_weakmap = __commonJS({
     var $weakMapDelete = callBound("WeakMap.prototype.delete", true);
     module.exports = $WeakMap ? (
       /** @type {Exclude<import('.'), false>} */
-      /* @__PURE__ */ __name(function getSideChannelWeakMap() {
+      /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getSideChannelWeakMap() {
         var $wm;
         var $m;
         var channel = {
-          assert: /* @__PURE__ */ __name(function(key) {
+          assert: /* @__PURE__ */ __name2(function(key) {
             if (!channel.has(key)) {
               throw new $TypeError("Side channel does not contain " + inspect(key));
             }
           }, "assert"),
-          "delete": /* @__PURE__ */ __name(function(key) {
+          "delete": /* @__PURE__ */ __name2(function(key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapDelete($wm, key);
@@ -2029,7 +2049,7 @@ var require_side_channel_weakmap = __commonJS({
             }
             return false;
           }, "delete"),
-          get: /* @__PURE__ */ __name(function(key) {
+          get: /* @__PURE__ */ __name2(function(key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapGet($wm, key);
@@ -2037,7 +2057,7 @@ var require_side_channel_weakmap = __commonJS({
             }
             return $m && $m.get(key);
           }, "get"),
-          has: /* @__PURE__ */ __name(function(key) {
+          has: /* @__PURE__ */ __name2(function(key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapHas($wm, key);
@@ -2045,7 +2065,7 @@ var require_side_channel_weakmap = __commonJS({
             }
             return !!$m && $m.has(key);
           }, "has"),
-          set: /* @__PURE__ */ __name(function(key, value) {
+          set: /* @__PURE__ */ __name2(function(key, value) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if (!$wm) {
                 $wm = new $WeakMap();
@@ -2060,16 +2080,14 @@ var require_side_channel_weakmap = __commonJS({
           }, "set")
         };
         return channel;
-      }, "getSideChannelWeakMap")
+      }, "getSideChannelWeakMap"), "getSideChannelWeakMap")
     ) : getSideChannelMap;
   }
 });
-
-// ../node_modules/side-channel/index.js
 var require_side_channel = __commonJS({
   "../node_modules/side-channel/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var $TypeError = require_type();
     var inspect = require_object_inspect();
@@ -2077,24 +2095,24 @@ var require_side_channel = __commonJS({
     var getSideChannelMap = require_side_channel_map();
     var getSideChannelWeakMap = require_side_channel_weakmap();
     var makeChannel = getSideChannelWeakMap || getSideChannelMap || getSideChannelList;
-    module.exports = /* @__PURE__ */ __name(function getSideChannel() {
+    module.exports = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getSideChannel() {
       var $channelData;
       var channel = {
-        assert: /* @__PURE__ */ __name(function(key) {
+        assert: /* @__PURE__ */ __name2(function(key) {
           if (!channel.has(key)) {
             throw new $TypeError("Side channel does not contain " + inspect(key));
           }
         }, "assert"),
-        "delete": /* @__PURE__ */ __name(function(key) {
+        "delete": /* @__PURE__ */ __name2(function(key) {
           return !!$channelData && $channelData["delete"](key);
         }, "delete"),
-        get: /* @__PURE__ */ __name(function(key) {
+        get: /* @__PURE__ */ __name2(function(key) {
           return $channelData && $channelData.get(key);
         }, "get"),
-        has: /* @__PURE__ */ __name(function(key) {
+        has: /* @__PURE__ */ __name2(function(key) {
           return !!$channelData && $channelData.has(key);
         }, "has"),
-        set: /* @__PURE__ */ __name(function(key, value) {
+        set: /* @__PURE__ */ __name2(function(key, value) {
           if (!$channelData) {
             $channelData = makeChannel();
           }
@@ -2102,15 +2120,13 @@ var require_side_channel = __commonJS({
         }, "set")
       };
       return channel;
-    }, "getSideChannel");
+    }, "getSideChannel"), "getSideChannel");
   }
 });
-
-// ../node_modules/qs/lib/formats.js
 var require_formats = __commonJS({
   "../node_modules/qs/lib/formats.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var replace = String.prototype.replace;
     var percentTwenties = /%20/g;
@@ -2121,10 +2137,10 @@ var require_formats = __commonJS({
     module.exports = {
       "default": Format.RFC3986,
       formatters: {
-        RFC1738: /* @__PURE__ */ __name(function(value) {
+        RFC1738: /* @__PURE__ */ __name2(function(value) {
           return replace.call(value, percentTwenties, "+");
         }, "RFC1738"),
-        RFC3986: /* @__PURE__ */ __name(function(value) {
+        RFC3986: /* @__PURE__ */ __name2(function(value) {
           return String(value);
         }, "RFC3986")
       },
@@ -2133,31 +2149,29 @@ var require_formats = __commonJS({
     };
   }
 });
-
-// ../node_modules/qs/lib/utils.js
 var require_utils = __commonJS({
   "../node_modules/qs/lib/utils.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var formats = require_formats();
     var getSideChannel = require_side_channel();
     var has = Object.prototype.hasOwnProperty;
     var isArray = Array.isArray;
     var overflowChannel = getSideChannel();
-    var markOverflow = /* @__PURE__ */ __name(function markOverflow2(obj, maxIndex) {
+    var markOverflow = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function markOverflow2(obj, maxIndex) {
       overflowChannel.set(obj, maxIndex);
       return obj;
-    }, "markOverflow");
-    var isOverflow = /* @__PURE__ */ __name(function isOverflow2(obj) {
+    }, "markOverflow2"), "markOverflow");
+    var isOverflow = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function isOverflow2(obj) {
       return overflowChannel.has(obj);
-    }, "isOverflow");
-    var getMaxIndex = /* @__PURE__ */ __name(function getMaxIndex2(obj) {
+    }, "isOverflow2"), "isOverflow");
+    var getMaxIndex = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function getMaxIndex2(obj) {
       return overflowChannel.get(obj);
-    }, "getMaxIndex");
-    var setMaxIndex = /* @__PURE__ */ __name(function setMaxIndex2(obj, maxIndex) {
+    }, "getMaxIndex2"), "getMaxIndex");
+    var setMaxIndex = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function setMaxIndex2(obj, maxIndex) {
       overflowChannel.set(obj, maxIndex);
-    }, "setMaxIndex");
+    }, "setMaxIndex2"), "setMaxIndex");
     var hexTable = (function() {
       var array = [];
       for (var i = 0; i < 256; ++i) {
@@ -2165,7 +2179,7 @@ var require_utils = __commonJS({
       }
       return array;
     })();
-    var compactQueue = /* @__PURE__ */ __name(function compactQueue2(queue) {
+    var compactQueue = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function compactQueue2(queue) {
       while (queue.length > 1) {
         var item = queue.pop();
         var obj = item.obj[item.prop];
@@ -2179,8 +2193,8 @@ var require_utils = __commonJS({
           item.obj[item.prop] = compacted;
         }
       }
-    }, "compactQueue");
-    var arrayToObject = /* @__PURE__ */ __name(function arrayToObject2(source, options) {
+    }, "compactQueue2"), "compactQueue");
+    var arrayToObject = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function arrayToObject2(source, options) {
       var obj = options && options.plainObjects ? { __proto__: null } : {};
       for (var i = 0; i < source.length; ++i) {
         if (typeof source[i] !== "undefined") {
@@ -2188,8 +2202,8 @@ var require_utils = __commonJS({
         }
       }
       return obj;
-    }, "arrayToObject");
-    var merge = /* @__PURE__ */ __name(function merge2(target, source, options) {
+    }, "arrayToObject2"), "arrayToObject");
+    var merge = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function merge2(target, source, options) {
       if (!source) {
         return target;
       }
@@ -2249,14 +2263,14 @@ var require_utils = __commonJS({
         }
         return acc;
       }, mergeTarget);
-    }, "merge");
-    var assign = /* @__PURE__ */ __name(function assignSingleSource(target, source) {
+    }, "merge2"), "merge");
+    var assign = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function assignSingleSource(target, source) {
       return Object.keys(source).reduce(function(acc, key) {
         acc[key] = source[key];
         return acc;
       }, target);
-    }, "assignSingleSource");
-    var decode = /* @__PURE__ */ __name(function(str, defaultDecoder, charset) {
+    }, "assignSingleSource"), "assignSingleSource");
+    var decode = /* @__PURE__ */ __name2(function(str, defaultDecoder, charset) {
       var strWithoutPlus = str.replace(/\+/g, " ");
       if (charset === "iso-8859-1") {
         return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
@@ -2268,7 +2282,7 @@ var require_utils = __commonJS({
       }
     }, "decode");
     var limit = 1024;
-    var encode = /* @__PURE__ */ __name(function encode2(str, defaultEncoder, charset, kind, format) {
+    var encode = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function encode2(str, defaultEncoder, charset, kind, format) {
       if (str.length === 0) {
         return str;
       }
@@ -2312,8 +2326,8 @@ var require_utils = __commonJS({
         out += arr.join("");
       }
       return out;
-    }, "encode");
-    var compact = /* @__PURE__ */ __name(function compact2(value) {
+    }, "encode2"), "encode");
+    var compact = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function compact2(value) {
       var queue = [{ obj: { o: value }, prop: "o" }];
       var refs = [];
       for (var i = 0; i < queue.length; ++i) {
@@ -2331,17 +2345,17 @@ var require_utils = __commonJS({
       }
       compactQueue(queue);
       return value;
-    }, "compact");
-    var isRegExp = /* @__PURE__ */ __name(function isRegExp2(obj) {
+    }, "compact2"), "compact");
+    var isRegExp = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function isRegExp2(obj) {
       return Object.prototype.toString.call(obj) === "[object RegExp]";
-    }, "isRegExp");
-    var isBuffer = /* @__PURE__ */ __name(function isBuffer2(obj) {
+    }, "isRegExp2"), "isRegExp");
+    var isBuffer = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function isBuffer2(obj) {
       if (!obj || typeof obj !== "object") {
         return false;
       }
       return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
-    }, "isBuffer");
-    var combine = /* @__PURE__ */ __name(function combine2(a, b, arrayLimit, plainObjects) {
+    }, "isBuffer2"), "isBuffer");
+    var combine = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function combine2(a, b, arrayLimit, plainObjects) {
       if (isOverflow(a)) {
         var newIndex = getMaxIndex(a) + 1;
         a[newIndex] = b;
@@ -2353,8 +2367,8 @@ var require_utils = __commonJS({
         return markOverflow(arrayToObject(result, { plainObjects }), result.length - 1);
       }
       return result;
-    }, "combine");
-    var maybeMap = /* @__PURE__ */ __name(function maybeMap2(val, fn) {
+    }, "combine2"), "combine");
+    var maybeMap = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function maybeMap2(val, fn) {
       if (isArray(val)) {
         var mapped = [];
         for (var i = 0; i < val.length; i += 1) {
@@ -2363,7 +2377,7 @@ var require_utils = __commonJS({
         return mapped;
       }
       return fn(val);
-    }, "maybeMap");
+    }, "maybeMap2"), "maybeMap");
     module.exports = {
       arrayToObject,
       assign,
@@ -2379,32 +2393,30 @@ var require_utils = __commonJS({
     };
   }
 });
-
-// ../node_modules/qs/lib/stringify.js
 var require_stringify = __commonJS({
   "../node_modules/qs/lib/stringify.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var getSideChannel = require_side_channel();
     var utils = require_utils();
     var formats = require_formats();
     var has = Object.prototype.hasOwnProperty;
     var arrayPrefixGenerators = {
-      brackets: /* @__PURE__ */ __name(function brackets(prefix) {
+      brackets: /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function brackets(prefix) {
         return prefix + "[]";
-      }, "brackets"),
+      }, "brackets"), "brackets"),
       comma: "comma",
-      indices: /* @__PURE__ */ __name(function indices(prefix, key) {
+      indices: /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function indices(prefix, key) {
         return prefix + "[" + key + "]";
-      }, "indices"),
-      repeat: /* @__PURE__ */ __name(function repeat(prefix) {
+      }, "indices"), "indices"),
+      repeat: /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function repeat(prefix) {
         return prefix;
-      }, "repeat")
+      }, "repeat"), "repeat")
     };
     var isArray = Array.isArray;
     var push = Array.prototype.push;
-    var pushToArray = /* @__PURE__ */ __name(function(arr, valueOrArray) {
+    var pushToArray = /* @__PURE__ */ __name2(function(arr, valueOrArray) {
       push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray]);
     }, "pushToArray");
     var toISO = Date.prototype.toISOString;
@@ -2427,17 +2439,17 @@ var require_stringify = __commonJS({
       formatter: formats.formatters[defaultFormat],
       // deprecated
       indices: false,
-      serializeDate: /* @__PURE__ */ __name(function serializeDate(date) {
+      serializeDate: /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function serializeDate(date) {
         return toISO.call(date);
-      }, "serializeDate"),
+      }, "serializeDate"), "serializeDate"),
       skipNulls: false,
       strictNullHandling: false
     };
-    var isNonNullishPrimitive = /* @__PURE__ */ __name(function isNonNullishPrimitive2(v) {
+    var isNonNullishPrimitive = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function isNonNullishPrimitive2(v) {
       return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
-    }, "isNonNullishPrimitive");
+    }, "isNonNullishPrimitive2"), "isNonNullishPrimitive");
     var sentinel = {};
-    var stringify2 = /* @__PURE__ */ __name(function stringify3(object, prefix, generateArrayPrefix, commaRoundTrip, allowEmptyArrays, strictNullHandling, skipNulls, encodeDotInKeys, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
+    var stringify2 = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function stringify3(object, prefix, generateArrayPrefix, commaRoundTrip, allowEmptyArrays, strictNullHandling, skipNulls, encodeDotInKeys, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
       var obj = object;
       var tmpSc = sideChannel;
       var step = 0;
@@ -2535,8 +2547,8 @@ var require_stringify = __commonJS({
         ));
       }
       return values;
-    }, "stringify");
-    var normalizeStringifyOptions = /* @__PURE__ */ __name(function normalizeStringifyOptions2(opts) {
+    }, "stringify3"), "stringify");
+    var normalizeStringifyOptions = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function normalizeStringifyOptions2(opts) {
       if (!opts) {
         return defaults;
       }
@@ -2598,7 +2610,7 @@ var require_stringify = __commonJS({
         sort: typeof opts.sort === "function" ? opts.sort : null,
         strictNullHandling: typeof opts.strictNullHandling === "boolean" ? opts.strictNullHandling : defaults.strictNullHandling
       };
-    }, "normalizeStringifyOptions");
+    }, "normalizeStringifyOptions2"), "normalizeStringifyOptions");
     module.exports = function(object, opts) {
       var obj = object;
       var options = normalizeStringifyOptions(opts);
@@ -2664,12 +2676,10 @@ var require_stringify = __commonJS({
     };
   }
 });
-
-// ../node_modules/qs/lib/parse.js
 var require_parse = __commonJS({
   "../node_modules/qs/lib/parse.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var utils = require_utils();
     var has = Object.prototype.hasOwnProperty;
@@ -2697,12 +2707,12 @@ var require_parse = __commonJS({
       strictNullHandling: false,
       throwOnLimitExceeded: false
     };
-    var interpretNumericEntities = /* @__PURE__ */ __name(function(str) {
+    var interpretNumericEntities = /* @__PURE__ */ __name2(function(str) {
       return str.replace(/&#(\d+);/g, function($0, numberStr) {
         return String.fromCharCode(parseInt(numberStr, 10));
       });
     }, "interpretNumericEntities");
-    var parseArrayValue = /* @__PURE__ */ __name(function(val, options, currentArrayLength) {
+    var parseArrayValue = /* @__PURE__ */ __name2(function(val, options, currentArrayLength) {
       if (val && typeof val === "string" && options.comma && val.indexOf(",") > -1) {
         return val.split(",");
       }
@@ -2713,7 +2723,7 @@ var require_parse = __commonJS({
     }, "parseArrayValue");
     var isoSentinel = "utf8=%26%2310003%3B";
     var charsetSentinel = "utf8=%E2%9C%93";
-    var parseValues = /* @__PURE__ */ __name(function parseQueryStringValues(str, options) {
+    var parseValues = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function parseQueryStringValues(str, options) {
       var obj = { __proto__: null };
       var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, "") : str;
       cleanStr = cleanStr.replace(/%5B/gi, "[").replace(/%5D/gi, "]");
@@ -2789,8 +2799,8 @@ var require_parse = __commonJS({
         }
       }
       return obj;
-    }, "parseQueryStringValues");
-    var parseObject = /* @__PURE__ */ __name(function(chain, val, options, valuesParsed) {
+    }, "parseQueryStringValues"), "parseQueryStringValues");
+    var parseObject = /* @__PURE__ */ __name2(function(chain, val, options, valuesParsed) {
       var currentArrayLength = 0;
       if (chain.length > 0 && chain[chain.length - 1] === "[]") {
         var parentKey = chain.slice(0, -1).join("");
@@ -2829,7 +2839,7 @@ var require_parse = __commonJS({
       }
       return leaf;
     }, "parseObject");
-    var splitKeyIntoSegments = /* @__PURE__ */ __name(function splitKeyIntoSegments2(givenKey, options) {
+    var splitKeyIntoSegments = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function splitKeyIntoSegments2(givenKey, options) {
       var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, "[$1]") : givenKey;
       if (options.depth <= 0) {
         if (!options.plainObjects && has.call(Object.prototype, key)) {
@@ -2870,8 +2880,8 @@ var require_parse = __commonJS({
         keys.push("[" + key.slice(segment.index) + "]");
       }
       return keys;
-    }, "splitKeyIntoSegments");
-    var parseKeys = /* @__PURE__ */ __name(function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
+    }, "splitKeyIntoSegments2"), "splitKeyIntoSegments");
+    var parseKeys = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
       if (!givenKey) {
         return;
       }
@@ -2880,8 +2890,8 @@ var require_parse = __commonJS({
         return;
       }
       return parseObject(keys, val, options, valuesParsed);
-    }, "parseQueryStringKeys");
-    var normalizeParseOptions = /* @__PURE__ */ __name(function normalizeParseOptions2(opts) {
+    }, "parseQueryStringKeys"), "parseQueryStringKeys");
+    var normalizeParseOptions = /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function normalizeParseOptions2(opts) {
       if (!opts) {
         return defaults;
       }
@@ -2930,7 +2940,7 @@ var require_parse = __commonJS({
         strictNullHandling: typeof opts.strictNullHandling === "boolean" ? opts.strictNullHandling : defaults.strictNullHandling,
         throwOnLimitExceeded: typeof opts.throwOnLimitExceeded === "boolean" ? opts.throwOnLimitExceeded : false
       };
-    }, "normalizeParseOptions");
+    }, "normalizeParseOptions2"), "normalizeParseOptions");
     module.exports = function(str, opts) {
       var options = normalizeParseOptions(opts);
       if (str === "" || str === null || typeof str === "undefined") {
@@ -2951,12 +2961,10 @@ var require_parse = __commonJS({
     };
   }
 });
-
-// ../node_modules/qs/lib/index.js
 var require_lib = __commonJS({
   "../node_modules/qs/lib/index.js"(exports, module) {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     var stringify2 = require_stringify();
     var parse2 = require_parse();
@@ -2968,21 +2976,22 @@ var require_lib = __commonJS({
     };
   }
 });
-
-// ../node_modules/stripe/esm/utils.js
 function isOptionsHash(o) {
   return o && typeof o === "object" && OPTIONS_KEYS.some((prop) => Object.prototype.hasOwnProperty.call(o, prop));
 }
+__name(isOptionsHash, "isOptionsHash");
 function queryStringifyRequestData(data, apiMode) {
   return qs.stringify(data, {
-    serializeDate: /* @__PURE__ */ __name((d) => Math.floor(d.getTime() / 1e3).toString(), "serializeDate"),
+    serializeDate: /* @__PURE__ */ __name2((d) => Math.floor(d.getTime() / 1e3).toString(), "serializeDate"),
     // Always use indexed format for arrays
     arrayFormat: "indices"
   }).replace(/%5B/g, "[").replace(/%5D/g, "]");
 }
+__name(queryStringifyRequestData, "queryStringifyRequestData");
 function isValidEncodeUriComponentType(value) {
   return ["number", "string", "boolean"].includes(typeof value);
 }
+__name(isValidEncodeUriComponentType, "isValidEncodeUriComponentType");
 function extractUrlParams(path) {
   const params = path.match(/\{\w+\}/g);
   if (!params) {
@@ -2990,6 +2999,7 @@ function extractUrlParams(path) {
   }
   return params.map((param) => param.replace(/[{}]/g, ""));
 }
+__name(extractUrlParams, "extractUrlParams");
 function getDataFromArgs(args) {
   if (!Array.isArray(args) || !args[0] || typeof args[0] !== "object") {
     return {};
@@ -3004,6 +3014,7 @@ function getDataFromArgs(args) {
   }
   return {};
 }
+__name(getDataFromArgs, "getDataFromArgs");
 function getOptionsFromArgs(args) {
   const opts = {
     host: null,
@@ -3067,6 +3078,7 @@ function getOptionsFromArgs(args) {
   }
   return opts;
 }
+__name(getOptionsFromArgs, "getOptionsFromArgs");
 function protoExtend(sub) {
   const Super = this;
   const Constructor = Object.prototype.hasOwnProperty.call(sub, "constructor") ? sub.constructor : function(...args) {
@@ -3077,6 +3089,7 @@ function protoExtend(sub) {
   Object.assign(Constructor.prototype, sub);
   return Constructor;
 }
+__name(protoExtend, "protoExtend");
 function removeNullish(obj) {
   if (typeof obj !== "object") {
     throw new Error("Argument must be an object");
@@ -3088,6 +3101,7 @@ function removeNullish(obj) {
     return result;
   }, {});
 }
+__name(removeNullish, "removeNullish");
 function normalizeHeaders(obj) {
   if (!(obj && typeof obj === "object")) {
     return obj;
@@ -3097,9 +3111,11 @@ function normalizeHeaders(obj) {
     return result;
   }, {});
 }
+__name(normalizeHeaders, "normalizeHeaders");
 function normalizeHeader(header) {
   return header.split("-").map((text) => text.charAt(0).toUpperCase() + text.substr(1).toLowerCase()).join("-");
 }
+__name(normalizeHeader, "normalizeHeader");
 function callbackifyPromiseWithTimeout(promise, callback) {
   if (callback) {
     return promise.then((res) => {
@@ -3114,6 +3130,7 @@ function callbackifyPromiseWithTimeout(promise, callback) {
   }
   return promise;
 }
+__name(callbackifyPromiseWithTimeout, "callbackifyPromiseWithTimeout");
 function pascalToCamelCase(name) {
   if (name === "OAuth") {
     return "oauth";
@@ -3121,19 +3138,22 @@ function pascalToCamelCase(name) {
     return name[0].toLowerCase() + name.substring(1);
   }
 }
+__name(pascalToCamelCase, "pascalToCamelCase");
 function emitWarning(warning) {
   if (typeof process.emitWarning !== "function") {
     return console.warn(`Stripe: ${warning}`);
   }
   return process.emitWarning(warning, "Stripe");
 }
+__name(emitWarning, "emitWarning");
 function isObject(obj) {
   const type = typeof obj;
   return (type === "function" || type === "object") && !!obj;
 }
+__name(isObject, "isObject");
 function flattenAndStringify(data) {
   const result = {};
-  const step = /* @__PURE__ */ __name((obj, prevKey) => {
+  const step = /* @__PURE__ */ __name2((obj, prevKey) => {
     Object.entries(obj).forEach(([key, value]) => {
       const newKey = prevKey ? `${prevKey}[${key}]` : key;
       if (isObject(value)) {
@@ -3150,6 +3170,7 @@ function flattenAndStringify(data) {
   step(data, null);
   return result;
 }
+__name(flattenAndStringify, "flattenAndStringify");
 function validateInteger(name, n, defaultVal) {
   if (!Number.isInteger(n)) {
     if (defaultVal !== void 0) {
@@ -3160,54 +3181,65 @@ function validateInteger(name, n, defaultVal) {
   }
   return n;
 }
+__name(validateInteger, "validateInteger");
 function determineProcessUserAgentProperties() {
   return typeof process === "undefined" ? {} : {
     lang_version: process.version,
     platform: process.platform
   };
 }
+__name(determineProcessUserAgentProperties, "determineProcessUserAgentProperties");
 function createApiKeyAuthenticator(apiKey) {
-  const authenticator = /* @__PURE__ */ __name((request) => {
+  const authenticator = /* @__PURE__ */ __name2((request) => {
     request.headers.Authorization = "Bearer " + apiKey;
     return Promise.resolve();
   }, "authenticator");
   authenticator._apiKey = apiKey;
   return authenticator;
 }
+__name(createApiKeyAuthenticator, "createApiKeyAuthenticator");
 function dateTimeReplacer(key, value) {
   if (this[key] instanceof Date) {
     return Math.floor(this[key].getTime() / 1e3).toString();
   }
   return value;
 }
+__name(dateTimeReplacer, "dateTimeReplacer");
 function jsonStringifyRequestData(data) {
   return JSON.stringify(data, dateTimeReplacer);
 }
+__name(jsonStringifyRequestData, "jsonStringifyRequestData");
 function getAPIMode(path) {
   if (!path) {
     return "v1";
   }
   return path.startsWith("/v2") ? "v2" : "v1";
 }
+__name(getAPIMode, "getAPIMode");
 function parseHttpHeaderAsString(header) {
   if (Array.isArray(header)) {
     return header.join(", ");
   }
   return String(header);
 }
+__name(parseHttpHeaderAsString, "parseHttpHeaderAsString");
 function parseHttpHeaderAsNumber(header) {
   const number = Array.isArray(header) ? header[0] : header;
   return Number(number);
 }
+__name(parseHttpHeaderAsNumber, "parseHttpHeaderAsNumber");
 function parseHeadersForFetch(headers) {
   return Object.entries(headers).map(([key, value]) => {
     return [key, parseHttpHeaderAsString(value)];
   });
 }
-var qs, OPTIONS_KEYS, makeURLInterpolator;
+__name(parseHeadersForFetch, "parseHeadersForFetch");
+var qs;
+var OPTIONS_KEYS;
+var makeURLInterpolator;
 var init_utils = __esm({
   "../node_modules/stripe/esm/utils.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     qs = __toESM(require_lib(), 1);
     OPTIONS_KEYS = [
@@ -3223,8 +3255,8 @@ var init_utils = __esm({
       "additionalHeaders",
       "streaming"
     ];
-    __name(isOptionsHash, "isOptionsHash");
-    __name(queryStringifyRequestData, "queryStringifyRequestData");
+    __name2(isOptionsHash, "isOptionsHash");
+    __name2(queryStringifyRequestData, "queryStringifyRequestData");
     makeURLInterpolator = /* @__PURE__ */ (() => {
       const rc = {
         "\n": "\\n",
@@ -3244,40 +3276,42 @@ var init_utils = __esm({
         };
       };
     })();
-    __name(isValidEncodeUriComponentType, "isValidEncodeUriComponentType");
-    __name(extractUrlParams, "extractUrlParams");
-    __name(getDataFromArgs, "getDataFromArgs");
-    __name(getOptionsFromArgs, "getOptionsFromArgs");
-    __name(protoExtend, "protoExtend");
-    __name(removeNullish, "removeNullish");
-    __name(normalizeHeaders, "normalizeHeaders");
-    __name(normalizeHeader, "normalizeHeader");
-    __name(callbackifyPromiseWithTimeout, "callbackifyPromiseWithTimeout");
-    __name(pascalToCamelCase, "pascalToCamelCase");
-    __name(emitWarning, "emitWarning");
-    __name(isObject, "isObject");
-    __name(flattenAndStringify, "flattenAndStringify");
-    __name(validateInteger, "validateInteger");
-    __name(determineProcessUserAgentProperties, "determineProcessUserAgentProperties");
-    __name(createApiKeyAuthenticator, "createApiKeyAuthenticator");
-    __name(dateTimeReplacer, "dateTimeReplacer");
-    __name(jsonStringifyRequestData, "jsonStringifyRequestData");
-    __name(getAPIMode, "getAPIMode");
-    __name(parseHttpHeaderAsString, "parseHttpHeaderAsString");
-    __name(parseHttpHeaderAsNumber, "parseHttpHeaderAsNumber");
-    __name(parseHeadersForFetch, "parseHeadersForFetch");
+    __name2(isValidEncodeUriComponentType, "isValidEncodeUriComponentType");
+    __name2(extractUrlParams, "extractUrlParams");
+    __name2(getDataFromArgs, "getDataFromArgs");
+    __name2(getOptionsFromArgs, "getOptionsFromArgs");
+    __name2(protoExtend, "protoExtend");
+    __name2(removeNullish, "removeNullish");
+    __name2(normalizeHeaders, "normalizeHeaders");
+    __name2(normalizeHeader, "normalizeHeader");
+    __name2(callbackifyPromiseWithTimeout, "callbackifyPromiseWithTimeout");
+    __name2(pascalToCamelCase, "pascalToCamelCase");
+    __name2(emitWarning, "emitWarning");
+    __name2(isObject, "isObject");
+    __name2(flattenAndStringify, "flattenAndStringify");
+    __name2(validateInteger, "validateInteger");
+    __name2(determineProcessUserAgentProperties, "determineProcessUserAgentProperties");
+    __name2(createApiKeyAuthenticator, "createApiKeyAuthenticator");
+    __name2(dateTimeReplacer, "dateTimeReplacer");
+    __name2(jsonStringifyRequestData, "jsonStringifyRequestData");
+    __name2(getAPIMode, "getAPIMode");
+    __name2(parseHttpHeaderAsString, "parseHttpHeaderAsString");
+    __name2(parseHttpHeaderAsNumber, "parseHttpHeaderAsNumber");
+    __name2(parseHeadersForFetch, "parseHeadersForFetch");
   }
 });
-
-// ../node_modules/stripe/esm/net/HttpClient.js
-var HttpClient, HttpClientResponse;
+var HttpClient;
+var HttpClientResponse;
 var init_HttpClient = __esm({
   "../node_modules/stripe/esm/net/HttpClient.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     HttpClient = class _HttpClient {
       static {
-        __name(this, "HttpClient");
+        __name(this, "_HttpClient");
+      }
+      static {
+        __name2(this, "HttpClient");
       }
       /** The client name used for diagnostics. */
       getClientName() {
@@ -3298,6 +3332,9 @@ var init_HttpClient = __esm({
     HttpClientResponse = class {
       static {
         __name(this, "HttpClientResponse");
+      }
+      static {
+        __name2(this, "HttpClientResponse");
       }
       constructor(statusCode, headers) {
         this._statusCode = statusCode;
@@ -3321,18 +3358,20 @@ var init_HttpClient = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/net/FetchHttpClient.js
-var FetchHttpClient, FetchHttpClientResponse;
+var FetchHttpClient;
+var FetchHttpClientResponse;
 var init_FetchHttpClient = __esm({
   "../node_modules/stripe/esm/net/FetchHttpClient.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_utils();
     init_HttpClient();
     FetchHttpClient = class _FetchHttpClient extends HttpClient {
       static {
-        __name(this, "FetchHttpClient");
+        __name(this, "_FetchHttpClient");
+      }
+      static {
+        __name2(this, "FetchHttpClient");
       }
       constructor(fetchFn) {
         super();
@@ -3407,7 +3446,10 @@ var init_FetchHttpClient = __esm({
     };
     FetchHttpClientResponse = class _FetchHttpClientResponse extends HttpClientResponse {
       static {
-        __name(this, "FetchHttpClientResponse");
+        __name(this, "_FetchHttpClientResponse");
+      }
+      static {
+        __name2(this, "FetchHttpClientResponse");
       }
       constructor(res) {
         super(res.status, _FetchHttpClientResponse._transformHeadersToObject(res.headers));
@@ -3436,16 +3478,18 @@ var init_FetchHttpClient = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/crypto/CryptoProvider.js
-var CryptoProvider, CryptoProviderOnlySupportsAsyncError;
+var CryptoProvider;
+var CryptoProviderOnlySupportsAsyncError;
 var init_CryptoProvider = __esm({
   "../node_modules/stripe/esm/crypto/CryptoProvider.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     CryptoProvider = class {
       static {
         __name(this, "CryptoProvider");
+      }
+      static {
+        __name2(this, "CryptoProvider");
       }
       /**
        * Computes a SHA-256 HMAC given a secret and a payload (encoded in UTF-8).
@@ -3483,20 +3527,25 @@ var init_CryptoProvider = __esm({
       static {
         __name(this, "CryptoProviderOnlySupportsAsyncError");
       }
+      static {
+        __name2(this, "CryptoProviderOnlySupportsAsyncError");
+      }
     };
   }
 });
-
-// ../node_modules/stripe/esm/crypto/SubtleCryptoProvider.js
-var SubtleCryptoProvider, byteHexMapping;
+var SubtleCryptoProvider;
+var byteHexMapping;
 var init_SubtleCryptoProvider = __esm({
   "../node_modules/stripe/esm/crypto/SubtleCryptoProvider.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_CryptoProvider();
     SubtleCryptoProvider = class extends CryptoProvider {
       static {
         __name(this, "SubtleCryptoProvider");
+      }
+      static {
+        __name2(this, "SubtleCryptoProvider");
       }
       constructor(subtleCrypto) {
         super();
@@ -3532,18 +3581,19 @@ var init_SubtleCryptoProvider = __esm({
     }
   }
 });
-
-// ../node_modules/stripe/esm/platform/PlatformFunctions.js
 var PlatformFunctions;
 var init_PlatformFunctions = __esm({
   "../node_modules/stripe/esm/platform/PlatformFunctions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_FetchHttpClient();
     init_SubtleCryptoProvider();
     PlatformFunctions = class {
       static {
         __name(this, "PlatformFunctions");
+      }
+      static {
+        __name2(this, "PlatformFunctions");
       }
       constructor() {
         this._fetchFn = null;
@@ -3633,16 +3683,18 @@ var init_PlatformFunctions = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/StripeEmitter.js
-var _StripeEvent, StripeEmitter;
+var _StripeEvent;
+var StripeEmitter;
 var init_StripeEmitter = __esm({
   "../node_modules/stripe/esm/StripeEmitter.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     _StripeEvent = class extends Event {
       static {
         __name(this, "_StripeEvent");
+      }
+      static {
+        __name2(this, "_StripeEvent");
       }
       constructor(eventName, data) {
         super(eventName);
@@ -3653,12 +3705,15 @@ var init_StripeEmitter = __esm({
       static {
         __name(this, "StripeEmitter");
       }
+      static {
+        __name2(this, "StripeEmitter");
+      }
       constructor() {
         this.eventTarget = new EventTarget();
         this.listenerMapping = /* @__PURE__ */ new Map();
       }
       on(eventName, listener) {
-        const listenerWrapper = /* @__PURE__ */ __name((event) => {
+        const listenerWrapper = /* @__PURE__ */ __name2((event) => {
           listener(event.data);
         }, "listenerWrapper");
         this.listenerMapping.set(listener, listenerWrapper);
@@ -3670,7 +3725,7 @@ var init_StripeEmitter = __esm({
         return this.eventTarget.removeEventListener(eventName, listenerWrapper);
       }
       once(eventName, listener) {
-        const listenerWrapper = /* @__PURE__ */ __name((event) => {
+        const listenerWrapper = /* @__PURE__ */ __name2((event) => {
           listener(event.data);
         }, "listenerWrapper");
         this.listenerMapping.set(listener, listenerWrapper);
@@ -3684,18 +3739,19 @@ var init_StripeEmitter = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/platform/WebPlatformFunctions.js
 var WebPlatformFunctions;
 var init_WebPlatformFunctions = __esm({
   "../node_modules/stripe/esm/platform/WebPlatformFunctions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_PlatformFunctions();
     init_StripeEmitter();
     WebPlatformFunctions = class extends PlatformFunctions {
       static {
         __name(this, "WebPlatformFunctions");
+      }
+      static {
+        __name2(this, "WebPlatformFunctions");
       }
       /** @override */
       getUname() {
@@ -3731,32 +3787,44 @@ var init_WebPlatformFunctions = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/Error.js
 var Error_exports = {};
 __export(Error_exports, {
-  StripeAPIError: () => StripeAPIError,
-  StripeAuthenticationError: () => StripeAuthenticationError,
-  StripeCardError: () => StripeCardError,
-  StripeConnectionError: () => StripeConnectionError,
-  StripeError: () => StripeError,
-  StripeIdempotencyError: () => StripeIdempotencyError,
-  StripeInvalidGrantError: () => StripeInvalidGrantError,
-  StripeInvalidRequestError: () => StripeInvalidRequestError,
-  StripePermissionError: () => StripePermissionError,
-  StripeRateLimitError: () => StripeRateLimitError,
-  StripeSignatureVerificationError: () => StripeSignatureVerificationError,
-  StripeUnknownError: () => StripeUnknownError,
-  TemporarySessionExpiredError: () => TemporarySessionExpiredError,
-  generateV1Error: () => generateV1Error,
-  generateV2Error: () => generateV2Error
+  StripeAPIError: /* @__PURE__ */ __name(() => StripeAPIError, "StripeAPIError"),
+  StripeAuthenticationError: /* @__PURE__ */ __name(() => StripeAuthenticationError, "StripeAuthenticationError"),
+  StripeCardError: /* @__PURE__ */ __name(() => StripeCardError, "StripeCardError"),
+  StripeConnectionError: /* @__PURE__ */ __name(() => StripeConnectionError, "StripeConnectionError"),
+  StripeError: /* @__PURE__ */ __name(() => StripeError, "StripeError"),
+  StripeIdempotencyError: /* @__PURE__ */ __name(() => StripeIdempotencyError, "StripeIdempotencyError"),
+  StripeInvalidGrantError: /* @__PURE__ */ __name(() => StripeInvalidGrantError, "StripeInvalidGrantError"),
+  StripeInvalidRequestError: /* @__PURE__ */ __name(() => StripeInvalidRequestError, "StripeInvalidRequestError"),
+  StripePermissionError: /* @__PURE__ */ __name(() => StripePermissionError, "StripePermissionError"),
+  StripeRateLimitError: /* @__PURE__ */ __name(() => StripeRateLimitError, "StripeRateLimitError"),
+  StripeSignatureVerificationError: /* @__PURE__ */ __name(() => StripeSignatureVerificationError, "StripeSignatureVerificationError"),
+  StripeUnknownError: /* @__PURE__ */ __name(() => StripeUnknownError, "StripeUnknownError"),
+  TemporarySessionExpiredError: /* @__PURE__ */ __name(() => TemporarySessionExpiredError, "TemporarySessionExpiredError"),
+  generateV1Error: /* @__PURE__ */ __name(() => generateV1Error, "generateV1Error"),
+  generateV2Error: /* @__PURE__ */ __name(() => generateV2Error, "generateV2Error")
 });
-var generateV1Error, generateV2Error, StripeError, StripeCardError, StripeInvalidRequestError, StripeAPIError, StripeAuthenticationError, StripePermissionError, StripeRateLimitError, StripeConnectionError, StripeSignatureVerificationError, StripeIdempotencyError, StripeInvalidGrantError, StripeUnknownError, TemporarySessionExpiredError;
+var generateV1Error;
+var generateV2Error;
+var StripeError;
+var StripeCardError;
+var StripeInvalidRequestError;
+var StripeAPIError;
+var StripeAuthenticationError;
+var StripePermissionError;
+var StripeRateLimitError;
+var StripeConnectionError;
+var StripeSignatureVerificationError;
+var StripeIdempotencyError;
+var StripeInvalidGrantError;
+var StripeUnknownError;
+var TemporarySessionExpiredError;
 var init_Error = __esm({
   "../node_modules/stripe/esm/Error.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    generateV1Error = /* @__PURE__ */ __name((rawStripeError) => {
+    generateV1Error = /* @__PURE__ */ __name2((rawStripeError) => {
       switch (rawStripeError.type) {
         case "card_error":
           return new StripeCardError(rawStripeError);
@@ -3776,7 +3844,7 @@ var init_Error = __esm({
           return new StripeUnknownError(rawStripeError);
       }
     }, "generateV1Error");
-    generateV2Error = /* @__PURE__ */ __name((rawStripeError) => {
+    generateV2Error = /* @__PURE__ */ __name2((rawStripeError) => {
       switch (rawStripeError.type) {
         // switchCases: The beginning of the section generated from our OpenAPI spec
         case "temporary_session_expired":
@@ -3791,6 +3859,9 @@ var init_Error = __esm({
     StripeError = class extends Error {
       static {
         __name(this, "StripeError");
+      }
+      static {
+        __name2(this, "StripeError");
       }
       constructor(raw = {}, type = null) {
         var _a;
@@ -3821,6 +3892,9 @@ var init_Error = __esm({
       static {
         __name(this, "StripeCardError");
       }
+      static {
+        __name2(this, "StripeCardError");
+      }
       constructor(raw = {}) {
         super(raw, "StripeCardError");
       }
@@ -3828,6 +3902,9 @@ var init_Error = __esm({
     StripeInvalidRequestError = class extends StripeError {
       static {
         __name(this, "StripeInvalidRequestError");
+      }
+      static {
+        __name2(this, "StripeInvalidRequestError");
       }
       constructor(raw = {}) {
         super(raw, "StripeInvalidRequestError");
@@ -3837,6 +3914,9 @@ var init_Error = __esm({
       static {
         __name(this, "StripeAPIError");
       }
+      static {
+        __name2(this, "StripeAPIError");
+      }
       constructor(raw = {}) {
         super(raw, "StripeAPIError");
       }
@@ -3844,6 +3924,9 @@ var init_Error = __esm({
     StripeAuthenticationError = class extends StripeError {
       static {
         __name(this, "StripeAuthenticationError");
+      }
+      static {
+        __name2(this, "StripeAuthenticationError");
       }
       constructor(raw = {}) {
         super(raw, "StripeAuthenticationError");
@@ -3853,6 +3936,9 @@ var init_Error = __esm({
       static {
         __name(this, "StripePermissionError");
       }
+      static {
+        __name2(this, "StripePermissionError");
+      }
       constructor(raw = {}) {
         super(raw, "StripePermissionError");
       }
@@ -3860,6 +3946,9 @@ var init_Error = __esm({
     StripeRateLimitError = class extends StripeError {
       static {
         __name(this, "StripeRateLimitError");
+      }
+      static {
+        __name2(this, "StripeRateLimitError");
       }
       constructor(raw = {}) {
         super(raw, "StripeRateLimitError");
@@ -3869,6 +3958,9 @@ var init_Error = __esm({
       static {
         __name(this, "StripeConnectionError");
       }
+      static {
+        __name2(this, "StripeConnectionError");
+      }
       constructor(raw = {}) {
         super(raw, "StripeConnectionError");
       }
@@ -3876,6 +3968,9 @@ var init_Error = __esm({
     StripeSignatureVerificationError = class extends StripeError {
       static {
         __name(this, "StripeSignatureVerificationError");
+      }
+      static {
+        __name2(this, "StripeSignatureVerificationError");
       }
       constructor(header, payload, raw = {}) {
         super(raw, "StripeSignatureVerificationError");
@@ -3887,6 +3982,9 @@ var init_Error = __esm({
       static {
         __name(this, "StripeIdempotencyError");
       }
+      static {
+        __name2(this, "StripeIdempotencyError");
+      }
       constructor(raw = {}) {
         super(raw, "StripeIdempotencyError");
       }
@@ -3894,6 +3992,9 @@ var init_Error = __esm({
     StripeInvalidGrantError = class extends StripeError {
       static {
         __name(this, "StripeInvalidGrantError");
+      }
+      static {
+        __name2(this, "StripeInvalidGrantError");
       }
       constructor(raw = {}) {
         super(raw, "StripeInvalidGrantError");
@@ -3903,6 +4004,9 @@ var init_Error = __esm({
       static {
         __name(this, "StripeUnknownError");
       }
+      static {
+        __name2(this, "StripeUnknownError");
+      }
       constructor(raw = {}) {
         super(raw, "StripeUnknownError");
       }
@@ -3911,18 +4015,20 @@ var init_Error = __esm({
       static {
         __name(this, "TemporarySessionExpiredError");
       }
+      static {
+        __name2(this, "TemporarySessionExpiredError");
+      }
       constructor(rawStripeError = {}) {
         super(rawStripeError, "TemporarySessionExpiredError");
       }
     };
   }
 });
-
-// ../node_modules/stripe/esm/RequestSender.js
-var MAX_RETRY_AFTER_WAIT, RequestSender;
+var MAX_RETRY_AFTER_WAIT;
+var RequestSender;
 var init_RequestSender = __esm({
   "../node_modules/stripe/esm/RequestSender.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_Error();
     init_HttpClient();
@@ -3930,7 +4036,10 @@ var init_RequestSender = __esm({
     MAX_RETRY_AFTER_WAIT = 60;
     RequestSender = class _RequestSender {
       static {
-        __name(this, "RequestSender");
+        __name(this, "_RequestSender");
+      }
+      static {
+        __name2(this, "RequestSender");
       }
       constructor(stripe, maxBufferedRequestMetric) {
         this._stripe = stripe;
@@ -3980,7 +4089,7 @@ var init_RequestSender = __esm({
       _streamingResponseHandler(requestEvent, usage, callback) {
         return (res) => {
           const headers = res.getHeaders();
-          const streamCompleteCallback = /* @__PURE__ */ __name(() => {
+          const streamCompleteCallback = /* @__PURE__ */ __name2(() => {
             const responseEvent = this._makeResponseEvent(requestEvent, res.getStatusCode(), headers);
             this._stripe._emitter.emit("response", responseEvent);
             this._recordRequestMetrics(this._getRequestId(headers), responseEvent.elapsed, usage);
@@ -4092,7 +4201,7 @@ var init_RequestSender = __esm({
       }
       _defaultIdempotencyKey(method, settings, apiMode) {
         const maxRetries = this._getMaxNetworkRetries(settings);
-        const genKey = /* @__PURE__ */ __name(() => `stripe-node-retry-${this._stripe._platformFunctions.uuid4()}`, "genKey");
+        const genKey = /* @__PURE__ */ __name2(() => `stripe-node-retry-${this._stripe._platformFunctions.uuid4()}`, "genKey");
         if (apiMode === "v2") {
           if (method === "POST" || method === "DELETE") {
             return genKey();
@@ -4197,6 +4306,7 @@ var init_RequestSender = __esm({
             }
           }
           __name(requestCallback, "requestCallback");
+          __name2(requestCallback, "requestCallback");
           const { headers, settings } = opts;
           const authenticator = opts.authenticator;
           this._request(opts.requestMethod, opts.host, path, opts.bodyData, authenticator, { headers, settings, streaming: opts.streaming }, opts.usage, requestCallback);
@@ -4211,10 +4321,10 @@ var init_RequestSender = __esm({
         let requestData;
         authenticator = (_a = authenticator !== null && authenticator !== void 0 ? authenticator : this._stripe._authenticator) !== null && _a !== void 0 ? _a : null;
         const apiMode = getAPIMode(path);
-        const retryRequest = /* @__PURE__ */ __name((requestFn, apiVersion, headers, requestRetries, retryAfter) => {
+        const retryRequest = /* @__PURE__ */ __name2((requestFn, apiVersion, headers, requestRetries, retryAfter) => {
           return setTimeout(requestFn, this._getSleepTimeInMS(requestRetries, retryAfter), apiVersion, headers, requestRetries + 1);
         }, "retryRequest");
-        const makeRequest = /* @__PURE__ */ __name((apiVersion, headers, numRetries) => {
+        const makeRequest = /* @__PURE__ */ __name2((apiVersion, headers, numRetries) => {
           const timeout = options.settings && options.settings.timeout && Number.isInteger(options.settings.timeout) && options.settings.timeout >= 0 ? options.settings.timeout : this._stripe.getApiField("timeout");
           const request = {
             host: host || this._stripe.getApiField("host"),
@@ -4265,7 +4375,7 @@ var init_RequestSender = __esm({
             });
           });
         }, "makeRequest");
-        const prepareAndMakeRequest = /* @__PURE__ */ __name((error, data2) => {
+        const prepareAndMakeRequest = /* @__PURE__ */ __name2((error, data2) => {
           if (error) {
             return callback(error);
           }
@@ -4304,14 +4414,13 @@ var init_RequestSender = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/autoPagination.js
 function getAsyncIteratorSymbol() {
   if (typeof Symbol !== "undefined" && Symbol.asyncIterator) {
     return Symbol.asyncIterator;
   }
   return "@@asyncIterator";
 }
+__name(getAsyncIteratorSymbol, "getAsyncIteratorSymbol");
 function getDoneCallback(args) {
   if (args.length < 2) {
     return null;
@@ -4322,6 +4431,7 @@ function getDoneCallback(args) {
   }
   return onDone;
 }
+__name(getDoneCallback, "getDoneCallback");
 function getItemCallback(args) {
   if (args.length === 0) {
     return void 0;
@@ -4336,11 +4446,12 @@ function getItemCallback(args) {
   if (onItem.length > 2) {
     throw Error(`The \`onItem\` callback function passed to autoPagingEach must accept at most two arguments; got ${onItem}`);
   }
-  return /* @__PURE__ */ __name(function _onItem(item, next) {
+  return /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function _onItem(item, next) {
     const shouldContinue = onItem(item);
     next(shouldContinue);
-  }, "_onItem");
+  }, "_onItem"), "_onItem");
 }
+__name(getItemCallback, "getItemCallback");
 function getLastId(listResult, reverseIteration) {
   const lastIdx = reverseIteration ? 0 : listResult.data.length - 1;
   const lastItem = listResult.data[lastIdx];
@@ -4350,8 +4461,9 @@ function getLastId(listResult, reverseIteration) {
   }
   return lastId;
 }
+__name(getLastId, "getLastId");
 function makeAutoPagingEach(asyncIteratorNext) {
-  return /* @__PURE__ */ __name(function autoPagingEach() {
+  return /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function autoPagingEach() {
     const args = [].slice.call(arguments);
     const onItem = getItemCallback(args);
     const onDone = getDoneCallback(args);
@@ -4364,10 +4476,11 @@ function makeAutoPagingEach(asyncIteratorNext) {
       onItem
     );
     return callbackifyPromiseWithTimeout(autoPagePromise, onDone);
-  }, "autoPagingEach");
+  }, "autoPagingEach"), "autoPagingEach");
 }
+__name(makeAutoPagingEach, "makeAutoPagingEach");
 function makeAutoPagingToArray(autoPagingEach) {
-  return /* @__PURE__ */ __name(function autoPagingToArray(opts, onDone) {
+  return /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function autoPagingToArray(opts, onDone) {
     const limit = opts && opts.limit;
     if (!limit) {
       throw Error("You must pass a `limit` option to autoPagingToArray, e.g., `autoPagingToArray({limit: 1000});`.");
@@ -4387,8 +4500,9 @@ function makeAutoPagingToArray(autoPagingEach) {
       }).catch(reject);
     });
     return callbackifyPromiseWithTimeout(promise, onDone);
-  }, "autoPagingToArray");
+  }, "autoPagingToArray"), "autoPagingToArray");
 }
+__name(makeAutoPagingToArray, "makeAutoPagingToArray");
 function wrapAsyncIteratorWithCallback(asyncIteratorNext, onItem) {
   return new Promise((resolve, reject) => {
     function handleIteration(iterResult) {
@@ -4408,23 +4522,34 @@ function wrapAsyncIteratorWithCallback(asyncIteratorNext, onItem) {
       });
     }
     __name(handleIteration, "handleIteration");
+    __name2(handleIteration, "handleIteration");
     asyncIteratorNext().then(handleIteration).catch(reject);
   });
 }
+__name(wrapAsyncIteratorWithCallback, "wrapAsyncIteratorWithCallback");
 function isReverseIteration(requestArgs) {
   const args = [].slice.call(requestArgs);
   const dataFromArgs = getDataFromArgs(args);
   return !!dataFromArgs.ending_before;
 }
-var V1Iterator, V1ListIterator, V1SearchIterator, V2ListIterator, makeAutoPaginationMethods, makeAutoPaginationMethodsFromIterator;
+__name(isReverseIteration, "isReverseIteration");
+var V1Iterator;
+var V1ListIterator;
+var V1SearchIterator;
+var V2ListIterator;
+var makeAutoPaginationMethods;
+var makeAutoPaginationMethodsFromIterator;
 var init_autoPagination = __esm({
   "../node_modules/stripe/esm/autoPagination.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_utils();
     V1Iterator = class {
       static {
         __name(this, "V1Iterator");
+      }
+      static {
+        __name2(this, "V1Iterator");
       }
       constructor(firstPagePromise, requestArgs, spec, stripeResource) {
         this.index = 0;
@@ -4476,6 +4601,9 @@ var init_autoPagination = __esm({
       static {
         __name(this, "V1ListIterator");
       }
+      static {
+        __name2(this, "V1ListIterator");
+      }
       getNextPage(pageResult) {
         const reverseIteration = isReverseIteration(this.requestArgs);
         const lastId = getLastId(pageResult, reverseIteration);
@@ -4487,6 +4615,9 @@ var init_autoPagination = __esm({
     V1SearchIterator = class extends V1Iterator {
       static {
         __name(this, "V1SearchIterator");
+      }
+      static {
+        __name2(this, "V1SearchIterator");
       }
       getNextPage(pageResult) {
         if (!pageResult.next_page) {
@@ -4500,6 +4631,9 @@ var init_autoPagination = __esm({
     V2ListIterator = class {
       static {
         __name(this, "V2ListIterator");
+      }
+      static {
+        __name2(this, "V2ListIterator");
       }
       constructor(firstPagePromise, requestArgs, spec, stripeResource) {
         this.currentPageIterator = (async () => {
@@ -4540,7 +4674,7 @@ var init_autoPagination = __esm({
         return { done: true, value: void 0 };
       }
     };
-    makeAutoPaginationMethods = /* @__PURE__ */ __name((stripeResource, requestArgs, spec, firstPagePromise) => {
+    makeAutoPaginationMethods = /* @__PURE__ */ __name2((stripeResource, requestArgs, spec, firstPagePromise) => {
       const apiMode = getAPIMode(spec.fullPath || spec.path);
       if (apiMode !== "v2" && spec.methodType === "search") {
         return makeAutoPaginationMethodsFromIterator(new V1SearchIterator(firstPagePromise, requestArgs, spec, stripeResource));
@@ -4553,15 +4687,15 @@ var init_autoPagination = __esm({
       }
       return null;
     }, "makeAutoPaginationMethods");
-    makeAutoPaginationMethodsFromIterator = /* @__PURE__ */ __name((iterator) => {
+    makeAutoPaginationMethodsFromIterator = /* @__PURE__ */ __name2((iterator) => {
       const autoPagingEach = makeAutoPagingEach((...args) => iterator.next(...args));
       const autoPagingToArray = makeAutoPagingToArray(autoPagingEach);
       const autoPaginationMethods = {
         autoPagingEach,
         autoPagingToArray,
         // Async iterator functions:
-        next: /* @__PURE__ */ __name(() => iterator.next(), "next"),
-        return: /* @__PURE__ */ __name(() => {
+        next: /* @__PURE__ */ __name2(() => iterator.next(), "next"),
+        return: /* @__PURE__ */ __name2(() => {
           return {};
         }, "return"),
         [getAsyncIteratorSymbol()]: () => {
@@ -4570,18 +4704,16 @@ var init_autoPagination = __esm({
       };
       return autoPaginationMethods;
     }, "makeAutoPaginationMethodsFromIterator");
-    __name(getAsyncIteratorSymbol, "getAsyncIteratorSymbol");
-    __name(getDoneCallback, "getDoneCallback");
-    __name(getItemCallback, "getItemCallback");
-    __name(getLastId, "getLastId");
-    __name(makeAutoPagingEach, "makeAutoPagingEach");
-    __name(makeAutoPagingToArray, "makeAutoPagingToArray");
-    __name(wrapAsyncIteratorWithCallback, "wrapAsyncIteratorWithCallback");
-    __name(isReverseIteration, "isReverseIteration");
+    __name2(getAsyncIteratorSymbol, "getAsyncIteratorSymbol");
+    __name2(getDoneCallback, "getDoneCallback");
+    __name2(getItemCallback, "getItemCallback");
+    __name2(getLastId, "getLastId");
+    __name2(makeAutoPagingEach, "makeAutoPagingEach");
+    __name2(makeAutoPagingToArray, "makeAutoPagingToArray");
+    __name2(wrapAsyncIteratorWithCallback, "wrapAsyncIteratorWithCallback");
+    __name2(isReverseIteration, "isReverseIteration");
   }
 });
-
-// ../node_modules/stripe/esm/StripeMethod.js
 function stripeMethod(spec) {
   if (spec.path !== void 0 && spec.fullPath !== void 0) {
     throw new Error(`Method spec specified both a 'path' (${spec.path}) and a 'fullPath' (${spec.fullPath}).`);
@@ -4594,17 +4726,16 @@ function stripeMethod(spec) {
     return requestPromise;
   };
 }
+__name(stripeMethod, "stripeMethod");
 var init_StripeMethod = __esm({
   "../node_modules/stripe/esm/StripeMethod.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_utils();
     init_autoPagination();
-    __name(stripeMethod, "stripeMethod");
+    __name2(stripeMethod, "stripeMethod");
   }
 });
-
-// ../node_modules/stripe/esm/StripeResource.js
 function StripeResource(stripe, deprecatedUrlData) {
   this._stripe = stripe;
   if (deprecatedUrlData) {
@@ -4618,16 +4749,17 @@ function StripeResource(stripe, deprecatedUrlData) {
   this.path = makeURLInterpolator(this.path);
   this.initialize(...arguments);
 }
+__name(StripeResource, "StripeResource");
 var init_StripeResource = __esm({
   "../node_modules/stripe/esm/StripeResource.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_utils();
     init_StripeMethod();
     StripeResource.extend = protoExtend;
     StripeResource.method = stripeMethod;
     StripeResource.MAX_BUFFERED_REQUEST_METRICS = 100;
-    __name(StripeResource, "StripeResource");
+    __name2(StripeResource, "StripeResource");
     StripeResource.prototype = {
       _stripe: null,
       // @ts-ignore the type of path changes in ctor
@@ -4735,6 +4867,7 @@ var init_StripeResource = __esm({
             }
           }
           __name(requestCallback, "requestCallback");
+          __name2(requestCallback, "requestCallback");
           const emptyQuery = Object.keys(opts.queryData).length === 0;
           const path = [
             opts.requestPath,
@@ -4752,16 +4885,17 @@ var init_StripeResource = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/StripeContext.js
 var StripeContext;
 var init_StripeContext = __esm({
   "../node_modules/stripe/esm/StripeContext.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     StripeContext = class _StripeContext {
       static {
-        __name(this, "StripeContext");
+        __name(this, "_StripeContext");
+      }
+      static {
+        __name2(this, "StripeContext");
       }
       /**
        * Creates a new StripeContext with the given segments.
@@ -4812,8 +4946,6 @@ var init_StripeContext = __esm({
     };
   }
 });
-
-// ../node_modules/stripe/esm/Webhooks.js
 function createWebhooks(platformFunctions) {
   const Webhook = {
     DEFAULT_TOLERANCE: 300,
@@ -4852,12 +4984,12 @@ function createWebhooks(platformFunctions) {
      * @property {string} signature - Computed webhook signature
      * @property {CryptoProvider} cryptoProvider - Crypto provider to use for computing the signature if none was provided. Defaults to NodeCryptoProvider.
      */
-    generateTestHeaderString: /* @__PURE__ */ __name(function(opts) {
+    generateTestHeaderString: /* @__PURE__ */ __name2(function(opts) {
       const preparedOpts = prepareOptions(opts);
       const signature2 = preparedOpts.signature || preparedOpts.cryptoProvider.computeHMACSignature(preparedOpts.payloadString, preparedOpts.secret);
       return preparedOpts.generateHeaderString(signature2);
     }, "generateTestHeaderString"),
-    generateTestHeaderStringAsync: /* @__PURE__ */ __name(async function(opts) {
+    generateTestHeaderStringAsync: /* @__PURE__ */ __name2(async function(opts) {
       const preparedOpts = prepareOptions(opts);
       const signature2 = preparedOpts.signature || await preparedOpts.cryptoProvider.computeHMACSignatureAsync(preparedOpts.payloadString, preparedOpts.secret);
       return preparedOpts.generateHeaderString(signature2);
@@ -4885,6 +5017,7 @@ function createWebhooks(platformFunctions) {
     return `${details.timestamp}.${payload}`;
   }
   __name(makeHMACContent, "makeHMACContent");
+  __name2(makeHMACContent, "makeHMACContent");
   function parseEventDetails(encodedPayload, encodedHeader, expectedScheme) {
     if (!encodedPayload) {
       throw new StripeSignatureVerificationError(encodedHeader, encodedPayload, {
@@ -4922,6 +5055,7 @@ function createWebhooks(platformFunctions) {
     };
   }
   __name(parseEventDetails, "parseEventDetails");
+  __name2(parseEventDetails, "parseEventDetails");
   function validateComputedSignature(payload, header, details, expectedSignature, tolerance, suspectPayloadType, secretContainsWhitespace, receivedAt) {
     const signatureFound = !!details.signatures.filter(platformFunctions.secureCompare.bind(platformFunctions, expectedSignature)).length;
     const docsLocation = "\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature";
@@ -4945,6 +5079,7 @@ function createWebhooks(platformFunctions) {
     return true;
   }
   __name(validateComputedSignature, "validateComputedSignature");
+  __name2(validateComputedSignature, "validateComputedSignature");
   function parseHeader(header, scheme) {
     if (typeof header !== "string") {
       return null;
@@ -4964,6 +5099,7 @@ function createWebhooks(platformFunctions) {
     });
   }
   __name(parseHeader, "parseHeader");
+  __name2(parseHeader, "parseHeader");
   let webhooksCryptoProviderInstance = null;
   function getCryptoProvider() {
     if (!webhooksCryptoProviderInstance) {
@@ -4972,6 +5108,7 @@ function createWebhooks(platformFunctions) {
     return webhooksCryptoProviderInstance;
   }
   __name(getCryptoProvider, "getCryptoProvider");
+  __name2(getCryptoProvider, "getCryptoProvider");
   function prepareOptions(opts) {
     if (!opts) {
       throw new StripeError({
@@ -4982,7 +5119,7 @@ function createWebhooks(platformFunctions) {
     const scheme = opts.scheme || signature.EXPECTED_SCHEME;
     const cryptoProvider = opts.cryptoProvider || getCryptoProvider();
     const payloadString = `${timestamp}.${opts.payload}`;
-    const generateHeaderString = /* @__PURE__ */ __name((signature2) => {
+    const generateHeaderString = /* @__PURE__ */ __name2((signature2) => {
       return `t=${timestamp},${scheme}=${signature2}`;
     }, "generateHeaderString");
     return Object.assign(Object.assign({}, opts), {
@@ -4994,30 +5131,28 @@ function createWebhooks(platformFunctions) {
     });
   }
   __name(prepareOptions, "prepareOptions");
+  __name2(prepareOptions, "prepareOptions");
   Webhook.signature = signature;
   return Webhook;
 }
+__name(createWebhooks, "createWebhooks");
 var init_Webhooks = __esm({
   "../node_modules/stripe/esm/Webhooks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_Error();
     init_CryptoProvider();
-    __name(createWebhooks, "createWebhooks");
+    __name2(createWebhooks, "createWebhooks");
   }
 });
-
-// ../node_modules/stripe/esm/apiVersion.js
 var ApiVersion;
 var init_apiVersion = __esm({
   "../node_modules/stripe/esm/apiVersion.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     ApiVersion = "2025-12-15.clover";
   }
 });
-
-// ../node_modules/stripe/esm/ResourceNamespace.js
 function ResourceNamespace(stripe, resources) {
   for (const name in resources) {
     if (!Object.prototype.hasOwnProperty.call(resources, name)) {
@@ -5028,25 +5163,26 @@ function ResourceNamespace(stripe, resources) {
     this[camelCaseName] = resource;
   }
 }
+__name(ResourceNamespace, "ResourceNamespace");
 function resourceNamespace(namespace, resources) {
   return function(stripe) {
     return new ResourceNamespace(stripe, resources);
   };
 }
+__name(resourceNamespace, "resourceNamespace");
 var init_ResourceNamespace = __esm({
   "../node_modules/stripe/esm/ResourceNamespace.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    __name(ResourceNamespace, "ResourceNamespace");
-    __name(resourceNamespace, "resourceNamespace");
+    __name2(ResourceNamespace, "ResourceNamespace");
+    __name2(resourceNamespace, "resourceNamespace");
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/AccountLinks.js
-var stripeMethod2, AccountLinks;
+var stripeMethod2;
+var AccountLinks;
 var init_AccountLinks = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/AccountLinks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod2 = StripeResource.method;
@@ -5055,12 +5191,11 @@ var init_AccountLinks = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/AccountTokens.js
-var stripeMethod3, AccountTokens;
+var stripeMethod3;
+var AccountTokens;
 var init_AccountTokens = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/AccountTokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod3 = StripeResource.method;
@@ -5073,12 +5208,11 @@ var init_AccountTokens = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/FinancialConnections/Accounts.js
-var stripeMethod4, Accounts;
+var stripeMethod4;
+var Accounts;
 var init_Accounts = __esm({
   "../node_modules/stripe/esm/resources/FinancialConnections/Accounts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod4 = StripeResource.method;
@@ -5116,12 +5250,11 @@ var init_Accounts = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/Accounts/Persons.js
-var stripeMethod5, Persons;
+var stripeMethod5;
+var Persons;
 var init_Persons = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/Accounts/Persons.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod5 = StripeResource.method;
@@ -5150,12 +5283,11 @@ var init_Persons = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/Accounts/PersonTokens.js
-var stripeMethod6, PersonTokens;
+var stripeMethod6;
+var PersonTokens;
 var init_PersonTokens = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/Accounts/PersonTokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod6 = StripeResource.method;
@@ -5171,19 +5303,18 @@ var init_PersonTokens = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/Accounts.js
-var stripeMethod7, Accounts2;
+var stripeMethod7;
+var Accounts2;
 var init_Accounts2 = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/Accounts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     init_Persons();
     init_PersonTokens();
     stripeMethod7 = StripeResource.method;
     Accounts2 = StripeResource.extend({
-      constructor: /* @__PURE__ */ __name(function(...args) {
+      constructor: /* @__PURE__ */ __name2(function(...args) {
         StripeResource.apply(this, args);
         this.persons = new Persons(...args);
         this.personTokens = new PersonTokens(...args);
@@ -5203,12 +5334,11 @@ var init_Accounts2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Entitlements/ActiveEntitlements.js
-var stripeMethod8, ActiveEntitlements;
+var stripeMethod8;
+var ActiveEntitlements;
 var init_ActiveEntitlements = __esm({
   "../node_modules/stripe/esm/resources/Entitlements/ActiveEntitlements.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod8 = StripeResource.method;
@@ -5225,12 +5355,11 @@ var init_ActiveEntitlements = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/Alerts.js
-var stripeMethod9, Alerts;
+var stripeMethod9;
+var Alerts;
 var init_Alerts = __esm({
   "../node_modules/stripe/esm/resources/Billing/Alerts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod9 = StripeResource.method;
@@ -5257,12 +5386,11 @@ var init_Alerts = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Tax/Associations.js
-var stripeMethod10, Associations;
+var stripeMethod10;
+var Associations;
 var init_Associations = __esm({
   "../node_modules/stripe/esm/resources/Tax/Associations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod10 = StripeResource.method;
@@ -5271,12 +5399,11 @@ var init_Associations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/Authorizations.js
-var stripeMethod11, Authorizations;
+var stripeMethod11;
+var Authorizations;
 var init_Authorizations = __esm({
   "../node_modules/stripe/esm/resources/Issuing/Authorizations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod11 = StripeResource.method;
@@ -5305,12 +5432,11 @@ var init_Authorizations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Issuing/Authorizations.js
-var stripeMethod12, Authorizations2;
+var stripeMethod12;
+var Authorizations2;
 var init_Authorizations2 = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Issuing/Authorizations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod12 = StripeResource.method;
@@ -5346,12 +5472,11 @@ var init_Authorizations2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Tax/Calculations.js
-var stripeMethod13, Calculations;
+var stripeMethod13;
+var Calculations;
 var init_Calculations = __esm({
   "../node_modules/stripe/esm/resources/Tax/Calculations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod13 = StripeResource.method;
@@ -5369,12 +5494,11 @@ var init_Calculations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/Cardholders.js
-var stripeMethod14, Cardholders;
+var stripeMethod14;
+var Cardholders;
 var init_Cardholders = __esm({
   "../node_modules/stripe/esm/resources/Issuing/Cardholders.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod14 = StripeResource.method;
@@ -5396,12 +5520,11 @@ var init_Cardholders = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/Cards.js
-var stripeMethod15, Cards;
+var stripeMethod15;
+var Cards;
 var init_Cards = __esm({
   "../node_modules/stripe/esm/resources/Issuing/Cards.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod15 = StripeResource.method;
@@ -5417,12 +5540,11 @@ var init_Cards = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Issuing/Cards.js
-var stripeMethod16, Cards2;
+var stripeMethod16;
+var Cards2;
 var init_Cards2 = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Issuing/Cards.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod16 = StripeResource.method;
@@ -5450,12 +5572,11 @@ var init_Cards2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/BillingPortal/Configurations.js
-var stripeMethod17, Configurations;
+var stripeMethod17;
+var Configurations;
 var init_Configurations = __esm({
   "../node_modules/stripe/esm/resources/BillingPortal/Configurations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod17 = StripeResource.method;
@@ -5480,12 +5601,11 @@ var init_Configurations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Terminal/Configurations.js
-var stripeMethod18, Configurations2;
+var stripeMethod18;
+var Configurations2;
 var init_Configurations2 = __esm({
   "../node_modules/stripe/esm/resources/Terminal/Configurations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod18 = StripeResource.method;
@@ -5514,12 +5634,11 @@ var init_Configurations2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/ConfirmationTokens.js
-var stripeMethod19, ConfirmationTokens;
+var stripeMethod19;
+var ConfirmationTokens;
 var init_ConfirmationTokens = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/ConfirmationTokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod19 = StripeResource.method;
@@ -5531,12 +5650,11 @@ var init_ConfirmationTokens = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Terminal/ConnectionTokens.js
-var stripeMethod20, ConnectionTokens;
+var stripeMethod20;
+var ConnectionTokens;
 var init_ConnectionTokens = __esm({
   "../node_modules/stripe/esm/resources/Terminal/ConnectionTokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod20 = StripeResource.method;
@@ -5548,12 +5666,11 @@ var init_ConnectionTokens = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/CreditBalanceSummary.js
-var stripeMethod21, CreditBalanceSummary;
+var stripeMethod21;
+var CreditBalanceSummary;
 var init_CreditBalanceSummary = __esm({
   "../node_modules/stripe/esm/resources/Billing/CreditBalanceSummary.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod21 = StripeResource.method;
@@ -5565,12 +5682,11 @@ var init_CreditBalanceSummary = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/CreditBalanceTransactions.js
-var stripeMethod22, CreditBalanceTransactions;
+var stripeMethod22;
+var CreditBalanceTransactions;
 var init_CreditBalanceTransactions = __esm({
   "../node_modules/stripe/esm/resources/Billing/CreditBalanceTransactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod22 = StripeResource.method;
@@ -5587,12 +5703,11 @@ var init_CreditBalanceTransactions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/CreditGrants.js
-var stripeMethod23, CreditGrants;
+var stripeMethod23;
+var CreditGrants;
 var init_CreditGrants = __esm({
   "../node_modules/stripe/esm/resources/Billing/CreditGrants.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod23 = StripeResource.method;
@@ -5622,12 +5737,11 @@ var init_CreditGrants = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/CreditReversals.js
-var stripeMethod24, CreditReversals;
+var stripeMethod24;
+var CreditReversals;
 var init_CreditReversals = __esm({
   "../node_modules/stripe/esm/resources/Treasury/CreditReversals.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod24 = StripeResource.method;
@@ -5648,12 +5762,11 @@ var init_CreditReversals = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Customers.js
-var stripeMethod25, Customers;
+var stripeMethod25;
+var Customers;
 var init_Customers = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Customers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod25 = StripeResource.method;
@@ -5665,12 +5778,11 @@ var init_Customers = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/DebitReversals.js
-var stripeMethod26, DebitReversals;
+var stripeMethod26;
+var DebitReversals;
 var init_DebitReversals = __esm({
   "../node_modules/stripe/esm/resources/Treasury/DebitReversals.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod26 = StripeResource.method;
@@ -5691,12 +5803,11 @@ var init_DebitReversals = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/Disputes.js
-var stripeMethod27, Disputes;
+var stripeMethod27;
+var Disputes;
 var init_Disputes = __esm({
   "../node_modules/stripe/esm/resources/Issuing/Disputes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod27 = StripeResource.method;
@@ -5722,12 +5833,11 @@ var init_Disputes = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Radar/EarlyFraudWarnings.js
-var stripeMethod28, EarlyFraudWarnings;
+var stripeMethod28;
+var EarlyFraudWarnings;
 var init_EarlyFraudWarnings = __esm({
   "../node_modules/stripe/esm/resources/Radar/EarlyFraudWarnings.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod28 = StripeResource.method;
@@ -5744,12 +5854,11 @@ var init_EarlyFraudWarnings = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/EventDestinations.js
-var stripeMethod29, EventDestinations;
+var stripeMethod29;
+var EventDestinations;
 var init_EventDestinations = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/EventDestinations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod29 = StripeResource.method;
@@ -5790,18 +5899,17 @@ var init_EventDestinations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Core/Events.js
-var stripeMethod30, Events;
+var stripeMethod30;
+var Events;
 var init_Events = __esm({
   "../node_modules/stripe/esm/resources/V2/Core/Events.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod30 = StripeResource.method;
     Events = StripeResource.extend({
       retrieve(...args) {
-        const transformResponseData = /* @__PURE__ */ __name((response) => {
+        const transformResponseData = /* @__PURE__ */ __name2((response) => {
           return this.addFetchRelatedObjectIfNeeded(response);
         }, "transformResponseData");
         return stripeMethod30({
@@ -5811,7 +5919,7 @@ var init_Events = __esm({
         }).apply(this, args);
       },
       list(...args) {
-        const transformResponseData = /* @__PURE__ */ __name((response) => {
+        const transformResponseData = /* @__PURE__ */ __name2((response) => {
           return Object.assign(Object.assign({}, response), { data: response.data.map(this.addFetchRelatedObjectIfNeeded.bind(this)) });
         }, "transformResponseData");
         return stripeMethod30({
@@ -5834,7 +5942,7 @@ var init_Events = __esm({
         if (!pulledEvent.related_object || !pulledEvent.related_object.url) {
           return pulledEvent;
         }
-        return Object.assign(Object.assign({}, pulledEvent), { fetchRelatedObject: /* @__PURE__ */ __name(() => (
+        return Object.assign(Object.assign({}, pulledEvent), { fetchRelatedObject: /* @__PURE__ */ __name2(() => (
           // call stripeMethod with 'this' resource to fetch
           // the related object. 'this' is needed to construct
           // and send the request, but the method spec controls
@@ -5853,12 +5961,11 @@ var init_Events = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Entitlements/Features.js
-var stripeMethod31, Features;
+var stripeMethod31;
+var Features;
 var init_Features = __esm({
   "../node_modules/stripe/esm/resources/Entitlements/Features.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod31 = StripeResource.method;
@@ -5880,12 +5987,11 @@ var init_Features = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/FinancialAccounts.js
-var stripeMethod32, FinancialAccounts;
+var stripeMethod32;
+var FinancialAccounts;
 var init_FinancialAccounts = __esm({
   "../node_modules/stripe/esm/resources/Treasury/FinancialAccounts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod32 = StripeResource.method;
@@ -5922,12 +6028,11 @@ var init_FinancialAccounts = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Treasury/InboundTransfers.js
-var stripeMethod33, InboundTransfers;
+var stripeMethod33;
+var InboundTransfers;
 var init_InboundTransfers = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Treasury/InboundTransfers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod33 = StripeResource.method;
@@ -5947,12 +6052,11 @@ var init_InboundTransfers = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/InboundTransfers.js
-var stripeMethod34, InboundTransfers2;
+var stripeMethod34;
+var InboundTransfers2;
 var init_InboundTransfers2 = __esm({
   "../node_modules/stripe/esm/resources/Treasury/InboundTransfers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod34 = StripeResource.method;
@@ -5977,12 +6081,11 @@ var init_InboundTransfers2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Terminal/Locations.js
-var stripeMethod35, Locations;
+var stripeMethod35;
+var Locations;
 var init_Locations = __esm({
   "../node_modules/stripe/esm/resources/Terminal/Locations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod35 = StripeResource.method;
@@ -6008,12 +6111,11 @@ var init_Locations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/MeterEventAdjustments.js
-var stripeMethod36, MeterEventAdjustments;
+var stripeMethod36;
+var MeterEventAdjustments;
 var init_MeterEventAdjustments = __esm({
   "../node_modules/stripe/esm/resources/Billing/MeterEventAdjustments.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod36 = StripeResource.method;
@@ -6025,12 +6127,11 @@ var init_MeterEventAdjustments = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Billing/MeterEventAdjustments.js
-var stripeMethod37, MeterEventAdjustments2;
+var stripeMethod37;
+var MeterEventAdjustments2;
 var init_MeterEventAdjustments2 = __esm({
   "../node_modules/stripe/esm/resources/V2/Billing/MeterEventAdjustments.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod37 = StripeResource.method;
@@ -6042,12 +6143,11 @@ var init_MeterEventAdjustments2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Billing/MeterEventSession.js
-var stripeMethod38, MeterEventSession;
+var stripeMethod38;
+var MeterEventSession;
 var init_MeterEventSession = __esm({
   "../node_modules/stripe/esm/resources/V2/Billing/MeterEventSession.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod38 = StripeResource.method;
@@ -6059,12 +6159,11 @@ var init_MeterEventSession = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Billing/MeterEventStream.js
-var stripeMethod39, MeterEventStream;
+var stripeMethod39;
+var MeterEventStream;
 var init_MeterEventStream = __esm({
   "../node_modules/stripe/esm/resources/V2/Billing/MeterEventStream.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod39 = StripeResource.method;
@@ -6077,12 +6176,11 @@ var init_MeterEventStream = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/MeterEvents.js
-var stripeMethod40, MeterEvents;
+var stripeMethod40;
+var MeterEvents;
 var init_MeterEvents = __esm({
   "../node_modules/stripe/esm/resources/Billing/MeterEvents.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod40 = StripeResource.method;
@@ -6091,12 +6189,11 @@ var init_MeterEvents = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/V2/Billing/MeterEvents.js
-var stripeMethod41, MeterEvents2;
+var stripeMethod41;
+var MeterEvents2;
 var init_MeterEvents2 = __esm({
   "../node_modules/stripe/esm/resources/V2/Billing/MeterEvents.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod41 = StripeResource.method;
@@ -6105,12 +6202,11 @@ var init_MeterEvents2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Billing/Meters.js
-var stripeMethod42, Meters;
+var stripeMethod42;
+var Meters;
 var init_Meters = __esm({
   "../node_modules/stripe/esm/resources/Billing/Meters.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod42 = StripeResource.method;
@@ -6139,12 +6235,11 @@ var init_Meters = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Terminal/OnboardingLinks.js
-var stripeMethod43, OnboardingLinks;
+var stripeMethod43;
+var OnboardingLinks;
 var init_OnboardingLinks = __esm({
   "../node_modules/stripe/esm/resources/Terminal/OnboardingLinks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod43 = StripeResource.method;
@@ -6156,12 +6251,11 @@ var init_OnboardingLinks = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Climate/Orders.js
-var stripeMethod44, Orders;
+var stripeMethod44;
+var Orders;
 var init_Orders = __esm({
   "../node_modules/stripe/esm/resources/Climate/Orders.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod44 = StripeResource.method;
@@ -6187,12 +6281,11 @@ var init_Orders = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Treasury/OutboundPayments.js
-var stripeMethod45, OutboundPayments;
+var stripeMethod45;
+var OutboundPayments;
 var init_OutboundPayments = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Treasury/OutboundPayments.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod45 = StripeResource.method;
@@ -6216,12 +6309,11 @@ var init_OutboundPayments = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/OutboundPayments.js
-var stripeMethod46, OutboundPayments2;
+var stripeMethod46;
+var OutboundPayments2;
 var init_OutboundPayments2 = __esm({
   "../node_modules/stripe/esm/resources/Treasury/OutboundPayments.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod46 = StripeResource.method;
@@ -6246,12 +6338,11 @@ var init_OutboundPayments2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Treasury/OutboundTransfers.js
-var stripeMethod47, OutboundTransfers;
+var stripeMethod47;
+var OutboundTransfers;
 var init_OutboundTransfers = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Treasury/OutboundTransfers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod47 = StripeResource.method;
@@ -6275,12 +6366,11 @@ var init_OutboundTransfers = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/OutboundTransfers.js
-var stripeMethod48, OutboundTransfers2;
+var stripeMethod48;
+var OutboundTransfers2;
 var init_OutboundTransfers2 = __esm({
   "../node_modules/stripe/esm/resources/Treasury/OutboundTransfers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod48 = StripeResource.method;
@@ -6305,12 +6395,11 @@ var init_OutboundTransfers2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/PersonalizationDesigns.js
-var stripeMethod49, PersonalizationDesigns;
+var stripeMethod49;
+var PersonalizationDesigns;
 var init_PersonalizationDesigns = __esm({
   "../node_modules/stripe/esm/resources/Issuing/PersonalizationDesigns.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod49 = StripeResource.method;
@@ -6335,12 +6424,11 @@ var init_PersonalizationDesigns = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Issuing/PersonalizationDesigns.js
-var stripeMethod50, PersonalizationDesigns2;
+var stripeMethod50;
+var PersonalizationDesigns2;
 var init_PersonalizationDesigns2 = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Issuing/PersonalizationDesigns.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod50 = StripeResource.method;
@@ -6360,12 +6448,11 @@ var init_PersonalizationDesigns2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/PhysicalBundles.js
-var stripeMethod51, PhysicalBundles;
+var stripeMethod51;
+var PhysicalBundles;
 var init_PhysicalBundles = __esm({
   "../node_modules/stripe/esm/resources/Issuing/PhysicalBundles.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod51 = StripeResource.method;
@@ -6382,12 +6469,11 @@ var init_PhysicalBundles = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Climate/Products.js
-var stripeMethod52, Products;
+var stripeMethod52;
+var Products;
 var init_Products = __esm({
   "../node_modules/stripe/esm/resources/Climate/Products.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod52 = StripeResource.method;
@@ -6404,12 +6490,11 @@ var init_Products = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Terminal/Readers.js
-var stripeMethod53, Readers;
+var stripeMethod53;
+var Readers;
 var init_Readers = __esm({
   "../node_modules/stripe/esm/resources/Terminal/Readers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod53 = StripeResource.method;
@@ -6467,12 +6552,11 @@ var init_Readers = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Terminal/Readers.js
-var stripeMethod54, Readers2;
+var stripeMethod54;
+var Readers2;
 var init_Readers2 = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Terminal/Readers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod54 = StripeResource.method;
@@ -6492,12 +6576,11 @@ var init_Readers2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Treasury/ReceivedCredits.js
-var stripeMethod55, ReceivedCredits;
+var stripeMethod55;
+var ReceivedCredits;
 var init_ReceivedCredits = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Treasury/ReceivedCredits.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod55 = StripeResource.method;
@@ -6509,12 +6592,11 @@ var init_ReceivedCredits = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/ReceivedCredits.js
-var stripeMethod56, ReceivedCredits2;
+var stripeMethod56;
+var ReceivedCredits2;
 var init_ReceivedCredits2 = __esm({
   "../node_modules/stripe/esm/resources/Treasury/ReceivedCredits.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod56 = StripeResource.method;
@@ -6531,12 +6613,11 @@ var init_ReceivedCredits2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Treasury/ReceivedDebits.js
-var stripeMethod57, ReceivedDebits;
+var stripeMethod57;
+var ReceivedDebits;
 var init_ReceivedDebits = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Treasury/ReceivedDebits.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod57 = StripeResource.method;
@@ -6548,12 +6629,11 @@ var init_ReceivedDebits = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/ReceivedDebits.js
-var stripeMethod58, ReceivedDebits2;
+var stripeMethod58;
+var ReceivedDebits2;
 var init_ReceivedDebits2 = __esm({
   "../node_modules/stripe/esm/resources/Treasury/ReceivedDebits.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod58 = StripeResource.method;
@@ -6570,12 +6650,11 @@ var init_ReceivedDebits2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Refunds.js
-var stripeMethod59, Refunds;
+var stripeMethod59;
+var Refunds;
 var init_Refunds = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Refunds.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod59 = StripeResource.method;
@@ -6587,12 +6666,11 @@ var init_Refunds = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Tax/Registrations.js
-var stripeMethod60, Registrations;
+var stripeMethod60;
+var Registrations;
 var init_Registrations = __esm({
   "../node_modules/stripe/esm/resources/Tax/Registrations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod60 = StripeResource.method;
@@ -6614,12 +6692,11 @@ var init_Registrations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Reporting/ReportRuns.js
-var stripeMethod61, ReportRuns;
+var stripeMethod61;
+var ReportRuns;
 var init_ReportRuns = __esm({
   "../node_modules/stripe/esm/resources/Reporting/ReportRuns.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod61 = StripeResource.method;
@@ -6637,12 +6714,11 @@ var init_ReportRuns = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Reporting/ReportTypes.js
-var stripeMethod62, ReportTypes;
+var stripeMethod62;
+var ReportTypes;
 var init_ReportTypes = __esm({
   "../node_modules/stripe/esm/resources/Reporting/ReportTypes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod62 = StripeResource.method;
@@ -6659,12 +6735,11 @@ var init_ReportTypes = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Forwarding/Requests.js
-var stripeMethod63, Requests;
+var stripeMethod63;
+var Requests;
 var init_Requests = __esm({
   "../node_modules/stripe/esm/resources/Forwarding/Requests.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod63 = StripeResource.method;
@@ -6682,12 +6757,11 @@ var init_Requests = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Sigma/ScheduledQueryRuns.js
-var stripeMethod64, ScheduledQueryRuns;
+var stripeMethod64;
+var ScheduledQueryRuns;
 var init_ScheduledQueryRuns = __esm({
   "../node_modules/stripe/esm/resources/Sigma/ScheduledQueryRuns.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod64 = StripeResource.method;
@@ -6704,12 +6778,11 @@ var init_ScheduledQueryRuns = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Apps/Secrets.js
-var stripeMethod65, Secrets;
+var stripeMethod65;
+var Secrets;
 var init_Secrets = __esm({
   "../node_modules/stripe/esm/resources/Apps/Secrets.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod65 = StripeResource.method;
@@ -6728,12 +6801,11 @@ var init_Secrets = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/BillingPortal/Sessions.js
-var stripeMethod66, Sessions;
+var stripeMethod66;
+var Sessions;
 var init_Sessions = __esm({
   "../node_modules/stripe/esm/resources/BillingPortal/Sessions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod66 = StripeResource.method;
@@ -6745,12 +6817,11 @@ var init_Sessions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Checkout/Sessions.js
-var stripeMethod67, Sessions2;
+var stripeMethod67;
+var Sessions2;
 var init_Sessions2 = __esm({
   "../node_modules/stripe/esm/resources/Checkout/Sessions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod67 = StripeResource.method;
@@ -6781,12 +6852,11 @@ var init_Sessions2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/FinancialConnections/Sessions.js
-var stripeMethod68, Sessions3;
+var stripeMethod68;
+var Sessions3;
 var init_Sessions3 = __esm({
   "../node_modules/stripe/esm/resources/FinancialConnections/Sessions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod68 = StripeResource.method;
@@ -6802,12 +6872,11 @@ var init_Sessions3 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Tax/Settings.js
-var stripeMethod69, Settings;
+var stripeMethod69;
+var Settings;
 var init_Settings = __esm({
   "../node_modules/stripe/esm/resources/Tax/Settings.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod69 = StripeResource.method;
@@ -6817,12 +6886,11 @@ var init_Settings = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Climate/Suppliers.js
-var stripeMethod70, Suppliers;
+var stripeMethod70;
+var Suppliers;
 var init_Suppliers = __esm({
   "../node_modules/stripe/esm/resources/Climate/Suppliers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod70 = StripeResource.method;
@@ -6839,12 +6907,11 @@ var init_Suppliers = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/TestClocks.js
-var stripeMethod71, TestClocks;
+var stripeMethod71;
+var TestClocks;
 var init_TestClocks = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/TestClocks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod71 = StripeResource.method;
@@ -6873,12 +6940,11 @@ var init_TestClocks = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/Tokens.js
-var stripeMethod72, Tokens;
+var stripeMethod72;
+var Tokens;
 var init_Tokens = __esm({
   "../node_modules/stripe/esm/resources/Issuing/Tokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod72 = StripeResource.method;
@@ -6899,12 +6965,11 @@ var init_Tokens = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/TransactionEntries.js
-var stripeMethod73, TransactionEntries;
+var stripeMethod73;
+var TransactionEntries;
 var init_TransactionEntries = __esm({
   "../node_modules/stripe/esm/resources/Treasury/TransactionEntries.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod73 = StripeResource.method;
@@ -6921,12 +6986,11 @@ var init_TransactionEntries = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/FinancialConnections/Transactions.js
-var stripeMethod74, Transactions;
+var stripeMethod74;
+var Transactions;
 var init_Transactions = __esm({
   "../node_modules/stripe/esm/resources/FinancialConnections/Transactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod74 = StripeResource.method;
@@ -6943,12 +7007,11 @@ var init_Transactions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Issuing/Transactions.js
-var stripeMethod75, Transactions2;
+var stripeMethod75;
+var Transactions2;
 var init_Transactions2 = __esm({
   "../node_modules/stripe/esm/resources/Issuing/Transactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod75 = StripeResource.method;
@@ -6969,12 +7032,11 @@ var init_Transactions2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Tax/Transactions.js
-var stripeMethod76, Transactions3;
+var stripeMethod76;
+var Transactions3;
 var init_Transactions3 = __esm({
   "../node_modules/stripe/esm/resources/Tax/Transactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod76 = StripeResource.method;
@@ -6999,12 +7061,11 @@ var init_Transactions3 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TestHelpers/Issuing/Transactions.js
-var stripeMethod77, Transactions4;
+var stripeMethod77;
+var Transactions4;
 var init_Transactions4 = __esm({
   "../node_modules/stripe/esm/resources/TestHelpers/Issuing/Transactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod77 = StripeResource.method;
@@ -7024,12 +7085,11 @@ var init_Transactions4 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Treasury/Transactions.js
-var stripeMethod78, Transactions5;
+var stripeMethod78;
+var Transactions5;
 var init_Transactions5 = __esm({
   "../node_modules/stripe/esm/resources/Treasury/Transactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod78 = StripeResource.method;
@@ -7046,12 +7106,11 @@ var init_Transactions5 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Radar/ValueListItems.js
-var stripeMethod79, ValueListItems;
+var stripeMethod79;
+var ValueListItems;
 var init_ValueListItems = __esm({
   "../node_modules/stripe/esm/resources/Radar/ValueListItems.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod79 = StripeResource.method;
@@ -7076,12 +7135,11 @@ var init_ValueListItems = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Radar/ValueLists.js
-var stripeMethod80, ValueLists;
+var stripeMethod80;
+var ValueLists;
 var init_ValueLists = __esm({
   "../node_modules/stripe/esm/resources/Radar/ValueLists.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod80 = StripeResource.method;
@@ -7107,12 +7165,11 @@ var init_ValueLists = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Identity/VerificationReports.js
-var stripeMethod81, VerificationReports;
+var stripeMethod81;
+var VerificationReports;
 var init_VerificationReports = __esm({
   "../node_modules/stripe/esm/resources/Identity/VerificationReports.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod81 = StripeResource.method;
@@ -7129,12 +7186,11 @@ var init_VerificationReports = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Identity/VerificationSessions.js
-var stripeMethod82, VerificationSessions;
+var stripeMethod82;
+var VerificationSessions;
 var init_VerificationSessions = __esm({
   "../node_modules/stripe/esm/resources/Identity/VerificationSessions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod82 = StripeResource.method;
@@ -7167,12 +7223,11 @@ var init_VerificationSessions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Accounts.js
-var stripeMethod83, Accounts3;
+var stripeMethod83;
+var Accounts3;
 var init_Accounts3 = __esm({
   "../node_modules/stripe/esm/resources/Accounts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod83 = StripeResource.method;
@@ -7268,12 +7323,11 @@ var init_Accounts3 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/AccountLinks.js
-var stripeMethod84, AccountLinks2;
+var stripeMethod84;
+var AccountLinks2;
 var init_AccountLinks2 = __esm({
   "../node_modules/stripe/esm/resources/AccountLinks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod84 = StripeResource.method;
@@ -7282,12 +7336,11 @@ var init_AccountLinks2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/AccountSessions.js
-var stripeMethod85, AccountSessions;
+var stripeMethod85;
+var AccountSessions;
 var init_AccountSessions = __esm({
   "../node_modules/stripe/esm/resources/AccountSessions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod85 = StripeResource.method;
@@ -7296,12 +7349,11 @@ var init_AccountSessions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/ApplePayDomains.js
-var stripeMethod86, ApplePayDomains;
+var stripeMethod86;
+var ApplePayDomains;
 var init_ApplePayDomains = __esm({
   "../node_modules/stripe/esm/resources/ApplePayDomains.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod86 = StripeResource.method;
@@ -7323,12 +7375,11 @@ var init_ApplePayDomains = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/ApplicationFees.js
-var stripeMethod87, ApplicationFees;
+var stripeMethod87;
+var ApplicationFees;
 var init_ApplicationFees = __esm({
   "../node_modules/stripe/esm/resources/ApplicationFees.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod87 = StripeResource.method;
@@ -7362,12 +7413,11 @@ var init_ApplicationFees = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Balance.js
-var stripeMethod88, Balance;
+var stripeMethod88;
+var Balance;
 var init_Balance = __esm({
   "../node_modules/stripe/esm/resources/Balance.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod88 = StripeResource.method;
@@ -7376,12 +7426,11 @@ var init_Balance = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/BalanceSettings.js
-var stripeMethod89, BalanceSettings;
+var stripeMethod89;
+var BalanceSettings;
 var init_BalanceSettings = __esm({
   "../node_modules/stripe/esm/resources/BalanceSettings.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod89 = StripeResource.method;
@@ -7391,12 +7440,11 @@ var init_BalanceSettings = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/BalanceTransactions.js
-var stripeMethod90, BalanceTransactions;
+var stripeMethod90;
+var BalanceTransactions;
 var init_BalanceTransactions = __esm({
   "../node_modules/stripe/esm/resources/BalanceTransactions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod90 = StripeResource.method;
@@ -7413,12 +7461,11 @@ var init_BalanceTransactions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Charges.js
-var stripeMethod91, Charges;
+var stripeMethod91;
+var Charges;
 var init_Charges = __esm({
   "../node_modules/stripe/esm/resources/Charges.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod91 = StripeResource.method;
@@ -7443,12 +7490,11 @@ var init_Charges = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/ConfirmationTokens.js
-var stripeMethod92, ConfirmationTokens2;
+var stripeMethod92;
+var ConfirmationTokens2;
 var init_ConfirmationTokens2 = __esm({
   "../node_modules/stripe/esm/resources/ConfirmationTokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod92 = StripeResource.method;
@@ -7460,12 +7506,11 @@ var init_ConfirmationTokens2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/CountrySpecs.js
-var stripeMethod93, CountrySpecs;
+var stripeMethod93;
+var CountrySpecs;
 var init_CountrySpecs = __esm({
   "../node_modules/stripe/esm/resources/CountrySpecs.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod93 = StripeResource.method;
@@ -7482,12 +7527,11 @@ var init_CountrySpecs = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Coupons.js
-var stripeMethod94, Coupons;
+var stripeMethod94;
+var Coupons;
 var init_Coupons = __esm({
   "../node_modules/stripe/esm/resources/Coupons.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod94 = StripeResource.method;
@@ -7504,12 +7548,11 @@ var init_Coupons = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/CreditNotes.js
-var stripeMethod95, CreditNotes;
+var stripeMethod95;
+var CreditNotes;
 var init_CreditNotes = __esm({
   "../node_modules/stripe/esm/resources/CreditNotes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod95 = StripeResource.method;
@@ -7540,12 +7583,11 @@ var init_CreditNotes = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/CustomerSessions.js
-var stripeMethod96, CustomerSessions;
+var stripeMethod96;
+var CustomerSessions;
 var init_CustomerSessions = __esm({
   "../node_modules/stripe/esm/resources/CustomerSessions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod96 = StripeResource.method;
@@ -7554,12 +7596,11 @@ var init_CustomerSessions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Customers.js
-var stripeMethod97, Customers2;
+var stripeMethod97;
+var Customers2;
 var init_Customers2 = __esm({
   "../node_modules/stripe/esm/resources/Customers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod97 = StripeResource.method;
@@ -7674,12 +7715,11 @@ var init_Customers2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Disputes.js
-var stripeMethod98, Disputes2;
+var stripeMethod98;
+var Disputes2;
 var init_Disputes2 = __esm({
   "../node_modules/stripe/esm/resources/Disputes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod98 = StripeResource.method;
@@ -7698,12 +7738,11 @@ var init_Disputes2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/EphemeralKeys.js
-var stripeMethod99, EphemeralKeys;
+var stripeMethod99;
+var EphemeralKeys;
 var init_EphemeralKeys = __esm({
   "../node_modules/stripe/esm/resources/EphemeralKeys.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod99 = StripeResource.method;
@@ -7711,7 +7750,7 @@ var init_EphemeralKeys = __esm({
       create: stripeMethod99({
         method: "POST",
         fullPath: "/v1/ephemeral_keys",
-        validator: /* @__PURE__ */ __name((data, options) => {
+        validator: /* @__PURE__ */ __name2((data, options) => {
           if (!options.headers || !options.headers["Stripe-Version"]) {
             throw new Error("Passing apiVersion in a separate options hash is required to create an ephemeral key. See https://stripe.com/docs/api/versioning?lang=node");
           }
@@ -7721,12 +7760,11 @@ var init_EphemeralKeys = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Events.js
-var stripeMethod100, Events2;
+var stripeMethod100;
+var Events2;
 var init_Events2 = __esm({
   "../node_modules/stripe/esm/resources/Events.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod100 = StripeResource.method;
@@ -7740,12 +7778,11 @@ var init_Events2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/ExchangeRates.js
-var stripeMethod101, ExchangeRates;
+var stripeMethod101;
+var ExchangeRates;
 var init_ExchangeRates = __esm({
   "../node_modules/stripe/esm/resources/ExchangeRates.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod101 = StripeResource.method;
@@ -7762,12 +7799,11 @@ var init_ExchangeRates = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/FileLinks.js
-var stripeMethod102, FileLinks;
+var stripeMethod102;
+var FileLinks;
 var init_FileLinks = __esm({
   "../node_modules/stripe/esm/resources/FileLinks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod102 = StripeResource.method;
@@ -7783,8 +7819,6 @@ var init_FileLinks = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/multipart.js
 function multipartRequestDataProcessor(method, data, headers, callback) {
   data = data || {};
   if (method !== "POST") {
@@ -7795,13 +7829,14 @@ function multipartRequestDataProcessor(method, data, headers, callback) {
     return callback(null, buffer);
   }).catch((err) => callback(err, null));
 }
+__name(multipartRequestDataProcessor, "multipartRequestDataProcessor");
 var multipartDataGenerator;
 var init_multipart = __esm({
   "../node_modules/stripe/esm/multipart.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_utils();
-    multipartDataGenerator = /* @__PURE__ */ __name((method, data, headers) => {
+    multipartDataGenerator = /* @__PURE__ */ __name2((method, data, headers) => {
       const segno = (Math.round(Math.random() * 1e16) + Math.round(Math.random() * 1e16)).toString();
       headers["Content-Type"] = `multipart/form-data; boundary=${segno}`;
       const textEncoder = new TextEncoder();
@@ -7816,10 +7851,12 @@ var init_multipart = __esm({
         buffer.set(endBuffer, buffer.length - 2);
       }
       __name(push, "push");
+      __name2(push, "push");
       function q(s) {
         return `"${s.replace(/"|"/g, "%22").replace(/\r\n|\r|\n/g, " ")}"`;
       }
       __name(q, "q");
+      __name2(q, "q");
       const flattenedData = flattenAndStringify(data);
       for (const k in flattenedData) {
         if (!Object.prototype.hasOwnProperty.call(flattenedData, k)) {
@@ -7842,15 +7879,14 @@ var init_multipart = __esm({
       push(`--${segno}--`);
       return buffer;
     }, "multipartDataGenerator");
-    __name(multipartRequestDataProcessor, "multipartRequestDataProcessor");
+    __name2(multipartRequestDataProcessor, "multipartRequestDataProcessor");
   }
 });
-
-// ../node_modules/stripe/esm/resources/Files.js
-var stripeMethod103, Files;
+var stripeMethod103;
+var Files;
 var init_Files = __esm({
   "../node_modules/stripe/esm/resources/Files.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_multipart();
     init_StripeResource();
@@ -7874,12 +7910,11 @@ var init_Files = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/InvoiceItems.js
-var stripeMethod104, InvoiceItems;
+var stripeMethod104;
+var InvoiceItems;
 var init_InvoiceItems = __esm({
   "../node_modules/stripe/esm/resources/InvoiceItems.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod104 = StripeResource.method;
@@ -7905,12 +7940,11 @@ var init_InvoiceItems = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/InvoicePayments.js
-var stripeMethod105, InvoicePayments;
+var stripeMethod105;
+var InvoicePayments;
 var init_InvoicePayments = __esm({
   "../node_modules/stripe/esm/resources/InvoicePayments.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod105 = StripeResource.method;
@@ -7927,12 +7961,11 @@ var init_InvoicePayments = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/InvoiceRenderingTemplates.js
-var stripeMethod106, InvoiceRenderingTemplates;
+var stripeMethod106;
+var InvoiceRenderingTemplates;
 var init_InvoiceRenderingTemplates = __esm({
   "../node_modules/stripe/esm/resources/InvoiceRenderingTemplates.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod106 = StripeResource.method;
@@ -7957,12 +7990,11 @@ var init_InvoiceRenderingTemplates = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Invoices.js
-var stripeMethod107, Invoices;
+var stripeMethod107;
+var Invoices;
 var init_Invoices = __esm({
   "../node_modules/stripe/esm/resources/Invoices.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod107 = StripeResource.method;
@@ -8030,12 +8062,11 @@ var init_Invoices = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Mandates.js
-var stripeMethod108, Mandates;
+var stripeMethod108;
+var Mandates;
 var init_Mandates = __esm({
   "../node_modules/stripe/esm/resources/Mandates.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod108 = StripeResource.method;
@@ -8044,13 +8075,13 @@ var init_Mandates = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/OAuth.js
-var stripeMethod109, oAuthHost, OAuth;
+var stripeMethod109;
+var oAuthHost;
+var OAuth;
 var init_OAuth = __esm({
   "../node_modules/stripe/esm/resources/OAuth.js"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     init_utils();
@@ -8094,12 +8125,11 @@ var init_OAuth = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentAttemptRecords.js
-var stripeMethod110, PaymentAttemptRecords;
+var stripeMethod110;
+var PaymentAttemptRecords;
 var init_PaymentAttemptRecords = __esm({
   "../node_modules/stripe/esm/resources/PaymentAttemptRecords.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod110 = StripeResource.method;
@@ -8116,12 +8146,11 @@ var init_PaymentAttemptRecords = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentIntents.js
-var stripeMethod111, PaymentIntents;
+var stripeMethod111;
+var PaymentIntents;
 var init_PaymentIntents = __esm({
   "../node_modules/stripe/esm/resources/PaymentIntents.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod111 = StripeResource.method;
@@ -8177,12 +8206,11 @@ var init_PaymentIntents = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentLinks.js
-var stripeMethod112, PaymentLinks;
+var stripeMethod112;
+var PaymentLinks;
 var init_PaymentLinks = __esm({
   "../node_modules/stripe/esm/resources/PaymentLinks.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod112 = StripeResource.method;
@@ -8209,12 +8237,11 @@ var init_PaymentLinks = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentMethodConfigurations.js
-var stripeMethod113, PaymentMethodConfigurations;
+var stripeMethod113;
+var PaymentMethodConfigurations;
 var init_PaymentMethodConfigurations = __esm({
   "../node_modules/stripe/esm/resources/PaymentMethodConfigurations.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod113 = StripeResource.method;
@@ -8239,12 +8266,11 @@ var init_PaymentMethodConfigurations = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentMethodDomains.js
-var stripeMethod114, PaymentMethodDomains;
+var stripeMethod114;
+var PaymentMethodDomains;
 var init_PaymentMethodDomains = __esm({
   "../node_modules/stripe/esm/resources/PaymentMethodDomains.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod114 = StripeResource.method;
@@ -8273,12 +8299,11 @@ var init_PaymentMethodDomains = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentMethods.js
-var stripeMethod115, PaymentMethods;
+var stripeMethod115;
+var PaymentMethods;
 var init_PaymentMethods = __esm({
   "../node_modules/stripe/esm/resources/PaymentMethods.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod115 = StripeResource.method;
@@ -8308,12 +8333,11 @@ var init_PaymentMethods = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PaymentRecords.js
-var stripeMethod116, PaymentRecords;
+var stripeMethod116;
+var PaymentRecords;
 var init_PaymentRecords = __esm({
   "../node_modules/stripe/esm/resources/PaymentRecords.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod116 = StripeResource.method;
@@ -8350,12 +8374,11 @@ var init_PaymentRecords = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Payouts.js
-var stripeMethod117, Payouts;
+var stripeMethod117;
+var Payouts;
 var init_Payouts = __esm({
   "../node_modules/stripe/esm/resources/Payouts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod117 = StripeResource.method;
@@ -8379,12 +8402,11 @@ var init_Payouts = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Plans.js
-var stripeMethod118, Plans;
+var stripeMethod118;
+var Plans;
 var init_Plans = __esm({
   "../node_modules/stripe/esm/resources/Plans.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod118 = StripeResource.method;
@@ -8401,12 +8423,11 @@ var init_Plans = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Prices.js
-var stripeMethod119, Prices;
+var stripeMethod119;
+var Prices;
 var init_Prices = __esm({
   "../node_modules/stripe/esm/resources/Prices.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod119 = StripeResource.method;
@@ -8427,12 +8448,11 @@ var init_Prices = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Products.js
-var stripeMethod120, Products2;
+var stripeMethod120;
+var Products2;
 var init_Products2 = __esm({
   "../node_modules/stripe/esm/resources/Products.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod120 = StripeResource.method;
@@ -8471,12 +8491,11 @@ var init_Products2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/PromotionCodes.js
-var stripeMethod121, PromotionCodes;
+var stripeMethod121;
+var PromotionCodes;
 var init_PromotionCodes = __esm({
   "../node_modules/stripe/esm/resources/PromotionCodes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod121 = StripeResource.method;
@@ -8498,12 +8517,11 @@ var init_PromotionCodes = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Quotes.js
-var stripeMethod122, Quotes;
+var stripeMethod122;
+var Quotes;
 var init_Quotes = __esm({
   "../node_modules/stripe/esm/resources/Quotes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod122 = StripeResource.method;
@@ -8541,12 +8559,11 @@ var init_Quotes = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Refunds.js
-var stripeMethod123, Refunds2;
+var stripeMethod123;
+var Refunds2;
 var init_Refunds2 = __esm({
   "../node_modules/stripe/esm/resources/Refunds.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod123 = StripeResource.method;
@@ -8566,12 +8583,11 @@ var init_Refunds2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Reviews.js
-var stripeMethod124, Reviews;
+var stripeMethod124;
+var Reviews;
 var init_Reviews = __esm({
   "../node_modules/stripe/esm/resources/Reviews.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod124 = StripeResource.method;
@@ -8589,12 +8605,11 @@ var init_Reviews = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/SetupAttempts.js
-var stripeMethod125, SetupAttempts;
+var stripeMethod125;
+var SetupAttempts;
 var init_SetupAttempts = __esm({
   "../node_modules/stripe/esm/resources/SetupAttempts.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod125 = StripeResource.method;
@@ -8607,12 +8622,11 @@ var init_SetupAttempts = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/SetupIntents.js
-var stripeMethod126, SetupIntents;
+var stripeMethod126;
+var SetupIntents;
 var init_SetupIntents = __esm({
   "../node_modules/stripe/esm/resources/SetupIntents.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod126 = StripeResource.method;
@@ -8646,12 +8660,11 @@ var init_SetupIntents = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/ShippingRates.js
-var stripeMethod127, ShippingRates;
+var stripeMethod127;
+var ShippingRates;
 var init_ShippingRates = __esm({
   "../node_modules/stripe/esm/resources/ShippingRates.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod127 = StripeResource.method;
@@ -8673,12 +8686,11 @@ var init_ShippingRates = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Sources.js
-var stripeMethod128, Sources;
+var stripeMethod128;
+var Sources;
 var init_Sources = __esm({
   "../node_modules/stripe/esm/resources/Sources.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod128 = StripeResource.method;
@@ -8698,12 +8710,11 @@ var init_Sources = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/SubscriptionItems.js
-var stripeMethod129, SubscriptionItems;
+var stripeMethod129;
+var SubscriptionItems;
 var init_SubscriptionItems = __esm({
   "../node_modules/stripe/esm/resources/SubscriptionItems.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod129 = StripeResource.method;
@@ -8729,12 +8740,11 @@ var init_SubscriptionItems = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/SubscriptionSchedules.js
-var stripeMethod130, SubscriptionSchedules;
+var stripeMethod130;
+var SubscriptionSchedules;
 var init_SubscriptionSchedules = __esm({
   "../node_modules/stripe/esm/resources/SubscriptionSchedules.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod130 = StripeResource.method;
@@ -8767,12 +8777,11 @@ var init_SubscriptionSchedules = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Subscriptions.js
-var stripeMethod131, Subscriptions;
+var stripeMethod131;
+var Subscriptions;
 var init_Subscriptions = __esm({
   "../node_modules/stripe/esm/resources/Subscriptions.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod131 = StripeResource.method;
@@ -8815,12 +8824,11 @@ var init_Subscriptions = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TaxCodes.js
-var stripeMethod132, TaxCodes;
+var stripeMethod132;
+var TaxCodes;
 var init_TaxCodes = __esm({
   "../node_modules/stripe/esm/resources/TaxCodes.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod132 = StripeResource.method;
@@ -8834,12 +8842,11 @@ var init_TaxCodes = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TaxIds.js
-var stripeMethod133, TaxIds;
+var stripeMethod133;
+var TaxIds;
 var init_TaxIds = __esm({
   "../node_modules/stripe/esm/resources/TaxIds.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod133 = StripeResource.method;
@@ -8855,12 +8862,11 @@ var init_TaxIds = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/TaxRates.js
-var stripeMethod134, TaxRates;
+var stripeMethod134;
+var TaxRates;
 var init_TaxRates = __esm({
   "../node_modules/stripe/esm/resources/TaxRates.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod134 = StripeResource.method;
@@ -8876,12 +8882,11 @@ var init_TaxRates = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Tokens.js
-var stripeMethod135, Tokens2;
+var stripeMethod135;
+var Tokens2;
 var init_Tokens2 = __esm({
   "../node_modules/stripe/esm/resources/Tokens.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod135 = StripeResource.method;
@@ -8891,12 +8896,11 @@ var init_Tokens2 = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Topups.js
-var stripeMethod136, Topups;
+var stripeMethod136;
+var Topups;
 var init_Topups = __esm({
   "../node_modules/stripe/esm/resources/Topups.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod136 = StripeResource.method;
@@ -8913,12 +8917,11 @@ var init_Topups = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/Transfers.js
-var stripeMethod137, Transfers;
+var stripeMethod137;
+var Transfers;
 var init_Transfers = __esm({
   "../node_modules/stripe/esm/resources/Transfers.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod137 = StripeResource.method;
@@ -8951,12 +8954,11 @@ var init_Transfers = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources/WebhookEndpoints.js
-var stripeMethod138, WebhookEndpoints;
+var stripeMethod138;
+var WebhookEndpoints;
 var init_WebhookEndpoints = __esm({
   "../node_modules/stripe/esm/resources/WebhookEndpoints.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_StripeResource();
     stripeMethod138 = StripeResource.method;
@@ -8982,90 +8984,105 @@ var init_WebhookEndpoints = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/resources.js
 var resources_exports = {};
 __export(resources_exports, {
-  Account: () => Accounts3,
-  AccountLinks: () => AccountLinks2,
-  AccountSessions: () => AccountSessions,
-  Accounts: () => Accounts3,
-  ApplePayDomains: () => ApplePayDomains,
-  ApplicationFees: () => ApplicationFees,
-  Apps: () => Apps,
-  Balance: () => Balance,
-  BalanceSettings: () => BalanceSettings,
-  BalanceTransactions: () => BalanceTransactions,
-  Billing: () => Billing,
-  BillingPortal: () => BillingPortal,
-  Charges: () => Charges,
-  Checkout: () => Checkout,
-  Climate: () => Climate,
-  ConfirmationTokens: () => ConfirmationTokens2,
-  CountrySpecs: () => CountrySpecs,
-  Coupons: () => Coupons,
-  CreditNotes: () => CreditNotes,
-  CustomerSessions: () => CustomerSessions,
-  Customers: () => Customers2,
-  Disputes: () => Disputes2,
-  Entitlements: () => Entitlements,
-  EphemeralKeys: () => EphemeralKeys,
-  Events: () => Events2,
-  ExchangeRates: () => ExchangeRates,
-  FileLinks: () => FileLinks,
-  Files: () => Files,
-  FinancialConnections: () => FinancialConnections,
-  Forwarding: () => Forwarding,
-  Identity: () => Identity,
-  InvoiceItems: () => InvoiceItems,
-  InvoicePayments: () => InvoicePayments,
-  InvoiceRenderingTemplates: () => InvoiceRenderingTemplates,
-  Invoices: () => Invoices,
-  Issuing: () => Issuing,
-  Mandates: () => Mandates,
-  OAuth: () => OAuth,
-  PaymentAttemptRecords: () => PaymentAttemptRecords,
-  PaymentIntents: () => PaymentIntents,
-  PaymentLinks: () => PaymentLinks,
-  PaymentMethodConfigurations: () => PaymentMethodConfigurations,
-  PaymentMethodDomains: () => PaymentMethodDomains,
-  PaymentMethods: () => PaymentMethods,
-  PaymentRecords: () => PaymentRecords,
-  Payouts: () => Payouts,
-  Plans: () => Plans,
-  Prices: () => Prices,
-  Products: () => Products2,
-  PromotionCodes: () => PromotionCodes,
-  Quotes: () => Quotes,
-  Radar: () => Radar,
-  Refunds: () => Refunds2,
-  Reporting: () => Reporting,
-  Reviews: () => Reviews,
-  SetupAttempts: () => SetupAttempts,
-  SetupIntents: () => SetupIntents,
-  ShippingRates: () => ShippingRates,
-  Sigma: () => Sigma,
-  Sources: () => Sources,
-  SubscriptionItems: () => SubscriptionItems,
-  SubscriptionSchedules: () => SubscriptionSchedules,
-  Subscriptions: () => Subscriptions,
-  Tax: () => Tax,
-  TaxCodes: () => TaxCodes,
-  TaxIds: () => TaxIds,
-  TaxRates: () => TaxRates,
-  Terminal: () => Terminal,
-  TestHelpers: () => TestHelpers,
-  Tokens: () => Tokens2,
-  Topups: () => Topups,
-  Transfers: () => Transfers,
-  Treasury: () => Treasury,
-  V2: () => V2,
-  WebhookEndpoints: () => WebhookEndpoints
+  Account: /* @__PURE__ */ __name(() => Accounts3, "Account"),
+  AccountLinks: /* @__PURE__ */ __name(() => AccountLinks2, "AccountLinks"),
+  AccountSessions: /* @__PURE__ */ __name(() => AccountSessions, "AccountSessions"),
+  Accounts: /* @__PURE__ */ __name(() => Accounts3, "Accounts"),
+  ApplePayDomains: /* @__PURE__ */ __name(() => ApplePayDomains, "ApplePayDomains"),
+  ApplicationFees: /* @__PURE__ */ __name(() => ApplicationFees, "ApplicationFees"),
+  Apps: /* @__PURE__ */ __name(() => Apps, "Apps"),
+  Balance: /* @__PURE__ */ __name(() => Balance, "Balance"),
+  BalanceSettings: /* @__PURE__ */ __name(() => BalanceSettings, "BalanceSettings"),
+  BalanceTransactions: /* @__PURE__ */ __name(() => BalanceTransactions, "BalanceTransactions"),
+  Billing: /* @__PURE__ */ __name(() => Billing, "Billing"),
+  BillingPortal: /* @__PURE__ */ __name(() => BillingPortal, "BillingPortal"),
+  Charges: /* @__PURE__ */ __name(() => Charges, "Charges"),
+  Checkout: /* @__PURE__ */ __name(() => Checkout, "Checkout"),
+  Climate: /* @__PURE__ */ __name(() => Climate, "Climate"),
+  ConfirmationTokens: /* @__PURE__ */ __name(() => ConfirmationTokens2, "ConfirmationTokens"),
+  CountrySpecs: /* @__PURE__ */ __name(() => CountrySpecs, "CountrySpecs"),
+  Coupons: /* @__PURE__ */ __name(() => Coupons, "Coupons"),
+  CreditNotes: /* @__PURE__ */ __name(() => CreditNotes, "CreditNotes"),
+  CustomerSessions: /* @__PURE__ */ __name(() => CustomerSessions, "CustomerSessions"),
+  Customers: /* @__PURE__ */ __name(() => Customers2, "Customers"),
+  Disputes: /* @__PURE__ */ __name(() => Disputes2, "Disputes"),
+  Entitlements: /* @__PURE__ */ __name(() => Entitlements, "Entitlements"),
+  EphemeralKeys: /* @__PURE__ */ __name(() => EphemeralKeys, "EphemeralKeys"),
+  Events: /* @__PURE__ */ __name(() => Events2, "Events"),
+  ExchangeRates: /* @__PURE__ */ __name(() => ExchangeRates, "ExchangeRates"),
+  FileLinks: /* @__PURE__ */ __name(() => FileLinks, "FileLinks"),
+  Files: /* @__PURE__ */ __name(() => Files, "Files"),
+  FinancialConnections: /* @__PURE__ */ __name(() => FinancialConnections, "FinancialConnections"),
+  Forwarding: /* @__PURE__ */ __name(() => Forwarding, "Forwarding"),
+  Identity: /* @__PURE__ */ __name(() => Identity, "Identity"),
+  InvoiceItems: /* @__PURE__ */ __name(() => InvoiceItems, "InvoiceItems"),
+  InvoicePayments: /* @__PURE__ */ __name(() => InvoicePayments, "InvoicePayments"),
+  InvoiceRenderingTemplates: /* @__PURE__ */ __name(() => InvoiceRenderingTemplates, "InvoiceRenderingTemplates"),
+  Invoices: /* @__PURE__ */ __name(() => Invoices, "Invoices"),
+  Issuing: /* @__PURE__ */ __name(() => Issuing, "Issuing"),
+  Mandates: /* @__PURE__ */ __name(() => Mandates, "Mandates"),
+  OAuth: /* @__PURE__ */ __name(() => OAuth, "OAuth"),
+  PaymentAttemptRecords: /* @__PURE__ */ __name(() => PaymentAttemptRecords, "PaymentAttemptRecords"),
+  PaymentIntents: /* @__PURE__ */ __name(() => PaymentIntents, "PaymentIntents"),
+  PaymentLinks: /* @__PURE__ */ __name(() => PaymentLinks, "PaymentLinks"),
+  PaymentMethodConfigurations: /* @__PURE__ */ __name(() => PaymentMethodConfigurations, "PaymentMethodConfigurations"),
+  PaymentMethodDomains: /* @__PURE__ */ __name(() => PaymentMethodDomains, "PaymentMethodDomains"),
+  PaymentMethods: /* @__PURE__ */ __name(() => PaymentMethods, "PaymentMethods"),
+  PaymentRecords: /* @__PURE__ */ __name(() => PaymentRecords, "PaymentRecords"),
+  Payouts: /* @__PURE__ */ __name(() => Payouts, "Payouts"),
+  Plans: /* @__PURE__ */ __name(() => Plans, "Plans"),
+  Prices: /* @__PURE__ */ __name(() => Prices, "Prices"),
+  Products: /* @__PURE__ */ __name(() => Products2, "Products"),
+  PromotionCodes: /* @__PURE__ */ __name(() => PromotionCodes, "PromotionCodes"),
+  Quotes: /* @__PURE__ */ __name(() => Quotes, "Quotes"),
+  Radar: /* @__PURE__ */ __name(() => Radar, "Radar"),
+  Refunds: /* @__PURE__ */ __name(() => Refunds2, "Refunds"),
+  Reporting: /* @__PURE__ */ __name(() => Reporting, "Reporting"),
+  Reviews: /* @__PURE__ */ __name(() => Reviews, "Reviews"),
+  SetupAttempts: /* @__PURE__ */ __name(() => SetupAttempts, "SetupAttempts"),
+  SetupIntents: /* @__PURE__ */ __name(() => SetupIntents, "SetupIntents"),
+  ShippingRates: /* @__PURE__ */ __name(() => ShippingRates, "ShippingRates"),
+  Sigma: /* @__PURE__ */ __name(() => Sigma, "Sigma"),
+  Sources: /* @__PURE__ */ __name(() => Sources, "Sources"),
+  SubscriptionItems: /* @__PURE__ */ __name(() => SubscriptionItems, "SubscriptionItems"),
+  SubscriptionSchedules: /* @__PURE__ */ __name(() => SubscriptionSchedules, "SubscriptionSchedules"),
+  Subscriptions: /* @__PURE__ */ __name(() => Subscriptions, "Subscriptions"),
+  Tax: /* @__PURE__ */ __name(() => Tax, "Tax"),
+  TaxCodes: /* @__PURE__ */ __name(() => TaxCodes, "TaxCodes"),
+  TaxIds: /* @__PURE__ */ __name(() => TaxIds, "TaxIds"),
+  TaxRates: /* @__PURE__ */ __name(() => TaxRates, "TaxRates"),
+  Terminal: /* @__PURE__ */ __name(() => Terminal, "Terminal"),
+  TestHelpers: /* @__PURE__ */ __name(() => TestHelpers, "TestHelpers"),
+  Tokens: /* @__PURE__ */ __name(() => Tokens2, "Tokens"),
+  Topups: /* @__PURE__ */ __name(() => Topups, "Topups"),
+  Transfers: /* @__PURE__ */ __name(() => Transfers, "Transfers"),
+  Treasury: /* @__PURE__ */ __name(() => Treasury, "Treasury"),
+  V2: /* @__PURE__ */ __name(() => V2, "V2"),
+  WebhookEndpoints: /* @__PURE__ */ __name(() => WebhookEndpoints, "WebhookEndpoints")
 });
-var Apps, Billing, BillingPortal, Checkout, Climate, Entitlements, FinancialConnections, Forwarding, Identity, Issuing, Radar, Reporting, Sigma, Tax, Terminal, TestHelpers, Treasury, V2;
+var Apps;
+var Billing;
+var BillingPortal;
+var Checkout;
+var Climate;
+var Entitlements;
+var FinancialConnections;
+var Forwarding;
+var Identity;
+var Issuing;
+var Radar;
+var Reporting;
+var Sigma;
+var Tax;
+var Terminal;
+var TestHelpers;
+var Treasury;
+var V2;
 var init_resources = __esm({
   "../node_modules/stripe/esm/resources.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_ResourceNamespace();
     init_AccountLinks();
@@ -9329,8 +9346,6 @@ var init_resources = __esm({
     });
   }
 });
-
-// ../node_modules/stripe/esm/stripe.core.js
 function createStripe(platformFunctions, requestSender = defaultRequestSenderFactory) {
   Stripe2.PACKAGE_VERSION = "20.2.0";
   Stripe2.API_VERSION = ApiVersion;
@@ -9389,7 +9404,8 @@ function createStripe(platformFunctions, requestSender = defaultRequestSenderFac
     this._requestSender = requestSender(this);
     this.StripeResource = Stripe2.StripeResource;
   }
-  __name(Stripe2, "Stripe");
+  __name(Stripe2, "Stripe2");
+  __name2(Stripe2, "Stripe");
   Stripe2.errors = Error_exports;
   Stripe2.createNodeHttpClient = platformFunctions.createNodeHttpClient;
   Stripe2.createFetchHttpClient = platformFunctions.createFetchHttpClient;
@@ -9476,7 +9492,7 @@ function createStripe(platformFunctions, requestSender = defaultRequestSenderFac
      *
      * It may be deprecated and removed in the future.
      */
-    getConstant: /* @__PURE__ */ __name((c) => {
+    getConstant: /* @__PURE__ */ __name2((c) => {
       switch (c) {
         case "DEFAULT_HOST":
           return DEFAULT_HOST;
@@ -9638,10 +9654,20 @@ function createStripe(platformFunctions, requestSender = defaultRequestSenderFac
   };
   return Stripe2;
 }
-var DEFAULT_HOST, DEFAULT_PORT, DEFAULT_BASE_PATH, DEFAULT_API_VERSION, DEFAULT_TIMEOUT, MAX_NETWORK_RETRY_DELAY_SEC, INITIAL_NETWORK_RETRY_DELAY_SEC, APP_INFO_PROPERTIES, ALLOWED_CONFIG_PROPERTIES, defaultRequestSenderFactory;
+__name(createStripe, "createStripe");
+var DEFAULT_HOST;
+var DEFAULT_PORT;
+var DEFAULT_BASE_PATH;
+var DEFAULT_API_VERSION;
+var DEFAULT_TIMEOUT;
+var MAX_NETWORK_RETRY_DELAY_SEC;
+var INITIAL_NETWORK_RETRY_DELAY_SEC;
+var APP_INFO_PROPERTIES;
+var ALLOWED_CONFIG_PROPERTIES;
+var defaultRequestSenderFactory;
 var init_stripe_core = __esm({
   "../node_modules/stripe/esm/stripe.core.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_Error();
     init_RequestSender();
@@ -9677,16 +9703,15 @@ var init_stripe_core = __esm({
       "stripeAccount",
       "stripeContext"
     ];
-    defaultRequestSenderFactory = /* @__PURE__ */ __name((stripe) => new RequestSender(stripe, StripeResource.MAX_BUFFERED_REQUEST_METRICS), "defaultRequestSenderFactory");
-    __name(createStripe, "createStripe");
+    defaultRequestSenderFactory = /* @__PURE__ */ __name2((stripe) => new RequestSender(stripe, StripeResource.MAX_BUFFERED_REQUEST_METRICS), "defaultRequestSenderFactory");
+    __name2(createStripe, "createStripe");
   }
 });
-
-// ../node_modules/stripe/esm/stripe.esm.worker.js
-var Stripe, stripe_esm_worker_default;
+var Stripe;
+var stripe_esm_worker_default;
 var init_stripe_esm_worker = __esm({
   "../node_modules/stripe/esm/stripe.esm.worker.js"() {
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_WebPlatformFunctions();
     init_stripe_core();
@@ -9694,16 +9719,14 @@ var init_stripe_esm_worker = __esm({
     stripe_esm_worker_default = Stripe;
   }
 });
-
-// api/orders/confirm.ts
-var onRequestPost4;
+var onRequestPost5;
 var init_confirm = __esm({
   "api/orders/confirm.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_stripe_esm_worker();
-    onRequestPost4 = /* @__PURE__ */ __name(async (context) => {
+    onRequestPost5 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { request, env } = context;
         const { paymentIntentId } = await request.json();
@@ -9748,15 +9771,13 @@ var init_confirm = __esm({
     }, "onRequestPost");
   }
 });
-
-// api/orders/sync.ts
-var onRequestPost5;
+var onRequestPost6;
 var init_sync = __esm({
   "api/orders/sync.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestPost5 = /* @__PURE__ */ __name(async (context) => {
+    onRequestPost6 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { request, env } = context;
         const { paymentIntentId, name, email } = await request.json();
@@ -9773,15 +9794,13 @@ var init_sync = __esm({
     }, "onRequestPost");
   }
 });
-
-// api/products/[id].ts
 var onRequestGet3;
 var init_id2 = __esm({
   "api/products/[id].ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestGet3 = /* @__PURE__ */ __name(async (context) => {
+    onRequestGet3 = /* @__PURE__ */ __name2(async (context) => {
       const id = context.params.id;
       const row = await context.env.DB.prepare("SELECT * FROM products WHERE id = ?").bind(id).first();
       if (!row) {
@@ -9806,20 +9825,19 @@ var init_id2 = __esm({
     }, "onRequestGet");
   }
 });
-
-// api/scripts/[id].ts
-var onRequestDelete2, onRequestPut2;
+var onRequestDelete2;
+var onRequestPut2;
 var init_id3 = __esm({
   "api/scripts/[id].ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestDelete2 = /* @__PURE__ */ __name(async (context) => {
+    onRequestDelete2 = /* @__PURE__ */ __name2(async (context) => {
       const id = context.params.id;
       await context.env.DB.prepare("DELETE FROM scripts WHERE id = ?").bind(id).run();
       return new Response(JSON.stringify({ success: true }));
     }, "onRequestDelete");
-    onRequestPut2 = /* @__PURE__ */ __name(async (context) => {
+    onRequestPut2 = /* @__PURE__ */ __name2(async (context) => {
       const id = context.params.id;
       const { enabled } = await context.request.json();
       await context.env.DB.prepare(
@@ -9829,16 +9847,14 @@ var init_id3 = __esm({
     }, "onRequestPut");
   }
 });
-
-// api/checkout.ts
-var onRequestPost6;
+var onRequestPost7;
 var init_checkout = __esm({
   "api/checkout.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     init_stripe_esm_worker();
-    onRequestPost6 = /* @__PURE__ */ __name(async (context) => {
+    onRequestPost7 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { request, env } = context;
         const { items, customerName, customerEmail } = await request.json();
@@ -9936,15 +9952,13 @@ var init_checkout = __esm({
     }, "onRequestPost");
   }
 });
-
-// api/products/index.ts
 var onRequestGet4;
 var init_products2 = __esm({
   "api/products/index.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestGet4 = /* @__PURE__ */ __name(async (context) => {
+    onRequestGet4 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { results } = await context.env.DB.prepare("SELECT * FROM products ORDER BY id DESC").all();
         const products = results.map((row) => ({
@@ -9958,6 +9972,7 @@ var init_products2 = __esm({
           url: row.url,
           imageFile: row.image_file,
           imageUrl: row.image_url,
+          images: row.images ? JSON.parse(row.images) : [],
           category: row.category
         }));
         return new Response(JSON.stringify(products), {
@@ -9969,15 +9984,14 @@ var init_products2 = __esm({
     }, "onRequestGet");
   }
 });
-
-// api/scripts/index.ts
-var onRequestGet5, onRequestPost7;
+var onRequestGet5;
+var onRequestPost8;
 var init_scripts = __esm({
   "api/scripts/index.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestGet5 = /* @__PURE__ */ __name(async (context) => {
+    onRequestGet5 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { results } = await context.env.DB.prepare(
           "SELECT * FROM scripts ORDER BY created_at DESC"
@@ -9989,7 +10003,7 @@ var init_scripts = __esm({
         return new Response(JSON.stringify({ error: e.message }), { status: 500 });
       }
     }, "onRequestGet");
-    onRequestPost7 = /* @__PURE__ */ __name(async (context) => {
+    onRequestPost8 = /* @__PURE__ */ __name2(async (context) => {
       try {
         const { name, content, location } = await context.request.json();
         if (!name || !content || !["head", "body_start", "footer"].includes(location)) {
@@ -10007,8 +10021,6 @@ var init_scripts = __esm({
     }, "onRequestPost");
   }
 });
-
-// api/admin/_middleware.ts
 async function verify(token, secret) {
   const parts = token.split(".");
   if (parts.length !== 3) return false;
@@ -10033,14 +10045,15 @@ async function verify(token, secret) {
   if (payload.exp < Math.floor(Date.now() / 1e3)) return false;
   return true;
 }
+__name(verify, "verify");
 var onRequest;
 var init_middleware = __esm({
   "api/admin/_middleware.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    __name(verify, "verify");
-    onRequest = /* @__PURE__ */ __name(async (context) => {
+    __name2(verify, "verify");
+    onRequest = /* @__PURE__ */ __name2(async (context) => {
       const { request, next, env } = context;
       if (!env.JWT_SECRET) {
         return new Response(JSON.stringify({ error: "Server misconfiguration" }), { status: 500 });
@@ -10064,15 +10077,13 @@ var init_middleware = __esm({
     }, "onRequest");
   }
 });
-
-// feed.xml.ts
 var onRequestGet6;
 var init_feed_xml = __esm({
   "feed.xml.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequestGet6 = /* @__PURE__ */ __name(async (context) => {
+    onRequestGet6 = /* @__PURE__ */ __name2(async (context) => {
       const { request, env } = context;
       const url = new URL(request.url);
       const baseUrl = `${url.protocol}//${url.host}`;
@@ -10146,33 +10157,33 @@ var init_feed_xml = __esm({
     }, "onRequestGet");
   }
 });
-
-// api/_middleware.ts
 var onRequest2;
 var init_middleware2 = __esm({
   "api/_middleware.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
-    onRequest2 = /* @__PURE__ */ __name(async (context) => {
+    onRequest2 = /* @__PURE__ */ __name2(async (context) => {
       return context.next();
     }, "onRequest");
   }
 });
-
-// _middleware.ts
-var ScriptInjector, onRequest3;
+var ScriptInjector;
+var onRequest3;
 var init_middleware3 = __esm({
   "_middleware.ts"() {
     "use strict";
-    init_functionsRoutes_0_013781110522466111();
+    init_functionsRoutes_0_08206309707451787();
     init_checked_fetch();
     ScriptInjector = class {
+      static {
+        __name(this, "ScriptInjector");
+      }
       constructor(scripts) {
         this.scripts = scripts;
       }
       static {
-        __name(this, "ScriptInjector");
+        __name2(this, "ScriptInjector");
       }
       element(element) {
         if (element.tagName === "head") {
@@ -10192,7 +10203,7 @@ var init_middleware3 = __esm({
         }
       }
     };
-    onRequest3 = /* @__PURE__ */ __name(async (context) => {
+    onRequest3 = /* @__PURE__ */ __name2(async (context) => {
       const { request, next, env } = context;
       const url = new URL(request.url);
       if (url.pathname.startsWith("/api") || url.pathname.startsWith("/assets/")) {
@@ -10220,12 +10231,11 @@ var init_middleware3 = __esm({
     }, "onRequest");
   }
 });
-
-// ../.wrangler/tmp/pages-so604z/functionsRoutes-0.013781110522466111.mjs
 var routes;
-var init_functionsRoutes_0_013781110522466111 = __esm({
-  "../.wrangler/tmp/pages-so604z/functionsRoutes-0.013781110522466111.mjs"() {
+var init_functionsRoutes_0_08206309707451787 = __esm({
+  "../.wrangler/tmp/pages-Xuc53S/functionsRoutes-0.08206309707451787.mjs"() {
     "use strict";
+    init_bulk();
     init_id();
     init_id();
     init_orders();
@@ -10247,6 +10257,13 @@ var init_functionsRoutes_0_013781110522466111 = __esm({
     init_middleware2();
     init_middleware3();
     routes = [
+      {
+        routePath: "/api/admin/products/bulk",
+        mountPath: "/api/admin/products",
+        method: "POST",
+        middlewares: [],
+        modules: [onRequestPost]
+      },
       {
         routePath: "/api/admin/products/:id",
         mountPath: "/api/admin/products",
@@ -10273,7 +10290,7 @@ var init_functionsRoutes_0_013781110522466111 = __esm({
         mountPath: "/api/admin/products",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost]
+        modules: [onRequestPost2]
       },
       {
         routePath: "/api/analytics/dashboard",
@@ -10287,28 +10304,28 @@ var init_functionsRoutes_0_013781110522466111 = __esm({
         mountPath: "/api/analytics",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost2]
+        modules: [onRequestPost3]
       },
       {
         routePath: "/api/auth/login",
         mountPath: "/api/auth",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost3]
+        modules: [onRequestPost4]
       },
       {
         routePath: "/api/orders/confirm",
         mountPath: "/api/orders",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost4]
+        modules: [onRequestPost5]
       },
       {
         routePath: "/api/orders/sync",
         mountPath: "/api/orders",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost5]
+        modules: [onRequestPost6]
       },
       {
         routePath: "/api/products/:id",
@@ -10336,7 +10353,7 @@ var init_functionsRoutes_0_013781110522466111 = __esm({
         mountPath: "/api",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost6]
+        modules: [onRequestPost7]
       },
       {
         routePath: "/api/products",
@@ -10357,7 +10374,7 @@ var init_functionsRoutes_0_013781110522466111 = __esm({
         mountPath: "/api/scripts",
         method: "POST",
         middlewares: [],
-        modules: [onRequestPost7]
+        modules: [onRequestPost8]
       },
       {
         routePath: "/api/admin",
@@ -10390,21 +10407,13 @@ var init_functionsRoutes_0_013781110522466111 = __esm({
     ];
   }
 });
-
-// ../.wrangler/tmp/bundle-0YgtSR/middleware-loader.entry.ts
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
-
-// ../.wrangler/tmp/bundle-0YgtSR/middleware-insertion-facade.js
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
-
-// ../../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
-
-// ../../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
 function lexer(str) {
   var tokens = [];
@@ -10490,6 +10499,7 @@ function lexer(str) {
   return tokens;
 }
 __name(lexer, "lexer");
+__name2(lexer, "lexer");
 function parse(str, options) {
   if (options === void 0) {
     options = {};
@@ -10500,18 +10510,18 @@ function parse(str, options) {
   var key = 0;
   var i = 0;
   var path = "";
-  var tryConsume = /* @__PURE__ */ __name(function(type) {
+  var tryConsume = /* @__PURE__ */ __name2(function(type) {
     if (i < tokens.length && tokens[i].type === type)
       return tokens[i++].value;
   }, "tryConsume");
-  var mustConsume = /* @__PURE__ */ __name(function(type) {
+  var mustConsume = /* @__PURE__ */ __name2(function(type) {
     var value2 = tryConsume(type);
     if (value2 !== void 0)
       return value2;
     var _a2 = tokens[i], nextType = _a2.type, index = _a2.index;
     throw new TypeError("Unexpected ".concat(nextType, " at ").concat(index, ", expected ").concat(type));
   }, "mustConsume");
-  var consumeText = /* @__PURE__ */ __name(function() {
+  var consumeText = /* @__PURE__ */ __name2(function() {
     var result2 = "";
     var value2;
     while (value2 = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR")) {
@@ -10519,7 +10529,7 @@ function parse(str, options) {
     }
     return result2;
   }, "consumeText");
-  var isSafe = /* @__PURE__ */ __name(function(value2) {
+  var isSafe = /* @__PURE__ */ __name2(function(value2) {
     for (var _i = 0, delimiter_1 = delimiter; _i < delimiter_1.length; _i++) {
       var char2 = delimiter_1[_i];
       if (value2.indexOf(char2) > -1)
@@ -10527,7 +10537,7 @@ function parse(str, options) {
     }
     return false;
   }, "isSafe");
-  var safePattern = /* @__PURE__ */ __name(function(prefix2) {
+  var safePattern = /* @__PURE__ */ __name2(function(prefix2) {
     var prev = result[result.length - 1];
     var prevText = prefix2 || (prev && typeof prev === "string" ? prev : "");
     if (prev && !prevText) {
@@ -10590,12 +10600,14 @@ function parse(str, options) {
   return result;
 }
 __name(parse, "parse");
+__name2(parse, "parse");
 function match(str, options) {
   var keys = [];
   var re = pathToRegexp(str, keys, options);
   return regexpToFunction(re, keys, options);
 }
 __name(match, "match");
+__name2(match, "match");
 function regexpToFunction(re, keys, options) {
   if (options === void 0) {
     options = {};
@@ -10609,7 +10621,7 @@ function regexpToFunction(re, keys, options) {
       return false;
     var path = m[0], index = m.index;
     var params = /* @__PURE__ */ Object.create(null);
-    var _loop_1 = /* @__PURE__ */ __name(function(i2) {
+    var _loop_1 = /* @__PURE__ */ __name2(function(i2) {
       if (m[i2] === void 0)
         return "continue";
       var key = keys[i2 - 1];
@@ -10628,14 +10640,17 @@ function regexpToFunction(re, keys, options) {
   };
 }
 __name(regexpToFunction, "regexpToFunction");
+__name2(regexpToFunction, "regexpToFunction");
 function escapeString(str) {
   return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
 }
 __name(escapeString, "escapeString");
+__name2(escapeString, "escapeString");
 function flags(options) {
   return options && options.sensitive ? "" : "i";
 }
 __name(flags, "flags");
+__name2(flags, "flags");
 function regexpToRegexp(path, keys) {
   if (!keys)
     return path;
@@ -10656,6 +10671,7 @@ function regexpToRegexp(path, keys) {
   return path;
 }
 __name(regexpToRegexp, "regexpToRegexp");
+__name2(regexpToRegexp, "regexpToRegexp");
 function arrayToRegexp(paths, keys, options) {
   var parts = paths.map(function(path) {
     return pathToRegexp(path, keys, options).source;
@@ -10663,10 +10679,12 @@ function arrayToRegexp(paths, keys, options) {
   return new RegExp("(?:".concat(parts.join("|"), ")"), flags(options));
 }
 __name(arrayToRegexp, "arrayToRegexp");
+__name2(arrayToRegexp, "arrayToRegexp");
 function stringToRegexp(path, keys, options) {
   return tokensToRegexp(parse(path, options), keys, options);
 }
 __name(stringToRegexp, "stringToRegexp");
+__name2(stringToRegexp, "stringToRegexp");
 function tokensToRegexp(tokens, keys, options) {
   if (options === void 0) {
     options = {};
@@ -10722,6 +10740,7 @@ function tokensToRegexp(tokens, keys, options) {
   return new RegExp(route, flags(options));
 }
 __name(tokensToRegexp, "tokensToRegexp");
+__name2(tokensToRegexp, "tokensToRegexp");
 function pathToRegexp(path, keys, options) {
   if (path instanceof RegExp)
     return regexpToRegexp(path, keys);
@@ -10730,8 +10749,7 @@ function pathToRegexp(path, keys, options) {
   return stringToRegexp(path, keys, options);
 }
 __name(pathToRegexp, "pathToRegexp");
-
-// ../../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/pages-template-worker.ts
+__name2(pathToRegexp, "pathToRegexp");
 var escapeRegex = /[.+?^${}()|[\]\\]/g;
 function* executeRequest(request) {
   const requestPath = new URL(request.url).pathname;
@@ -10782,13 +10800,14 @@ function* executeRequest(request) {
   }
 }
 __name(executeRequest, "executeRequest");
+__name2(executeRequest, "executeRequest");
 var pages_template_worker_default = {
   async fetch(originalRequest, env, workerContext) {
     let request = originalRequest;
     const handlerIterator = executeRequest(request);
     let data = {};
     let isFailOpen = false;
-    const next = /* @__PURE__ */ __name(async (input, init) => {
+    const next = /* @__PURE__ */ __name2(async (input, init) => {
       if (input !== void 0) {
         let url = input;
         if (typeof input === "string") {
@@ -10815,7 +10834,7 @@ var pages_template_worker_default = {
           },
           env,
           waitUntil: workerContext.waitUntil.bind(workerContext),
-          passThroughOnException: /* @__PURE__ */ __name(() => {
+          passThroughOnException: /* @__PURE__ */ __name2(() => {
             isFailOpen = true;
           }, "passThroughOnException")
         };
@@ -10843,18 +10862,16 @@ var pages_template_worker_default = {
     }
   }
 };
-var cloneResponse = /* @__PURE__ */ __name((response) => (
+var cloneResponse = /* @__PURE__ */ __name2((response) => (
   // https://fetch.spec.whatwg.org/#null-body-status
   new Response(
     [101, 204, 205, 304].includes(response.status) ? null : response.body,
     response
   )
 ), "cloneResponse");
-
-// ../../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
-var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
   } finally {
@@ -10870,9 +10887,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
   }
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
-
-// ../../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
 function reduceError(e) {
   return {
@@ -10883,7 +10898,8 @@ function reduceError(e) {
   };
 }
 __name(reduceError, "reduceError");
-var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+__name2(reduceError, "reduceError");
+var jsonError = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
   } catch (e) {
@@ -10895,22 +10911,19 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
   }
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
-
-// ../.wrangler/tmp/bundle-0YgtSR/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = pages_template_worker_default;
-
-// ../../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/common.ts
-init_functionsRoutes_0_013781110522466111();
+init_functionsRoutes_0_08206309707451787();
 init_checked_fetch();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
 }
 __name(__facade_register__, "__facade_register__");
+__name2(__facade_register__, "__facade_register__");
 function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
   const [head, ...tail] = middlewareChain;
   const middlewareCtx = {
@@ -10922,6 +10935,7 @@ function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
   return head(request, env, ctx, middlewareCtx);
 }
 __name(__facade_invokeChain__, "__facade_invokeChain__");
+__name2(__facade_invokeChain__, "__facade_invokeChain__");
 function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   return __facade_invokeChain__(request, env, ctx, dispatch, [
     ...__facade_middleware__,
@@ -10929,16 +10943,18 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   ]);
 }
 __name(__facade_invoke__, "__facade_invoke__");
-
-// ../.wrangler/tmp/bundle-0YgtSR/middleware-loader.entry.ts
+__name2(__facade_invoke__, "__facade_invoke__");
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
+  static {
+    __name(this, "___Facade_ScheduledController__");
+  }
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
     this.cron = cron;
     this.#noRetry = noRetry;
   }
   static {
-    __name(this, "__Facade_ScheduledController__");
+    __name2(this, "__Facade_ScheduledController__");
   }
   #noRetry;
   noRetry() {
@@ -10955,7 +10971,7 @@ function wrapExportedHandler(worker) {
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
-  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+  const fetchDispatcher = /* @__PURE__ */ __name2(function(request, env, ctx) {
     if (worker.fetch === void 0) {
       throw new Error("Handler does not export a fetch() function.");
     }
@@ -10964,7 +10980,7 @@ function wrapExportedHandler(worker) {
   return {
     ...worker,
     fetch(request, env, ctx) {
-      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+      const dispatcher = /* @__PURE__ */ __name2(function(type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__(
             Date.now(),
@@ -10980,6 +10996,7 @@ function wrapExportedHandler(worker) {
   };
 }
 __name(wrapExportedHandler, "wrapExportedHandler");
+__name2(wrapExportedHandler, "wrapExportedHandler");
 function wrapWorkerEntrypoint(klass) {
   if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
     return klass;
@@ -10988,7 +11005,7 @@ function wrapWorkerEntrypoint(klass) {
     __facade_register__(middleware);
   }
   return class extends klass {
-    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+    #fetchDispatcher = /* @__PURE__ */ __name2((request, env, ctx) => {
       this.env = env;
       this.ctx = ctx;
       if (super.fetch === void 0) {
@@ -10996,7 +11013,7 @@ function wrapWorkerEntrypoint(klass) {
       }
       return super.fetch(request);
     }, "#fetchDispatcher");
-    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+    #dispatcher = /* @__PURE__ */ __name2((type, init) => {
       if (type === "scheduled" && super.scheduled !== void 0) {
         const controller = new __Facade_ScheduledController__(
           Date.now(),
@@ -11019,6 +11036,7 @@ function wrapWorkerEntrypoint(klass) {
   };
 }
 __name(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
+__name2(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
 var WRAPPED_ENTRY;
 if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapExportedHandler(middleware_insertion_facade_default);
@@ -11026,8 +11044,178 @@ if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapWorkerEntrypoint(middleware_insertion_facade_default);
 }
 var middleware_loader_entry_default = WRAPPED_ENTRY;
-export {
-  __INTERNAL_WRANGLER_MIDDLEWARE__,
-  middleware_loader_entry_default as default
+
+// ../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+var drainBody2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } finally {
+    try {
+      if (request.body !== null && !request.bodyUsed) {
+        const reader = request.body.getReader();
+        while (!(await reader.read()).done) {
+        }
+      }
+    } catch (e) {
+      console.error("Failed to drain the unused request body.", e);
+    }
+  }
+}, "drainBody");
+var middleware_ensure_req_body_drained_default2 = drainBody2;
+
+// ../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+function reduceError2(e) {
+  return {
+    name: e?.name,
+    message: e?.message ?? String(e),
+    stack: e?.stack,
+    cause: e?.cause === void 0 ? void 0 : reduceError2(e.cause)
+  };
+}
+__name(reduceError2, "reduceError");
+var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } catch (e) {
+    const error = reduceError2(e);
+    return Response.json(error, {
+      status: 500,
+      headers: { "MF-Experimental-Error-Stack": "true" }
+    });
+  }
+}, "jsonError");
+var middleware_miniflare3_json_error_default2 = jsonError2;
+
+// .wrangler/tmp/bundle-ltocyV/middleware-insertion-facade.js
+var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
+  middleware_ensure_req_body_drained_default2,
+  middleware_miniflare3_json_error_default2
+];
+var middleware_insertion_facade_default2 = middleware_loader_entry_default;
+
+// ../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/common.ts
+var __facade_middleware__2 = [];
+function __facade_register__2(...args) {
+  __facade_middleware__2.push(...args.flat());
+}
+__name(__facade_register__2, "__facade_register__");
+function __facade_invokeChain__2(request, env, ctx, dispatch, middlewareChain) {
+  const [head, ...tail] = middlewareChain;
+  const middlewareCtx = {
+    dispatch,
+    next(newRequest, newEnv) {
+      return __facade_invokeChain__2(newRequest, newEnv, ctx, dispatch, tail);
+    }
+  };
+  return head(request, env, ctx, middlewareCtx);
+}
+__name(__facade_invokeChain__2, "__facade_invokeChain__");
+function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__2(request, env, ctx, dispatch, [
+    ...__facade_middleware__2,
+    finalMiddleware
+  ]);
+}
+__name(__facade_invoke__2, "__facade_invoke__");
+
+// .wrangler/tmp/bundle-ltocyV/middleware-loader.entry.ts
+var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
+  constructor(scheduledTime, cron, noRetry) {
+    this.scheduledTime = scheduledTime;
+    this.cron = cron;
+    this.#noRetry = noRetry;
+  }
+  static {
+    __name(this, "__Facade_ScheduledController__");
+  }
+  #noRetry;
+  noRetry() {
+    if (!(this instanceof ___Facade_ScheduledController__2)) {
+      throw new TypeError("Illegal invocation");
+    }
+    this.#noRetry();
+  }
 };
-//# sourceMappingURL=functionsWorker-0.6529832111762933.mjs.map
+function wrapExportedHandler2(worker) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__2 === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__2.length === 0) {
+    return worker;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
+    __facade_register__2(middleware);
+  }
+  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+    if (worker.fetch === void 0) {
+      throw new Error("Handler does not export a fetch() function.");
+    }
+    return worker.fetch(request, env, ctx);
+  }, "fetchDispatcher");
+  return {
+    ...worker,
+    fetch(request, env, ctx) {
+      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+        if (type === "scheduled" && worker.scheduled !== void 0) {
+          const controller = new __Facade_ScheduledController__2(
+            Date.now(),
+            init.cron ?? "",
+            () => {
+            }
+          );
+          return worker.scheduled(controller, env, ctx);
+        }
+      }, "dispatcher");
+      return __facade_invoke__2(request, env, ctx, dispatcher, fetchDispatcher);
+    }
+  };
+}
+__name(wrapExportedHandler2, "wrapExportedHandler");
+function wrapWorkerEntrypoint2(klass) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__2 === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__2.length === 0) {
+    return klass;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
+    __facade_register__2(middleware);
+  }
+  return class extends klass {
+    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+      this.env = env;
+      this.ctx = ctx;
+      if (super.fetch === void 0) {
+        throw new Error("Entrypoint class does not define a fetch() function.");
+      }
+      return super.fetch(request);
+    }, "#fetchDispatcher");
+    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+      if (type === "scheduled" && super.scheduled !== void 0) {
+        const controller = new __Facade_ScheduledController__2(
+          Date.now(),
+          init.cron ?? "",
+          () => {
+          }
+        );
+        return super.scheduled(controller);
+      }
+    }, "#dispatcher");
+    fetch(request) {
+      return __facade_invoke__2(
+        request,
+        this.env,
+        this.ctx,
+        this.#dispatcher,
+        this.#fetchDispatcher
+      );
+    }
+  };
+}
+__name(wrapWorkerEntrypoint2, "wrapWorkerEntrypoint");
+var WRAPPED_ENTRY2;
+if (typeof middleware_insertion_facade_default2 === "object") {
+  WRAPPED_ENTRY2 = wrapExportedHandler2(middleware_insertion_facade_default2);
+} else if (typeof middleware_insertion_facade_default2 === "function") {
+  WRAPPED_ENTRY2 = wrapWorkerEntrypoint2(middleware_insertion_facade_default2);
+}
+var middleware_loader_entry_default2 = WRAPPED_ENTRY2;
+export {
+  __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
+  middleware_loader_entry_default2 as default
+};
+//# sourceMappingURL=functionsWorker-0.4655157153260361.js.map

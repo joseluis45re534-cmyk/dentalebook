@@ -1,3 +1,4 @@
+import { onRequestPost as __api_admin_products_bulk_ts_onRequestPost } from "C:\\Users\\pc\\Downloads\\Digital-Listings\\Digital-Listings\\functions\\api\\admin\\products\\bulk.ts"
 import { onRequestDelete as __api_admin_products__id__ts_onRequestDelete } from "C:\\Users\\pc\\Downloads\\Digital-Listings\\Digital-Listings\\functions\\api\\admin\\products\\[id].ts"
 import { onRequestPut as __api_admin_products__id__ts_onRequestPut } from "C:\\Users\\pc\\Downloads\\Digital-Listings\\Digital-Listings\\functions\\api\\admin\\products\\[id].ts"
 import { onRequestGet as __api_admin_orders_ts_onRequestGet } from "C:\\Users\\pc\\Downloads\\Digital-Listings\\Digital-Listings\\functions\\api\\admin\\orders.ts"
@@ -21,6 +22,13 @@ import { onRequest as ___middleware_ts_onRequest } from "C:\\Users\\pc\\Download
 
 export const routes = [
     {
+      routePath: "/api/admin/products/bulk",
+      mountPath: "/api/admin/products",
+      method: "POST",
+      middlewares: [],
+      modules: [__api_admin_products_bulk_ts_onRequestPost],
+    },
+  {
       routePath: "/api/admin/products/:id",
       mountPath: "/api/admin/products",
       method: "DELETE",

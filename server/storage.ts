@@ -204,6 +204,7 @@ function loadProductsFromCSV(): Product[] {
       url: url,
       imageFile: primaryImageFile,
       imageUrl: primaryImageUrl,
+      images: imageUrls, // Store all images
       category: determineCategory(title, description),
     });
   }

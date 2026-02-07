@@ -1,29 +1,27 @@
+import { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ShoppingCart, Check, ArrowLeft, BookOpen, Video, Clock, FileText, Download, Shield, Zap, HeadphonesIcon } from "lucide-react";
-import { useCart } from "@/lib/cart";
-import type { Product } from "@shared/schema";
-import { fetchProductById, fetchSuggestedProducts } from "@/lib/products";
-import { ProductGrid } from "@/components/ProductGrid";
-import { Helmet } from "react-helmet";
+// ... existing imports ...
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
-  // ... rest of imports
+  // ... existing hooks ...
 
   const [, setLocation] = useLocation();
   const { addToCart, isInCart } = useCart();
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   const { data: product, isLoading, error } = useQuery({
     queryKey: ["product", id],
     queryFn: () => fetchProductById(parseInt(id, 10)),
     enabled: !!id
   });
+
+  useEffect(() => {
+    if (product?.imageUrl) {
+      setActiveImage(product.imageUrl);
+    }
+  }, [product]);
 
   const { data: suggestedProducts, isLoading: isSuggestedLoading } = useQuery({
     queryKey: ["suggested", id],
@@ -159,12 +157,12 @@ export default function ProductDetail() {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           <div className="relative">
-            <div className="sticky top-24">
+            <div className="sticky top-24 space-y-4">
               <Card className="overflow-hidden">
                 <div className="aspect-square relative bg-muted">
-                  {product.imageUrl ? (
+                  {activeImage ? (
                     <img
-                      src={product.imageUrl}
+                      src={activeImage}
                       alt={product.title}
                       className="w-full h-full object-cover"
                     />
@@ -184,6 +182,22 @@ export default function ProductDetail() {
                   )}
                 </div>
               </Card>
+
+              {/* Image Gallery */}
+              {product.images && product.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {product.images.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveImage(img)}
+                      className={`relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden border-2 transaction-all ${activeImage === img ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-muted-foreground/50'
+                        }`}
+                    >
+                      <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
