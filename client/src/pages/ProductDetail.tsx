@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-// ... existing imports ...
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ShoppingCart, Check, ArrowLeft, BookOpen, Video, Clock, FileText, Download, Shield, Zap, HeadphonesIcon } from "lucide-react";
+import { useCart } from "@/lib/cart";
+import type { Product } from "@shared/schema";
+import { fetchProductById, fetchSuggestedProducts } from "@/lib/products";
+import { ProductGrid } from "@/components/ProductGrid";
+import { Helmet } from "react-helmet";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
