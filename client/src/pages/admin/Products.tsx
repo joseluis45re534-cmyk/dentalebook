@@ -39,20 +39,6 @@ export default function AdminProducts() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isImporting, setIsImporting] = useState(false);
 
-    // Derive unique categories from products
-    const categories = Array.from(new Set(products?.map(p => p.category) || [])).sort();
-
-    // Sync state when editingProduct changes
-    useEffect(() => {
-        if (editingProduct) {
-            setDescription(editingProduct.description || "");
-            setCategory(editingProduct.category || "");
-        } else {
-            setDescription("");
-            setCategory("");
-        }
-    }, [editingProduct]);
-
     // Fetch Products
     const { data: products, isLoading } = useQuery<Product[]>({
         queryKey: ["/api/products"],
@@ -62,6 +48,9 @@ export default function AdminProducts() {
             return res.json();
         }
     });
+
+    // Derive unique categories from products
+    const categories = Array.from(new Set(products?.map(p => p.category) || [])).sort();
 
     // Mutations
     const createMutation = useMutation({
