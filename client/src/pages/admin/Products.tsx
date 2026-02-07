@@ -7,11 +7,25 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, ArrowLeft, Code, Upload } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, ArrowLeft, Code, Upload, Check, ChevronsUpDown } from "lucide-react";
 import type { Product } from "@shared/schema";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Papa from "papaparse";
+import { cn } from "@/lib/utils";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function AdminProducts() {
     const { toast } = useToast();
@@ -19,16 +33,23 @@ export default function AdminProducts() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [description, setDescription] = useState("");
+    const [category, setCategory] = useState("");
+    const [openCategory, setOpenCategory] = useState(false);
     const [isSourceView, setIsSourceView] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isImporting, setIsImporting] = useState(false);
 
-    // Sync description state when editingProduct changes
+    // Derive unique categories from products
+    const categories = Array.from(new Set(products?.map(p => p.category) || [])).sort();
+
+    // Sync state when editingProduct changes
     useEffect(() => {
         if (editingProduct) {
             setDescription(editingProduct.description || "");
+            setCategory(editingProduct.category || "");
         } else {
             setDescription("");
+            setCategory("");
         }
     }, [editingProduct]);
 
@@ -158,7 +179,7 @@ export default function AdminProducts() {
             currentPrice: parseFloat(formData.get("currentPrice") as string),
             originalPrice: formData.get("originalPrice") ? parseFloat(formData.get("originalPrice") as string) : null,
             description: description, // Use state instead of formData
-            category: formData.get("category") as string,
+            category: category || "books", // Use state
             imageUrl: images[0] || "", // Backward compatibility
             images: images,
             isOnSale: !!formData.get("originalPrice"), // Simple logic: if original price exists, it's on sale
@@ -259,9 +280,79 @@ export default function AdminProducts() {
                                             <label className="text-sm font-medium">Title</label>
                                             <Input name="title" defaultValue={editingProduct?.title} required />
                                         </div>
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 flex flex-col">
                                             <label className="text-sm font-medium">Category</label>
-                                            <Input name="category" defaultValue={editingProduct?.category || "books"} required />
+                                            <Popover open={openCategory} onOpenChange={setOpenCategory}>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        aria-expanded={openCategory}
+                                                        className="justify-between"
+                                                    >
+                                                        {category
+                                                            ? category
+                                                            : "Select category..."}
+                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="p-0">
+                                                    <Command>
+                                                        <CommandInput placeholder="Search category..." />
+                                                        <CommandList>
+                                                            <CommandEmpty>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    className="w-full justify-start text-sm"
+                                                                    onClick={() => {
+                                                                        // Logic to add new category would ideally use the search term, 
+                                                                        // but shadcn's CommandInput doesn't expose it easily in standard way without controlled state.
+                                                                        // For now, simpler to just allow typing in the standard input or use a "Creative" approach.
+                                                                        // Let's use a standard input approach if Command is too complex for "create new".
+                                                                        // Actually, let's keep it simple: List existing, and allow "Other" which shows an input?
+                                                                        // Or better: Use the CommandInput value. 
+                                                                        // Since accessing internal input value is tricky, let's just add a fallback text input below if needed
+                                                                        // or just generic "Select or Type" is better handled by a Creatable Select. 
+                                                                        // Given constraints, I'll switch to a hybrid approach:
+                                                                        // 1. Combobox for selection
+                                                                        // 2. If valid option not found, show "Create '{search}'" (requires controlling search state)
+                                                                    }}
+                                                                >
+                                                                    Type to search or create...
+                                                                </Button>
+                                                            </CommandEmpty>
+                                                            <CommandGroup>
+                                                                {categories.map((c) => (
+                                                                    <CommandItem
+                                                                        key={c}
+                                                                        value={c}
+                                                                        onSelect={(currentValue) => {
+                                                                            setCategory(currentValue === category ? "" : currentValue)
+                                                                            setOpenCategory(false)
+                                                                        }}
+                                                                    >
+                                                                        <Check
+                                                                            className={cn(
+                                                                                "mr-2 h-4 w-4",
+                                                                                category === c ? "opacity-100" : "opacity-0"
+                                                                            )}
+                                                                        />
+                                                                        {c}
+                                                                    </CommandItem>
+                                                                ))}
+                                                            </CommandGroup>
+                                                        </CommandList>
+                                                    </Command>
+                                                </PopoverContent>
+                                            </Popover>
+                                            {/* Fallback input to allow creating new categories easily if dropdown doesn't suffice or for manual override */}
+                                            <Input
+                                                name="category"
+                                                value={category}
+                                                onChange={(e) => setCategory(e.target.value)}
+                                                placeholder="Or type new category..."
+                                                className="mt-2"
+                                            />
                                         </div>
                                     </div>
 
