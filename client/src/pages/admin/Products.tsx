@@ -26,6 +26,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AdminProducts() {
     const { toast } = useToast();
@@ -38,6 +39,18 @@ export default function AdminProducts() {
     const [isSourceView, setIsSourceView] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isImporting, setIsImporting] = useState(false);
+    const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+
+    // Sync state when editingProduct changes
+    useEffect(() => {
+        if (editingProduct) {
+            setDescription(editingProduct.description || "");
+            setCategory(editingProduct.category || "");
+        } else {
+            setDescription("");
+            setCategory("");
+        }
+    }, [editingProduct]);
 
     // Fetch Products
     const { data: products, isLoading } = useQuery<Product[]>({
@@ -228,6 +241,44 @@ export default function AdminProducts() {
         setIsDialogOpen(true);
     };
 
+    const toggleSelectAll = (checked: boolean) => {
+        if (checked && products) {
+            setSelectedProducts(products.map(p => p.id));
+        } else {
+            setSelectedProducts([]);
+        }
+    };
+
+    const toggleSelectOne = (id: number, checked: boolean) => {
+        if (checked) {
+            setSelectedProducts(prev => [...prev, id]);
+        } else {
+            setSelectedProducts(prev => prev.filter(pId => pId !== id));
+        }
+    };
+
+    const handleBulkDelete = () => {
+        if (!confirm(`Are you sure you want to delete ${selectedProducts.length} products?`)) return;
+
+        // Naive bulk delete: firing multiple requests. Ideally endpoint should support bulk delete.
+        // For now this works for small batches.
+        Promise.all(selectedProducts.map(id =>
+            // Reuse delete logic or call mutation directly if possible. 
+            // Since deleteMutation is one-shot, we can loop.
+            // Better to wrap in a new mutation or just iterate.
+            fetch(`/api/admin/products/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${localStorage.getItem("admin_token")}` }
+            })
+        )).then(() => {
+            queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+            setSelectedProducts([]);
+            toast({ title: "Success", description: "Selected products deleted" });
+        }).catch(err => {
+            toast({ title: "Error", description: "Failed to delete some products", variant: "destructive" });
+        });
+    };
+
     return (
         <div className="min-h-screen bg-muted/30 p-8">
             <div className="max-w-6xl mx-auto space-y-6">
@@ -242,6 +293,15 @@ export default function AdminProducts() {
                     </div>
 
                     <div className="flex gap-2">
+                        {selectedProducts.length > 0 && (
+                            <div className="flex gap-2 mr-4 bg-primary/5 p-1 rounded-md">
+                                <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete ({selectedProducts.length})
+                                </Button>
+                                {/* Bulk category change can be added here later */}
+                            </div>
+                        )}
                         <input
                             type="file"
                             ref={fileInputRef}
@@ -425,6 +485,12 @@ export default function AdminProducts() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-[50px]">
+                                        <Checkbox
+                                            checked={products?.length === selectedProducts.length && products?.length > 0}
+                                            onCheckedChange={(checked) => toggleSelectAll(!!checked)}
+                                        />
+                                    </TableHead>
                                     <TableHead>ID</TableHead>
                                     <TableHead>Image</TableHead>
                                     <TableHead>Title</TableHead>
@@ -436,6 +502,12 @@ export default function AdminProducts() {
                             <TableBody>
                                 {products?.map((product) => (
                                     <TableRow key={product.id}>
+                                        <TableCell>
+                                            <Checkbox
+                                                checked={selectedProducts.includes(product.id)}
+                                                onCheckedChange={(checked) => toggleSelectOne(product.id, !!checked)}
+                                            />
+                                        </TableCell>
                                         <TableCell>{product.id}</TableCell>
                                         <TableCell>
                                             <div className="w-10 h-10 rounded bg-muted overflow-hidden">
@@ -461,7 +533,7 @@ export default function AdminProducts() {
                                 ))}
                                 {products?.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                                        <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                                             No products found. Import data or create one.
                                         </TableCell>
                                     </TableRow>
