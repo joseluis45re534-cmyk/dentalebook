@@ -27,6 +27,14 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Search } from "lucide-react";
 
 export default function AdminProducts() {
     const { toast } = useToast();
@@ -40,6 +48,8 @@ export default function AdminProducts() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isImporting, setIsImporting] = useState(false);
     const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filterCategory, setFilterCategory] = useState<string>("all");
 
     // Sync state when editingProduct changes
     useEffect(() => {
@@ -64,6 +74,13 @@ export default function AdminProducts() {
 
     // Derive unique categories from products
     const categories = Array.from(new Set(products?.map(p => p.category) || [])).sort();
+
+    // Filter Logic
+    const filteredProducts = products?.filter(product => {
+        const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = filterCategory === "all" || product.category === filterCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     // Mutations
     const createMutation = useMutation({
@@ -292,257 +309,281 @@ export default function AdminProducts() {
                         <h1 className="text-3xl font-bold">Products</h1>
                     </div>
 
-                    <div className="flex gap-2">
-                        {selectedProducts.length > 0 && (
-                            <div className="flex gap-2 mr-4 bg-primary/5 p-1 rounded-md">
-                                <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
-                                    <Trash2 className="w-4 h-4 mr-2" />
-                                    Delete ({selectedProducts.length})
-                                </Button>
-                                {/* Bulk category change can be added here later */}
+                    <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+                        <div className="flex gap-2 w-full md:w-auto flex-1 max-w-sm">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search products..."
+                                    className="pl-8"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                             </div>
-                        )}
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            className="hidden"
-                            accept=".csv"
-                            onChange={handleFileUpload}
-                        />
-                        <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isImporting}>
-                            {isImporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
-                            Import CSV
-                        </Button>
-                        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) setEditingProduct(null); }}>
-                            <DialogTrigger asChild>
-                                <Button>
-                                    <Plus className="w-4 h-4 mr-2" /> Add Product
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                                <DialogHeader>
-                                    <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
-                                </DialogHeader>
-                                <form onSubmit={handleSubmit} className="space-y-4 py-4">
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">Title</label>
-                                            <Input name="title" defaultValue={editingProduct?.title} required />
-                                        </div>
-                                        <div className="space-y-2 flex flex-col">
-                                            <label className="text-sm font-medium">Category</label>
-                                            <Popover open={openCategory} onOpenChange={setOpenCategory}>
-                                                <PopoverTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        aria-expanded={openCategory}
-                                                        className="justify-between"
-                                                    >
-                                                        {category
-                                                            ? category
-                                                            : "Select category..."}
-                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="p-0">
-                                                    <Command>
-                                                        <CommandInput placeholder="Search category..." />
-                                                        <CommandList>
-                                                            <CommandEmpty>
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    className="w-full justify-start text-sm"
-                                                                    onClick={() => {
-                                                                        // Logic to add new category would ideally use the search term, 
-                                                                        // but shadcn's CommandInput doesn't expose it easily in standard way without controlled state.
-                                                                        // For now, simpler to just allow typing in the standard input or use a "Creative" approach.
-                                                                        // Let's use a standard input approach if Command is too complex for "create new".
-                                                                        // Actually, let's keep it simple: List existing, and allow "Other" which shows an input?
-                                                                        // Or better: Use the CommandInput value. 
-                                                                        // Since accessing internal input value is tricky, let's just add a fallback text input below if needed
-                                                                        // or just generic "Select or Type" is better handled by a Creatable Select. 
-                                                                        // Given constraints, I'll switch to a hybrid approach:
-                                                                        // 1. Combobox for selection
-                                                                        // 2. If valid option not found, show "Create '{search}'" (requires controlling search state)
-                                                                    }}
-                                                                >
-                                                                    Type to search or create...
-                                                                </Button>
-                                                            </CommandEmpty>
-                                                            <CommandGroup>
-                                                                {categories.map((c) => (
-                                                                    <CommandItem
-                                                                        key={c}
-                                                                        value={c}
-                                                                        onSelect={(currentValue) => {
-                                                                            setCategory(currentValue === category ? "" : currentValue)
-                                                                            setOpenCategory(false)
+                            <Select value={filterCategory} onValueChange={setFilterCategory}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Categories</SelectItem>
+                                    {categories.map((c) => (
+                                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="flex gap-2">
+                            {selectedProducts.length > 0 && (
+                                <div className="flex gap-2 mr-4 bg-primary/5 p-1 rounded-md">
+                                    <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Delete ({selectedProducts.length})
+                                    </Button>
+                                    {/* Bulk category change can be added here later */}
+                                </div>
+                            )}
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                accept=".csv"
+                                onChange={handleFileUpload}
+                            />
+                            <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isImporting}>
+                                {isImporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                                Import CSV
+                            </Button>
+                            <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) setEditingProduct(null); }}>
+                                <DialogTrigger asChild>
+                                    <Button>
+                                        <Plus className="w-4 h-4 mr-2" /> Add Product
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
+                                    </DialogHeader>
+                                    <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium">Title</label>
+                                                <Input name="title" defaultValue={editingProduct?.title} required />
+                                            </div>
+                                            <div className="space-y-2 flex flex-col">
+                                                <label className="text-sm font-medium">Category</label>
+                                                <Popover open={openCategory} onOpenChange={setOpenCategory}>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant="outline"
+                                                            role="combobox"
+                                                            aria-expanded={openCategory}
+                                                            className="justify-between"
+                                                        >
+                                                            {category
+                                                                ? category
+                                                                : "Select category..."}
+                                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="p-0">
+                                                        <Command>
+                                                            <CommandInput placeholder="Search category..." />
+                                                            <CommandList>
+                                                                <CommandEmpty>
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        className="w-full justify-start text-sm"
+                                                                        onClick={() => {
+                                                                            // Logic to add new category would ideally use the search term, 
+                                                                            // but shadcn's CommandInput doesn't expose it easily in standard way without controlled state.
+                                                                            // For now, simpler to just allow typing in the standard input or use a "Creative" approach.
+                                                                            // Let's use a standard input approach if Command is too complex for "create new".
+                                                                            // Actually, let's keep it simple: List existing, and allow "Other" which shows an input?
+                                                                            // Or better: Use the CommandInput value. 
+                                                                            // Since accessing internal input value is tricky, let's just add a fallback text input below if needed
+                                                                            // or just generic "Select or Type" is better handled by a Creatable Select. 
+                                                                            // Given constraints, I'll switch to a hybrid approach:
+                                                                            // 1. Combobox for selection
+                                                                            // 2. If valid option not found, show "Create '{search}'" (requires controlling search state)
                                                                         }}
                                                                     >
-                                                                        <Check
-                                                                            className={cn(
-                                                                                "mr-2 h-4 w-4",
-                                                                                category === c ? "opacity-100" : "opacity-0"
-                                                                            )}
-                                                                        />
-                                                                        {c}
-                                                                    </CommandItem>
-                                                                ))}
-                                                            </CommandGroup>
-                                                        </CommandList>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
-                                            {/* Fallback input to allow creating new categories easily if dropdown doesn't suffice or for manual override */}
-                                            <Input
-                                                name="category"
-                                                value={category}
-                                                onChange={(e) => setCategory(e.target.value)}
-                                                placeholder="Or type new category..."
-                                                className="mt-2"
+                                                                        Type to search or create...
+                                                                    </Button>
+                                                                </CommandEmpty>
+                                                                <CommandGroup>
+                                                                    {categories.map((c) => (
+                                                                        <CommandItem
+                                                                            key={c}
+                                                                            value={c}
+                                                                            onSelect={(currentValue) => {
+                                                                                setCategory(currentValue === category ? "" : currentValue)
+                                                                                setOpenCategory(false)
+                                                                            }}
+                                                                        >
+                                                                            <Check
+                                                                                className={cn(
+                                                                                    "mr-2 h-4 w-4",
+                                                                                    category === c ? "opacity-100" : "opacity-0"
+                                                                                )}
+                                                                            />
+                                                                            {c}
+                                                                        </CommandItem>
+                                                                    ))}
+                                                                </CommandGroup>
+                                                            </CommandList>
+                                                        </Command>
+                                                    </PopoverContent>
+                                                </Popover>
+                                                {/* Fallback input to allow creating new categories easily if dropdown doesn't suffice or for manual override */}
+                                                <Input
+                                                    name="category"
+                                                    value={category}
+                                                    onChange={(e) => setCategory(e.target.value)}
+                                                    placeholder="Or type new category..."
+                                                    className="mt-2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-sm font-medium">Description</label>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setIsSourceView(!isSourceView)}
+                                                    className="h-8 text-xs"
+                                                >
+                                                    <Code className="w-3 h-3 mr-1" />
+                                                    {isSourceView ? "Visual Editor" : "Edit HTML"}
+                                                </Button>
+                                            </div>
+                                            <div className="min-h-[200px] border rounded-md">
+                                                {isSourceView ? (
+                                                    <Textarea
+                                                        name="description-source"
+                                                        value={description}
+                                                        onChange={(e) => setDescription(e.target.value)}
+                                                        className="min-h-[200px] font-mono text-sm"
+                                                    />
+                                                ) : (
+                                                    <ReactQuill
+                                                        theme="snow"
+                                                        value={description}
+                                                        onChange={setDescription}
+                                                        className="h-[200px] mb-12" // Add margin bottom for toolbar
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium">Display Price Text</label>
+                                                <Input name="price" defaultValue={editingProduct?.price || "$0.00"} required placeholder="$99.00" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium">Numeric Price</label>
+                                                <Input name="currentPrice" type="number" step="0.01" defaultValue={editingProduct?.currentPrice} required />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium">Original Price (opt)</label>
+                                                <Input name="originalPrice" type="number" step="0.01" defaultValue={editingProduct?.originalPrice || ""} />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Image URLs (one per line)</label>
+                                            <Textarea
+                                                name="imageUrl"
+                                                defaultValue={editingProduct?.images?.join("\n") || editingProduct?.imageUrl || ""}
+                                                placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                                                className="min-h-[100px] font-mono text-xs"
                                             />
                                         </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-sm font-medium">Description</label>
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => setIsSourceView(!isSourceView)}
-                                                className="h-8 text-xs"
-                                            >
-                                                <Code className="w-3 h-3 mr-1" />
-                                                {isSourceView ? "Visual Editor" : "Edit HTML"}
-                                            </Button>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Product URL / Download Link</label>
+                                            <Input name="url" defaultValue={editingProduct?.url || ""} />
                                         </div>
-                                        <div className="min-h-[200px] border rounded-md">
-                                            {isSourceView ? (
-                                                <Textarea
-                                                    name="description-source"
-                                                    value={description}
-                                                    onChange={(e) => setDescription(e.target.value)}
-                                                    className="min-h-[200px] font-mono text-sm"
+
+                                        <Button type="submit" className="w-full" disabled={createMutation.isPending || updateMutation.isPending}>
+                                            {createMutation.isPending || updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Product"}
+                                        </Button>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </div>
+
+                    <div className="bg-card rounded-lg border shadow-sm">
+                        {isLoading ? (
+                            <div className="p-8 flex justify-center">
+                                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[50px]">
+                                            <Checkbox
+                                                checked={products?.length === selectedProducts.length && products?.length > 0}
+                                                onCheckedChange={(checked) => toggleSelectAll(!!checked)}
+                                            />
+                                        </TableHead>
+                                        <TableHead>ID</TableHead>
+                                        <TableHead>Image</TableHead>
+                                        <TableHead>Title</TableHead>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead>Price</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredProducts?.map((product) => (
+                                        <TableRow key={product.id}>
+                                            <TableCell>
+                                                <Checkbox
+                                                    checked={selectedProducts.includes(product.id)}
+                                                    onCheckedChange={(checked) => toggleSelectOne(product.id, !!checked)}
                                                 />
-                                            ) : (
-                                                <ReactQuill
-                                                    theme="snow"
-                                                    value={description}
-                                                    onChange={setDescription}
-                                                    className="h-[200px] mb-12" // Add margin bottom for toolbar
-                                                />
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-3 gap-4">
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">Display Price Text</label>
-                                            <Input name="price" defaultValue={editingProduct?.price || "$0.00"} required placeholder="$99.00" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">Numeric Price</label>
-                                            <Input name="currentPrice" type="number" step="0.01" defaultValue={editingProduct?.currentPrice} required />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">Original Price (opt)</label>
-                                            <Input name="originalPrice" type="number" step="0.01" defaultValue={editingProduct?.originalPrice || ""} />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium">Image URLs (one per line)</label>
-                                        <Textarea
-                                            name="imageUrl"
-                                            defaultValue={editingProduct?.images?.join("\n") || editingProduct?.imageUrl || ""}
-                                            placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-                                            className="min-h-[100px] font-mono text-xs"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium">Product URL / Download Link</label>
-                                        <Input name="url" defaultValue={editingProduct?.url || ""} />
-                                    </div>
-
-                                    <Button type="submit" className="w-full" disabled={createMutation.isPending || updateMutation.isPending}>
-                                        {createMutation.isPending || updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Product"}
-                                    </Button>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
+                                            </TableCell>
+                                            <TableCell>{product.id}</TableCell>
+                                            <TableCell>
+                                                <div className="w-10 h-10 rounded bg-muted overflow-hidden">
+                                                    {product.imageUrl && <img src={product.imageUrl} alt="" className="w-full h-full object-cover" />}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="font-medium">{product.title}</TableCell>
+                                            <TableCell>{product.category}</TableCell>
+                                            <TableCell>${product.currentPrice.toFixed(2)}</TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <Button variant="ghost" size="icon" onClick={() => openEdit(product)}>
+                                                        <Pencil className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => {
+                                                        if (confirm("Are you sure?")) deleteMutation.mutate(product.id);
+                                                    }}>
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                    {filteredProducts?.length === 0 && (
+                                        <TableRow>
+                                            <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                                                No products found matching your search.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
-
-                <div className="bg-card rounded-lg border shadow-sm">
-                    {isLoading ? (
-                        <div className="p-8 flex justify-center">
-                            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                        </div>
-                    ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[50px]">
-                                        <Checkbox
-                                            checked={products?.length === selectedProducts.length && products?.length > 0}
-                                            onCheckedChange={(checked) => toggleSelectAll(!!checked)}
-                                        />
-                                    </TableHead>
-                                    <TableHead>ID</TableHead>
-                                    <TableHead>Image</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Category</TableHead>
-                                    <TableHead>Price</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {products?.map((product) => (
-                                    <TableRow key={product.id}>
-                                        <TableCell>
-                                            <Checkbox
-                                                checked={selectedProducts.includes(product.id)}
-                                                onCheckedChange={(checked) => toggleSelectOne(product.id, !!checked)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>{product.id}</TableCell>
-                                        <TableCell>
-                                            <div className="w-10 h-10 rounded bg-muted overflow-hidden">
-                                                {product.imageUrl && <img src={product.imageUrl} alt="" className="w-full h-full object-cover" />}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="font-medium">{product.title}</TableCell>
-                                        <TableCell>{product.category}</TableCell>
-                                        <TableCell>${product.currentPrice.toFixed(2)}</TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <Button variant="ghost" size="icon" onClick={() => openEdit(product)}>
-                                                    <Pencil className="w-4 h-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive" onClick={() => {
-                                                    if (confirm("Are you sure?")) deleteMutation.mutate(product.id);
-                                                }}>
-                                                    <Trash2 className="w-4 h-4" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                                {products?.length === 0 && (
-                                    <TableRow>
-                                        <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                                            No products found. Import data or create one.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    )}
-                </div>
             </div>
-        </div>
-    );
+            );
 }
