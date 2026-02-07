@@ -50,6 +50,8 @@ export default function AdminProducts() {
     const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterCategory, setFilterCategory] = useState<string>("all");
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 100;
 
     // Sync state when editingProduct changes
     useEffect(() => {
@@ -61,6 +63,11 @@ export default function AdminProducts() {
             setCategory("");
         }
     }, [editingProduct]);
+
+    // Reset page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, filterCategory]);
 
     // Fetch Products
     const { data: products, isLoading } = useQuery<Product[]>({
@@ -81,6 +88,13 @@ export default function AdminProducts() {
         const matchesCategory = filterCategory === "all" || product.category === filterCategory;
         return matchesSearch && matchesCategory;
     });
+
+    // Pagination Logic
+    const totalPages = Math.ceil((filteredProducts?.length || 0) / ITEMS_PER_PAGE);
+    const paginatedProducts = filteredProducts?.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     // Mutations
     const createMutation = useMutation({
@@ -516,19 +530,21 @@ export default function AdminProducts() {
                             </Dialog>
                         </div>
                     </div>
+                </div>
 
-                    <div className="bg-card rounded-lg border shadow-sm">
-                        {isLoading ? (
-                            <div className="p-8 flex justify-center">
-                                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                            </div>
-                        ) : (
+                <div className="bg-card rounded-lg border shadow-sm">
+                    {isLoading ? (
+                        <div className="p-8 flex justify-center">
+                            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                        </div>
+                    ) : (
+                        <>
                             <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="w-[50px]">
                                             <Checkbox
-                                                checked={products?.length === selectedProducts.length && products?.length > 0}
+                                                checked={paginatedProducts?.length === selectedProducts.length && paginatedProducts?.length > 0}
                                                 onCheckedChange={(checked) => toggleSelectAll(!!checked)}
                                             />
                                         </TableHead>
@@ -541,7 +557,7 @@ export default function AdminProducts() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {filteredProducts?.map((product) => (
+                                    {paginatedProducts?.map((product) => (
                                         <TableRow key={product.id}>
                                             <TableCell>
                                                 <Checkbox
@@ -572,7 +588,7 @@ export default function AdminProducts() {
                                             </TableCell>
                                         </TableRow>
                                     ))}
-                                    {filteredProducts?.length === 0 && (
+                                    {paginatedProducts?.length === 0 && (
                                         <TableRow>
                                             <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                                                 No products found matching your search.
@@ -581,9 +597,35 @@ export default function AdminProducts() {
                                     )}
                                 </TableBody>
                             </Table>
-                        )}
-                    </div>
+
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && (
+                                <div className="flex items-center justify-end space-x-2 p-4 border-t">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Previous
+                                    </Button>
+                                    <div className="text-sm font-medium">
+                                        Page {currentPage} of {totalPages}
+                                    </div>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        Next
+                                    </Button>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
-            );
+        </div>
+    );
 }
