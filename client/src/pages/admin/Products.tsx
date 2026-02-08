@@ -52,6 +52,9 @@ export default function AdminProducts() {
     const [filterCategory, setFilterCategory] = useState<string>("all");
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 100;
+    const [lastSelectedId, setLastSelectedId] = useState<number | null>(null);
+    const [isBulkEditCategoryOpen, setIsBulkEditCategoryOpen] = useState(false);
+    const [bulkCategory, setBulkCategory] = useState("");
 
     // Sync state when editingProduct changes
     useEffect(() => {
@@ -273,19 +276,43 @@ export default function AdminProducts() {
     };
 
     const toggleSelectAll = (checked: boolean) => {
-        if (checked && products) {
-            setSelectedProducts(products.map(p => p.id));
+        if (checked && paginatedProducts) {
+            setSelectedProducts(paginatedProducts.map(p => p.id));
         } else {
             setSelectedProducts([]);
         }
     };
 
-    const toggleSelectOne = (id: number, checked: boolean) => {
+    const toggleSelectOne = (id: number, checked: boolean, shiftKey: boolean = false) => {
+        let newSelected = [...selectedProducts];
+
         if (checked) {
-            setSelectedProducts(prev => [...prev, id]);
+            if (shiftKey && lastSelectedId !== null && paginatedProducts) {
+                // Find range
+                const currentIndex = paginatedProducts.findIndex(p => p.id === id);
+                const lastIndex = paginatedProducts.findIndex(p => p.id === lastSelectedId);
+
+                if (currentIndex !== -1 && lastIndex !== -1) {
+                    const start = Math.min(currentIndex, lastIndex);
+                    const end = Math.max(currentIndex, lastIndex);
+                    const rangeIds = paginatedProducts.slice(start, end + 1).map(p => p.id);
+
+                    // Add all unique IDs from range
+                    const uniqueIds = new Set([...newSelected, ...rangeIds]);
+                    newSelected = Array.from(uniqueIds);
+                } else {
+                    newSelected.push(id);
+                }
+            } else {
+                newSelected.push(id);
+            }
+            setLastSelectedId(id);
         } else {
-            setSelectedProducts(prev => prev.filter(pId => pId !== id));
+            newSelected = newSelected.filter(pId => pId !== id);
+            setLastSelectedId(null); // Reset on deselect or keep? usually reset logic is tricky, simple is fine.
         }
+
+        setSelectedProducts(newSelected);
     };
 
     const handleBulkDelete = () => {
@@ -310,9 +337,64 @@ export default function AdminProducts() {
         });
     };
 
+    const handleBulkUpdateCategory = () => {
+        if (!bulkCategory) return;
+
+        Promise.all(selectedProducts.map(id =>
+            fetch(`/api/admin/products/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
+                },
+                body: JSON.stringify({ id, category: bulkCategory })
+            })
+        )).then(() => {
+            queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+            setSelectedProducts([]);
+            setIsBulkEditCategoryOpen(false);
+            setBulkCategory("");
+            toast({ title: "Success", description: "Categories updated successfully" });
+        }).catch(err => {
+            toast({ title: "Error", description: "Failed to update categories", variant: "destructive" });
+        });
+    };
+
     return (
         <div className="min-h-screen bg-muted/30 p-8">
             <div className="max-w-6xl mx-auto space-y-6">
+                <Dialog open={isBulkEditCategoryOpen} onOpenChange={setIsBulkEditCategoryOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Bulk Edit Category</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">New Category</label>
+                                <Select value={bulkCategory} onValueChange={setBulkCategory}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select category..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {categories.map((c) => (
+                                            <SelectItem key={c} value={c}>{c}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Input
+                                    placeholder="Or type new..."
+                                    value={bulkCategory}
+                                    onChange={(e) => setBulkCategory(e.target.value)}
+                                    className="mt-2"
+                                />
+                            </div>
+                            <Button onClick={handleBulkUpdateCategory} className="w-full">
+                                Update {selectedProducts.length} Products
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href="/admin/dashboard">
@@ -350,6 +432,10 @@ export default function AdminProducts() {
                         <div className="flex gap-2">
                             {selectedProducts.length > 0 && (
                                 <div className="flex gap-2 mr-4 bg-primary/5 p-1 rounded-md">
+                                    <Button variant="outline" size="sm" onClick={() => setIsBulkEditCategoryOpen(true)}>
+                                        <Pencil className="w-4 h-4 mr-2" />
+                                        Category
+                                    </Button>
                                     <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
                                         <Trash2 className="w-4 h-4 mr-2" />
                                         Delete ({selectedProducts.length})
